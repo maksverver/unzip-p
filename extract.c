@@ -321,6 +321,8 @@ static ZCONST char Far UnsupportedExtraField[] =
   "\nerror:  unsupported extra-field compression type (%u)--skipping\n";
 static ZCONST char Far BadExtraFieldCRC[] =
   "error [%s]:  bad extra-field CRC %08lx (should be %08lx)\n";
+static ZCONST char Far OverlappedComponents[] =
+  "error: invalid zip file with overlapped components (possible zip bomb)\n";
 
 
 
@@ -375,6 +377,26 @@ int extract_or_test_files(__G)    /* return PK-type error code */
         }
     }
 #endif /* !SFX || SFX_EXDIR */
+
+    /*
+     * Zip bombs are malicious zip files that have been constructed to generate
+     * unreasonably large amounts of output. The most effective zip bombs use
+     * overlapping file entries to generate output that grows quadratically with
+     * the input size: https://www.bamsoftware.com/hacks/zipbomb/
+     *
+     * We can detect those by limiting the total amount of compressed bytes to
+     * be consumed during extraction to the total size of the zip file, thus
+     * preventing the quadratic blowup that zip bombs rely on.
+     *
+     * Because bytes consumed are subtracted from the budget only *after*
+     * decoding a file entry, we may overconsume by a number of bytes close to
+     * the size of the zipfile. This makes zip bomb detection about twice as
+     * slow as it could be, but that's okay: we are still guaranteed to detect
+     * the overlap before the problematic quadratic blowup happens.
+     *
+     * More information: CVE-2019-13232
+     */
+    G.zipbomb_budget = G.ziplen - G.extra_bytes;
 
 /*---------------------------------------------------------------------------
     The basic idea of this function is as follows.  Since the central di-
@@ -592,8 +614,9 @@ int extract_or_test_files(__G)    /* return PK-type error code */
         if (error != PK_COOL) {
             if (error > error_in_archive)
                 error_in_archive = error;
-            /* ...and keep going (unless disk full or user break) */
-            if (G.disk_full > 1 || error_in_archive == IZ_CTRLC) {
+            /* ...and keep going (unless disk full, user break, or zip bomb) */
+            if (G.disk_full > 1 || error_in_archive == IZ_CTRLC ||
+                G.zipbomb_budget < 0) {
                 /* clear reached_end to signal premature stop ... */
                 reached_end = FALSE;
                 /* ... and cancel scanning the central directory */
@@ -1605,6 +1628,15 @@ reprompt:
 #ifdef MACOS  /* MacOS is no preemptive OS, thus call event-handling by hand */
         UserStop();
 #endif
+        /* Zipbomb detection: subtract bytes consumed from the budget. */
+        G.zipbomb_budget -=
+            G.cur_zipfile_bufstart + (G.inptr - G.inbuf) - request;
+        if (G.zipbomb_budget < 0) {
+            Info(slide, 0x401, ((char *)slide,
+                LoadFarString(OverlappedComponents)));
+            return PK_BOMB;     /* likely zip bomb detected! */
+        }
+
     } /* end for-loop (i:  files in current block) */
 
     return error_in_archive;

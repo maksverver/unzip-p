@@ -266,6 +266,7 @@ typedef struct Globals {
     ulg      outsize;              /* extract.c static */
     int      reported_backslash;   /* extract.c static */
     int      newfile;
+    zoff_t   zipbomb_budget;
 
     int      didCRlast;            /* fileio static */
     ulg      numlines;             /* fileio static: number of lines printed */
