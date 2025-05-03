@@ -559,6 +559,7 @@ typedef struct _UzpOpts {
 #ifdef UNIX
     int cflxflag;       /* -^: allow control chars in extracted filenames */
 #endif
+    int zipbomb;
 #endif /* !FUNZIP */
 } UzpOpts;
 

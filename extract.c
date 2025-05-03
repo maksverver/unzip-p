@@ -322,7 +322,8 @@ static ZCONST char Far UnsupportedExtraField[] =
 static ZCONST char Far BadExtraFieldCRC[] =
   "error [%s]:  bad extra-field CRC %08lx (should be %08lx)\n";
 static ZCONST char Far OverlappedComponents[] =
-  "error: invalid zip file with overlapped components (possible zip bomb)\n";
+  "error: invalid zip file with overlapped components (possible zip bomb)\n \
+To unzip the file anyway, rerun the command with UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE environment variable\n";
 
 
 
@@ -396,7 +397,9 @@ int extract_or_test_files(__G)    /* return PK-type error code */
      *
      * More information: CVE-2019-13232
      */
-    G.zipbomb_budget = G.ziplen - G.extra_bytes;
+    if (uO.zipbomb == TRUE) {
+        G.zipbomb_budget = G.ziplen - G.extra_bytes;
+    }
 
 /*---------------------------------------------------------------------------
     The basic idea of this function is as follows.  Since the central di-
@@ -616,7 +619,7 @@ int extract_or_test_files(__G)    /* return PK-type error code */
                 error_in_archive = error;
             /* ...and keep going (unless disk full, user break, or zip bomb) */
             if (G.disk_full > 1 || error_in_archive == IZ_CTRLC ||
-                G.zipbomb_budget < 0) {
+                (uO.zipbomb == TRUE && G.zipbomb_budget < 0)) {
                 /* clear reached_end to signal premature stop ... */
                 reached_end = FALSE;
                 /* ... and cancel scanning the central directory */
@@ -1629,12 +1632,14 @@ reprompt:
         UserStop();
 #endif
         /* Zipbomb detection: subtract bytes consumed from the budget. */
-        G.zipbomb_budget -=
-            G.cur_zipfile_bufstart + (G.inptr - G.inbuf) - request;
-        if (G.zipbomb_budget < 0) {
-            Info(slide, 0x401, ((char *)slide,
-                LoadFarString(OverlappedComponents)));
-            return PK_BOMB;     /* likely zip bomb detected! */
+        if (uO.zipbomb == TRUE) {
+            G.zipbomb_budget -=
+                G.cur_zipfile_bufstart + (G.inptr - G.inbuf) - request;
+            if (G.zipbomb_budget < 0) {
+                Info(slide, 0x401, ((char *)slide,
+                    LoadFarString(OverlappedComponents)));
+                return PK_BOMB;     /* likely zip bomb detected! */
+            }
         }
 
     } /* end for-loop (i:  files in current block) */
