@@ -474,8 +474,8 @@ int extract_or_test_files(__G)    /* return PK-type error code */
                      */
                     Info(slide, 0x401, ((char *)slide,
                       LoadFarString(CentSigMsg), j + blknum*DIR_BLKSIZ + 1));
-                    Info(slide, 0x401, ((char *)slide,
-                      LoadFarString(ReportMsg)));
+                    Info(slide, 0x401,
+                         ((char *)slide,"%s", LoadFarString(ReportMsg)));
                     error_in_archive = PK_BADERR;
                 }
                 reached_end = TRUE;     /* ...so no more left to do */
@@ -754,8 +754,8 @@ int extract_or_test_files(__G)    /* return PK-type error code */
 
 #ifndef SFX
     if (no_endsig_found) {                      /* just to make sure */
-        Info(slide, 0x401, ((char *)slide, LoadFarString(EndSigMsg)));
-        Info(slide, 0x401, ((char *)slide, LoadFarString(ReportMsg)));
+        Info(slide, 0x401, ((char *)slide,"%s", LoadFarString(EndSigMsg)));
+        Info(slide, 0x401, ((char *)slide,"%s", LoadFarString(ReportMsg)));
         if (!error_in_archive)       /* don't overwrite stronger error */
             error_in_archive = PK_WARN;
     }

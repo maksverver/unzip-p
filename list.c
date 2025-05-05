@@ -181,7 +181,7 @@ int list_files(__G)    /* return PK-type error code */
                 Info(slide, 0x401,
                      ((char *)slide, LoadFarString(CentSigMsg), j));
                 Info(slide, 0x401,
-                     ((char *)slide, LoadFarString(ReportMsg)));
+                     ((char *)slide,"%s", LoadFarString(ReportMsg)));
                 return PK_BADERR;   /* sig not found */
             }
         }
@@ -518,7 +518,8 @@ int list_files(__G)    /* return PK-type error code */
             && (!G.ecrec.is_zip64_archive)
             && (memcmp(G.sig, end_central_sig, 4) != 0)
            ) {          /* just to make sure again */
-            Info(slide, 0x401, ((char *)slide, LoadFarString(EndSigMsg)));
+            Info(slide, 0x401, 
+                 ((char *)slide,"%s", LoadFarString(EndSigMsg)));
             error_in_archive = PK_WARN;   /* didn't find sig */
         }
 
@@ -602,7 +603,7 @@ int get_time_stamp(__G__ last_modtime, nmember)  /* return PK-type error code */
                 Info(slide, 0x401,
                      ((char *)slide, LoadFarString(CentSigMsg), j));
                 Info(slide, 0x401,
-                     ((char *)slide, LoadFarString(ReportMsg)));
+                     ((char *)slide,"%s", LoadFarString(ReportMsg)));
                 return PK_BADERR;   /* sig not found */
             }
         }
@@ -685,7 +686,7 @@ int get_time_stamp(__G__ last_modtime, nmember)  /* return PK-type error code */
   ---------------------------------------------------------------------------*/
 
     if (memcmp(G.sig, end_central_sig, 4)) {    /* just to make sure again */
-        Info(slide, 0x401, ((char *)slide, LoadFarString(EndSigMsg)));
+        Info(slide, 0x401, ((char *)slide,"%s", LoadFarString(EndSigMsg)));
         error_in_archive = PK_WARN;
     }
     if (*nmember == 0L && error_in_archive <= PK_WARN)

@@ -771,7 +771,7 @@ int zipinfo(__G)   /* return PK-type error code */
                 Info(slide, 0x401,
                      ((char *)slide, LoadFarString(CentSigMsg), j));
                 Info(slide, 0x401,
-                     ((char *)slide, LoadFarString(ReportMsg)));
+                     ((char *)slide,"%s", LoadFarString(ReportMsg)));
                 error_in_archive = PK_BADERR;   /* sig not found */
                 break;
             }
@@ -960,7 +960,8 @@ int zipinfo(__G)   /* return PK-type error code */
             && (!G.ecrec.is_zip64_archive)
             && (memcmp(G.sig, end_central_sig, 4) != 0)
            ) {          /* just to make sure again */
-            Info(slide, 0x401, ((char *)slide, LoadFarString(EndSigMsg)));
+            Info(slide, 0x401, 
+                 ((char *)slide,"%s", LoadFarString(EndSigMsg)));
             error_in_archive = PK_WARN;   /* didn't find sig */
         }
 
