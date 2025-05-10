@@ -1099,8 +1099,10 @@ static int get_extattribs(__G__ pzt, z_uidgid)
 /* Function CloseError()    */
 /***************************/
 
-int CloseError(__G)
+int CloseError(__G__ outfile, filename)
     __GDEF
+    FILE *outfile;
+    char *filename;
 {
     int errval = PK_OK;
     
