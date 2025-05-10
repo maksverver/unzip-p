@@ -1108,7 +1108,7 @@ int CloseError(__G__ outfile, filename)
     char *filename;
 {
     int errval = PK_OK;
-    
+
     if (fclose(G.outfile) < 0) {
           switch (errno) {
                 case ENOSPC:
@@ -1120,7 +1120,7 @@ int CloseError(__G__ outfile, filename)
                         G.disk_full = 1;         /* pass to next */
                     else
                         G.disk_full = 2;         /* no: exit program */
-          
+
                     errval = PK_DISK;
                     break;
 
@@ -1135,7 +1135,7 @@ int CloseError(__G__ outfile, filename)
 /* Function close_outfile() */
 /****************************/
 
-int close_outfile(__G) 
+int close_outfile(__G)
     __GDEF
 {
     union {
@@ -1941,17 +1941,17 @@ void init_conversion_charsets()
     const char *local_charset;
     int i;
 
-    /* Make a guess only if OEM_CP not already set. */ 
+    /* Make a guess only if OEM_CP not already set. */
     if(*OEM_CP == '\0') {
-    	local_charset = nl_langinfo(CODESET);
-    	for(i = 0; i < sizeof(dos_charset_map)/sizeof(CHARSET_MAP); i++)
-    		if(!strcasecmp(local_charset, dos_charset_map[i].local_charset)) {
-    			strncpy(OEM_CP, dos_charset_map[i].archive_charset,
-    					MAX_CP_NAME - 1);
+        local_charset = nl_langinfo(CODESET);
+        for(i = 0; i < sizeof(dos_charset_map)/sizeof(CHARSET_MAP); i++)
+            if(!strcasecmp(local_charset, dos_charset_map[i].local_charset)) {
+                strncpy(OEM_CP, dos_charset_map[i].archive_charset,
+                        MAX_CP_NAME - 1);
 
-			OEM_CP[MAX_CP_NAME - 1] = '\0';
-    			break;
-    		}
+            OEM_CP[MAX_CP_NAME - 1] = '\0';
+                break;
+            }
     }
 }
 
@@ -1966,7 +1966,7 @@ static void charset_to_intern(char *string, char *from_charset)
     const char *local_charset;
 
     if(*from_charset == '\0')
-    	return;
+        return;
 
     buf = NULL;
     local_charset = nl_langinfo(CODESET);
@@ -1988,13 +1988,13 @@ static void charset_to_intern(char *string, char *from_charset)
 
     d = buf = malloc(buflen);
     if(!d)
-    	goto cleanup;
+        goto cleanup;
 
     bzero(buf,buflen);
     dlen = buflen - 1;
 
     if(iconv(cd, &s, &slen, &d, &dlen) == (size_t)-1)
-    	goto cleanup;
+        goto cleanup;
     strncpy(string, buf, buflen);
 
     cleanup:

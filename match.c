@@ -28,12 +28,12 @@
   ---------------------------------------------------------------------------
 
   Copyright on recmatch() from Zip's util.c
-	 Copyright (c) 1990-2005 Info-ZIP.  All rights reserved.
+  Copyright (c) 1990-2005 Info-ZIP.  All rights reserved.
 
-	 See the accompanying file LICENSE, version 2004-May-22 or later
-	 for terms of use.
-	 If, for some reason, both of these files are missing, the Info-ZIP license
-	 also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html  
+  See the accompanying file LICENSE, version 2004-May-22 or later
+  for terms of use.
+  If, for some reason, both of these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
 
 
   ---------------------------------------------------------------------------
@@ -136,7 +136,7 @@ int recmatch OF((ZCONST uch *pattern, ZCONST uch *string,
                  int ignore_case __WDLPRO));
 #endif
 #endif /* 0 */
-static int recmatch OF((ZCONST char *, ZCONST char *, 
+static int recmatch OF((ZCONST char *, ZCONST char *,
                         int));
 static char *isshexp OF((ZCONST char *p));
 static int namecmp OF((ZCONST char *s1, ZCONST char *s2));
@@ -202,7 +202,7 @@ int ci;                 /* flag: force case-insensitive matching */
   int c;                /* pattern char or start of range in [-] loop */
   /* Get first character, the pattern for new recmatch calls follows */
  /* borrowed from Zip's global.c */
- int no_wild = 0; 
+ int no_wild = 0;
  int allow_regex=1;
   /* This fix provided by akt@m5.dion.ne.jp for Japanese.
      See 21 July 2006 mail.

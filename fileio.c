@@ -1604,7 +1604,7 @@ int UZ_EXP UzpPassword (pG, rcnt, pwbuf, size, zfn, efn)
         isOverflow = TRUE;
         if (2*FILNAMSIZ >= zfnfl && (2*FILNAMSIZ - zfnfl) >= strlen(efnf))
         {
-		isOverflow = FALSE;
+            isOverflow = FALSE;
         }
         if ((isOverflow == FALSE) && ((prompt = (char *)malloc(2*FILNAMSIZ + 15)) != (char *)NULL)) {
             sprintf(prompt, LoadFarString(PasswPrompt),

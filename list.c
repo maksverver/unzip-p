@@ -518,7 +518,7 @@ int list_files(__G)    /* return PK-type error code */
             && (!G.ecrec.is_zip64_archive)
             && (memcmp(G.sig, end_central_sig, 4) != 0)
            ) {          /* just to make sure again */
-            Info(slide, 0x401, 
+            Info(slide, 0x401,
                  ((char *)slide,"%s", LoadFarString(EndSigMsg)));
             error_in_archive = PK_WARN;   /* didn't find sig */
         }

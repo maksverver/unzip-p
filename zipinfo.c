@@ -506,35 +506,35 @@ int zi_opts(__G__ pargc, pargv)
                     }
                     break;
 #ifdef UNIX
-    			case ('I'):
+                case ('I'):
                     if (negative) {
                         Info(slide, 0x401, ((char *)slide,
                           "error:  encodings can't be negated"));
                         return(PK_PARAM);
-    				} else {
-    					if(*s) { /* Handle the -Icharset case */
-    						/* Assume that charsets can't start with a dash to spot arguments misuse */
-    						if(*s == '-') { 
-    	                        Info(slide, 0x401, ((char *)slide,
-        		                  "error:  a valid character encoding should follow the -I argument"));
-    	                        return(PK_PARAM); 
-    						}
-    						strncpy(ISO_CP, s, MAX_CP_NAME - 1);
-    						ISO_CP[MAX_CP_NAME - 1] = '\0';
-    					} else { /* -I charset */
-    						++argv;
-    						if(!(--argc > 0 && *argv != NULL && **argv != '-')) {
-    	                        Info(slide, 0x401, ((char *)slide,
-        		                  "error:  a valid character encoding should follow the -I argument"));
-    	                        return(PK_PARAM); 
-    						}
-    						s = *argv;
-    						strncpy(ISO_CP, s, MAX_CP_NAME - 1);
-    						ISO_CP[MAX_CP_NAME - 1] = '\0';
-    					}
-    					while(*(++s)); /* No params straight after charset name */
-    				}
-    				break;
+                    } else {
+                        if(*s) { /* Handle the -Icharset case */
+                            /* Assume that charsets can't start with a dash to spot arguments misuse */
+                            if(*s == '-') {
+                                Info(slide, 0x401, ((char *)slide,
+                                  "error:  a valid character encoding should follow the -I argument"));
+                                return(PK_PARAM);
+                            }
+                            strncpy(ISO_CP, s, MAX_CP_NAME - 1);
+                            ISO_CP[MAX_CP_NAME - 1] = '\0';
+                        } else { /* -I charset */
+                            ++argv;
+                            if(!(--argc > 0 && *argv != NULL && **argv != '-')) {
+                                Info(slide, 0x401, ((char *)slide,
+                                  "error:  a valid character encoding should follow the -I argument"));
+                                return(PK_PARAM);
+                            }
+                            s = *argv;
+                            strncpy(ISO_CP, s, MAX_CP_NAME - 1);
+                            ISO_CP[MAX_CP_NAME - 1] = '\0';
+                        }
+                        while(*(++s)); /* No params straight after charset name */
+                    }
+                    break;
 #endif /* ?UNIX */
                 case 'l':      /* longer form of "ls -l" type listing */
                     if (negative)
@@ -557,35 +557,35 @@ int zi_opts(__G__ pargc, pargv)
                     break;
 #endif
 #ifdef UNIX
-    			case ('O'):
+                case ('O'):
                     if (negative) {
                         Info(slide, 0x401, ((char *)slide,
                           "error:  encodings can't be negated"));
                         return(PK_PARAM);
-    				} else {
-    					if(*s) { /* Handle the -Ocharset case */
-    						/* Assume that charsets can't start with a dash to spot arguments misuse */
-    						if(*s == '-') { 
-    	                        Info(slide, 0x401, ((char *)slide,
-        		                  "error:  a valid character encoding should follow the -I argument"));
-    	                        return(PK_PARAM); 
-    						}
-    						strncpy(OEM_CP, s, MAX_CP_NAME - 1);
-    						OEM_CP[MAX_CP_NAME - 1] = '\0';
-    					} else { /* -O charset */
-    						++argv;
-    						if(!(--argc > 0 && *argv != NULL && **argv != '-')) {
-    	                        Info(slide, 0x401, ((char *)slide,
-        		                  "error:  a valid character encoding should follow the -O argument"));
-    	                        return(PK_PARAM); 
-    						}
-    						s = *argv;
-    						strncpy(OEM_CP, s, MAX_CP_NAME - 1);
-    						OEM_CP[MAX_CP_NAME - 1] = '\0';
-    					}
-    					while(*(++s)); /* No params straight after charset name */
-    				}
-    				break;
+                    } else {
+                        if(*s) { /* Handle the -Ocharset case */
+                            /* Assume that charsets can't start with a dash to spot arguments misuse */
+                            if(*s == '-') {
+                                Info(slide, 0x401, ((char *)slide,
+                                  "error:  a valid character encoding should follow the -I argument"));
+                                return(PK_PARAM);
+                            }
+                            strncpy(OEM_CP, s, MAX_CP_NAME - 1);
+                            OEM_CP[MAX_CP_NAME - 1] = '\0';
+                        } else { /* -O charset */
+                            ++argv;
+                            if(!(--argc > 0 && *argv != NULL && **argv != '-')) {
+                                Info(slide, 0x401, ((char *)slide,
+                                  "error:  a valid character encoding should follow the -O argument"));
+                                return(PK_PARAM);
+                            }
+                            s = *argv;
+                            strncpy(OEM_CP, s, MAX_CP_NAME - 1);
+                            OEM_CP[MAX_CP_NAME - 1] = '\0';
+                        }
+                        while(*(++s)); /* No params straight after charset name */
+                    }
+                    break;
 #endif /* ?UNIX */
                 case 's':      /* default:  shorter "ls -l" type listing */
                     if (negative)
@@ -1026,7 +1026,7 @@ int zipinfo(__G)   /* return PK-type error code */
             && (!G.ecrec.is_zip64_archive)
             && (memcmp(G.sig, end_central_sig, 4) != 0)
            ) {          /* just to make sure again */
-            Info(slide, 0x401, 
+            Info(slide, 0x401,
                  ((char *)slide,"%s", LoadFarString(EndSigMsg)));
             error_in_archive = PK_WARN;   /* didn't find sig */
         }
