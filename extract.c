@@ -1935,23 +1935,20 @@ static int extract_or_test_member(__G)    /* return PK-type error code */
 
 #ifdef VMS                  /* VMS:  required even for stdout! (final flush) */
     if (!uO.tflag)           /* don't close NULL file */
-        close_outfile(__G);
+        error = close_outfile(__G);
 #else
 #ifdef DLL
     if (!uO.tflag && (!uO.cflag || G.redirect_data)) {
         if (G.redirect_data)
             FINISH_REDIRECT();
         else
-            close_outfile(__G);
+            error = close_outfile(__G);
     }
 #else
     if (!uO.tflag && !uO.cflag)   /* don't close NULL file or stdout */
-        close_outfile(__G);
+        error = close_outfile(__G);
 #endif
 #endif /* VMS */
-
-            /* GRR: CONVERT close_outfile() TO NON-VOID:  CHECK FOR ERRORS! */
-
 
     if (G.disk_full) {            /* set by flush() */
         if (G.disk_full > 1) {

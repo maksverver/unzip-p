@@ -1096,10 +1096,41 @@ static int get_extattribs(__G__ pzt, z_uidgid)
 #ifndef MTS
 
 /****************************/
+/* Function CloseError()    */
+/***************************/
+
+int CloseError(__G)
+    __GDEF
+{
+    int errval = PK_OK;
+    
+    if (fclose(G.outfile) < 0) {
+          switch (errno) {
+                case ENOSPC:
+                    /* Do we need this on fileio.c? */
+                    Info(slide, 0x4a1, ((char *)slide, "%s: write error (disk full?).   Continue? (y/n/^C) ",
+                          FnFilter1(G.filename)));
+                    fgets(G.answerbuf, 9, stdin);
+                    if (*G.answerbuf == 'y')     /* stop writing to this file */
+                        G.disk_full = 1;         /* pass to next */
+                    else
+                        G.disk_full = 2;         /* no: exit program */
+          
+                    errval = PK_DISK;
+                    break;
+
+                default:
+                    errval = PK_WARN;
+          }
+     }
+     return errval;
+} /* End of CloseError() */
+
+/****************************/
 /* Function close_outfile() */
 /****************************/
 
-void close_outfile(__G)    /* GRR: change to return PK-style warning level */
+int close_outfile(__G) 
     __GDEF
 {
     union {
@@ -1108,6 +1139,7 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
     } zt;
     ulg z_uidgid[2];
     int have_uidgid_flg;
+    int errval = PK_OK;
 
     have_uidgid_flg = get_extattribs(__G__ &(zt.t3), z_uidgid);
 
@@ -1141,16 +1173,16 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
             Info(slide, 0x201, ((char *)slide,
               "warning:  symbolic link (%s) failed: mem alloc overflow\n",
               FnFilter1(G.filename)));
-            fclose(G.outfile);
-            return;
+            errval = CloseError(G.outfile, G.filename);
+            return errval ? errval : PK_WARN;
         }
 
         if ((slnk_entry = (slinkentry *)malloc(slnk_entrysize)) == NULL) {
             Info(slide, 0x201, ((char *)slide,
               "warning:  symbolic link (%s) failed: no mem\n",
               FnFilter1(G.filename)));
-            fclose(G.outfile);
-            return;
+            errval = CloseError(G.outfile, G.filename);
+            return errval ? errval : PK_WARN;
         }
         slnk_entry->next = NULL;
         slnk_entry->targetlen = ucsize;
@@ -1174,10 +1206,10 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
               "warning:  symbolic link (%s) failed\n",
               FnFilter1(G.filename)));
             free(slnk_entry);
-            fclose(G.outfile);
-            return;
+            errval = CloseError(G.outfile, G.filename);
+            return errval ? errval : PK_WARN;
         }
-        fclose(G.outfile);                  /* close "link" file for good... */
+        errval = CloseError(G.outfile, G.filename); /* close "link" file for good... */
         slnk_entry->target[ucsize] = '\0';
         if (QCOND2)
             Info(slide, 0, ((char *)slide, "-> %s ",
@@ -1188,7 +1220,7 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
         else
             G.slink_head = slnk_entry;
         G.slink_last = slnk_entry;
-        return;
+        return errval;
     }
 #endif /* SYMLINKS */
 
@@ -1201,7 +1233,7 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
 #endif
 
 #if (defined(NO_FCHOWN))
-    fclose(G.outfile);
+    errval = CloseError(G.outfile, G.filename);
 #endif
 
     /* if -X option was specified and we have UID/GID info, restore it */
@@ -1227,7 +1259,7 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
     }
 
 #if (!defined(NO_FCHOWN) && defined(NO_FCHMOD))
-    fclose(G.outfile);
+    errval = CloseError(G.outfile, G.filename);
 #endif
 
 #if (!defined(NO_FCHOWN) && !defined(NO_FCHMOD))
@@ -1239,7 +1271,7 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
     if (fchmod(fileno(G.outfile), filtattr(__G__ G.pInfo->file_attr)))
         perror("fchmod (file attributes) error");
 
-    fclose(G.outfile);
+    errval = CloseError(G.outfile, G.filename);
 #endif /* !NO_FCHOWN && !NO_FCHMOD */
 
     /* skip restoring time stamps on user's request */
@@ -1267,6 +1299,7 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
 #endif
 #endif /* NO_FCHOWN || NO_FCHMOD */
 
+    return errval;
 } /* end function close_outfile() */
 
 #endif /* !MTS */

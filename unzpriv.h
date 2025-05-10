@@ -2607,7 +2607,7 @@ char    *GetLoadPath     OF((__GPRO));                              /* local */
    int   SetFileSize     OF((FILE *file, zusz_t filesize));         /* local */
 #endif
 #ifndef MTS /* macro in MTS */
-   void  close_outfile   OF((__GPRO));                              /* local */
+   int  close_outfile   OF((__GPRO));                              /* local */
 #endif
 #ifdef SET_SYMLINK_ATTRIBS
    int  set_symlnk_attribs  OF((__GPRO__ slinkentry *slnk_entry));  /* local */
