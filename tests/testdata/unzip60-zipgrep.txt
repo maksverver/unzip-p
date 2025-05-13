@@ -1,0 +1,151 @@
+unzip60/Contents:  tops20/       support files for compiling under TOPS-20
+unzip60/History.600:    buildpath, optimized code by removing overflow checks inside the copy loops
+unzip60/INSTALL:    structure (e.g., ./unix/unix.c).  The sole exception is TOPS-20, where
+unzip60/INSTALL:    tops20/* should be unpacked into the current directory, but TOPS-20
+unzip60/INSTALL:      TOPS-20
+unzip60/INSTALL:        directory only (including those in the zipfile's tops20 directory),
+unzip60/INSTALL:Human68K, TOPS-20, AOS/VS, MVS, VM/CMS, etc.
+unzip60/README:and TOPS-20 (partly).  UnZip features not found in PKUNZIP include source
+unzip60/README:     (with -W: "*" stops at directory delimiter, "**" matches unlimited)
+unzip60/funzip.txt:SYNOPSIS
+unzip60/unzip.txt:SYNOPSIS
+unzip60/unzipsfx.txt:SYNOPSIS
+unzip60/zipgrep.txt:SYNOPSIS
+unzip60/zipinfo.txt:SYNOPSIS
+unzip60/crc32.c:#ifndef NO_UNROLLED_LOOPS
+unzip60/crc32.c:#endif /* !NO_UNROLLED_LOOPS */
+unzip60/crc_i386.S: * Loop unrolling can be disabled by defining the macro NO_UNROLLED_LOOPS.
+unzip60/crc_i386.S:#ifndef  NO_UNROLLED_LOOPS
+unzip60/crc_i386.S:#endif /* !NO_UNROLLED_LOOPS */
+unzip60/extract.c:    block.  Thus this routine contains two small(er) loops within a very
+unzip60/extract.c:    the outer one loops over blocks.  There's some file-pointer positioning
+unzip60/extract.c:            Trace((stderr, "oops!  (BZ2_bzDecompressInit() err = %d)\n", err));
+unzip60/extract.c:                Trace((stderr, "oops!  (bzip(first loop) err = %d)\n", err));
+unzip60/extract.c:            Trace((stderr, "oops!  (bzip(final loop) err = %d)\n", err));
+unzip60/extract.c:        Trace((stderr, "oops!  (BZ2_bzDecompressEnd() err = %d)\n", err));
+unzip60/fileio.c:#ifdef TOPS20
+unzip60/fileio.c:#else /* !TOPS20 */
+unzip60/fileio.c:#endif /* !TOPS20 */
+unzip60/fileio.c:#ifdef TOPS20
+unzip60/fileio.c:#else /* !TOPS20 */
+unzip60/fileio.c:#endif /* ?TOPS20 */
+unzip60/fileio.c:#ifdef TOPS20
+unzip60/fileio.c:#else /* !TOPS20 */
+unzip60/fileio.c:#endif /* ?TOPS20 */
+unzip60/inflate.c:            Trace((stderr, "oops!  (inflateBack9Init() err = %d)\n", err));
+unzip60/inflate.c:                Trace((stderr, "oops!  (inflateBack9() err = %d)\n", err));
+unzip60/inflate.c:                Trace((stderr, "oops!  (inflateBack9() err = %d)\n", err));
+unzip60/inflate.c:                Trace((stderr, "oops!  (inflateBack9() err = %d)\n", err));
+unzip60/inflate.c:            Trace((stderr, "oops!  (inflateBack9End() err = %d)\n", err));
+unzip60/inflate.c:                Trace((stderr, "oops!  (inflateBackInit() err = %d)\n", err));
+unzip60/inflate.c:                Trace((stderr, "oops!  (inflateBack() err = %d)\n", err));
+unzip60/inflate.c:                Trace((stderr, "oops!  (inflateBack() err = %d)\n", err));
+unzip60/inflate.c:                Trace((stderr, "oops!  (inflateBack() err = %d)\n", err));
+unzip60/inflate.c:            Trace((stderr, "oops!  (inflateBackEnd() err = %d)\n", err));
+unzip60/inflate.c:            Trace((stderr, "oops!  (inflateInit2() err = %d)\n", err));
+unzip60/inflate.c:                Trace((stderr, "oops!  (inflate(first loop) err = %d)\n", err));
+unzip60/inflate.c:            Trace((stderr, "oops!  (inflate(final loop) err = %d)\n", err));
+unzip60/inflate.c:        Trace((stderr, "oops!  (inflateReset() err = %d)\n", err));
+unzip60/inflate.c:        /* sorry for this goto, but we have to exit two loops at once */
+unzip60/process.c:            case TOPS20_:
+unzip60/unzip.c:              and TOPS-20.
+unzip60/unzip.c:                        /* break out of nested loops without "++argv;--argc" */
+unzip60/unzip.h:#    define TOPS20
+unzip60/unzpriv.h:    TOPS-20 section:
+unzip60/unzpriv.h:#ifdef TOPS20
+unzip60/unzpriv.h:#    define NO_STRNICMP           /* probably not provided by TOPS20 C RTL  */
+unzip60/unzpriv.h:#endif /* TOPS20 */
+unzip60/unzpriv.h:#if (defined(TOPS20) || defined(VMS))
+unzip60/unzpriv.h:#ifdef TOPS20          /* TOPS-20 MODERN?  You kidding? */
+unzip60/unzpriv.h:#endif /* TOPS20 */
+unzip60/unzpriv.h:#ifdef REALLY_SHORT_SYMS            /* TOPS-20 linker:  first 6 chars */
+unzip60/unzpriv.h:#define TOPS20_           10
+unzip60/unzpriv.h:    TOPS20-only functions:
+unzip60/unzpriv.h:#ifdef TOPS20
+unzip60/unzpriv.h:   int    upper               OF((char *s));                     /* tops20.c */
+unzip60/unzpriv.h:   int    enquote             OF((char *s));                     /* tops20.c */
+unzip60/unzpriv.h:   int    dequote             OF((char *s));                     /* tops20.c */
+unzip60/unzpriv.h:   int    fnlegal             OF(()); /* error if prototyped? */ /* tops20.c */
+unzip60/zipinfo.c:static ZCONST char Far OS_TOPS20[] = "TOPS-20";
+unzip60/zipinfo.c:        OS_Macintosh, OS_ZSystem, OS_CPM, OS_TOPS20, OS_NTFS, OS_QDOS,
+unzip60/acorn/acorn.c:        case TOPS20_:
+unzip60/acorn/acorn.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/amiga/amiga.c:        case TOPS20_:
+unzip60/amiga/crc_68.a:; Define NO_UNROLLED_LOOPS to use a simple short loop which might be more
+unzip60/amiga/crc_68.a:; processing short strings.  If loops are unrolled, the textlen parm must be
+unzip60/amiga/crc_68.a:    IFD     NO_UNROLLED_LOOPS
+unzip60/amiga/crc_68.a:    ELSE    ; !NO_UNROLLED_LOOPS
+unzip60/amiga/crc_68.a:    ENDC    ; ?NO_UNROLLED_LOOPS
+unzip60/aosvs/aosvs.c:        case TOPS20_:
+unzip60/aosvs/aosvs.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/atari/atari.c:        case TOPS20_:
+unzip60/atari/atari.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/atheos/atheos.c:        case TOPS20_:
+unzip60/atheos/atheos.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/beos/beos.c:        case TOPS20_:
+unzip60/beos/beos.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/cmsmvs/ccunzip.exec:CCopts = 'LONGNAME RENT LANGLVL(EXTENDED) NOEXECOPS'
+unzip60/flexos/hc.pro:pragma On(Callee_pops_when_possible);
+unzip60/human68k/crc_68.s:; Define NO_UNROLLED_LOOPS to use a simple short loop which might be more
+unzip60/human68k/crc_68.s:; processing short strings.  If loops are unrolled, the textlen parm must be
+unzip60/human68k/crc_68.s:    ifdef   NO_UNROLLED_LOOPS
+unzip60/human68k/crc_68.s:    ELSE    ; !NO_UNROLLED_LOOPS
+unzip60/human68k/crc_68.s:    ENDC    ; ?NO_UNROLLED_LOOPS
+unzip60/macos/source/macbin3.c:        CtoPstr((char *)file->name);
+unzip60/msdos/crc_i86.asm:ifndef NO_UNROLLED_LOOPS
+unzip60/msdos/crc_i86.asm:ifndef NO_UNROLLED_LOOPS
+unzip60/msdos/crc_i86.asm:endif ; !NO_UNROLLED_LOOPS
+unzip60/msdos/msc51opt.dif:   of code (containing to deeply nested loops) that break MSC 5.1's loop
+unzip60/msdos/msc51opt.dif:   optimization. I have guarded these loops with "#pragma loop_opt (off)"
+unzip60/netware/netware.c:        case TOPS20_:
+unzip60/netware/netware.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/os2/os2.c:     * (GRR:  oops, small bug--if char was quoted, no longer have any
+unzip60/os2/os2.c:                *pEndFAT = pEnd;   /* oops...didn't have 8 chars to truncate */
+unzip60/qdos/qdos.c:        case TOPS20_:
+unzip60/qdos/qdos.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/tandem/README:                 non-WIDE mode. If DEFLATE64 is used and non-WIDE then it drops
+unzip60/tandem/tanunz.c:        case TOPS20_:
+unzip60/tandem/tanunz.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/theos/theos.c:        case TOPS20_:
+unzip60/theos/theos.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/tops20/Contents:Contents of the "tops20" sub-archive for UnZip 5.3 and later:
+unzip60/tops20/Contents:  tops20.c       TOPS20-specific routines for UnZip
+unzip60/tops20/make.mic:@cc -c -q tops20
+unzip60/tops20/make.mic:@cc -o unzip unzip.rel crc32.rel crypt.rel envarg.rel explod.rel extrac.rel fileio.rel global.rel inflat.rel match.rel proces.rel ttyio.rel unredu.rel unshri.rel zipinf.rel tops20.rel -ltmx
+unzip60/tops20/tops20.c:  tops20.c
+unzip60/tops20/tops20.c:  TOPS20-specific routines for use with Info-ZIP's UnZip 5.1 and later.
+unzip60/tops20/tops20.c:        case TOPS20_:
+unzip60/tops20/tops20.c:        case TOPS20_:
+unzip60/tops20/tops20.c:      "TOPS-20",
+unzip60/tops20/tops20.c:{                   /*  in s, assuming that s is a TOPS-20 filename */
+unzip60/unix/Makefile:# -malign-functions=2 -malign-jumps=2 -malign-loops=2" for Pentium [Pro]
+unzip60/unix/unix.c:        case TOPS20_:
+unzip60/unix/unix.c:/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+unzip60/vms/vms.c:        case TOPS20_:
+unzip60/vms/vms.c:        prop = char_prop[uchr = *src];          /* Get source char, props. */
+unzip60/vms/vms.c:        prop = char_prop[uchr];                 /* Get source char props. */
+unzip60/vms/vms.c:        prop = char_prop[uchr];                 /* Get source char props. */
+unzip60/win32/crc_i386.asm:;      unrolled loops                NO_UNROLLED_LOOPS
+unzip60/win32/crc_i386.asm:;   Enlarged unrolling loops to "do 16 bytes per turn"; optimized access to
+unzip60/win32/crc_i386.asm:; Loop unrolling can be disabled by defining the macro NO_UNROLLED_LOOPS.
+unzip60/win32/crc_i386.asm:    IFNDEF  NO_UNROLLED_LOOPS
+unzip60/win32/crc_i386.asm:    ENDIF ; !NO_UNROLLED_LOOPS
+unzip60/win32/crc_i386.c: *      unrolled loops                NO_UNROLLED_LOOPS
+unzip60/win32/crc_i386.c: *   Enlarged unrolling loops to "do 16 bytes per turn"; optimized access to
+unzip60/win32/crc_i386.c: * Loop unrolling can be disabled by defining the macro NO_UNROLLED_LOOPS.
+unzip60/win32/crc_i386.c:#ifndef NO_UNROLLED_LOOPS
+unzip60/win32/crc_i386.c:#endif /* !NO_UNROLLED_LOOPS */
+unzip60/wince/wince.h:// building for release, then we turn all calls to DebugOut() into no-ops.  The
+unzip60/wince/winmain.cpp:   // We don't need to jump through any hoops to make it work like on Windows CE.
+unzip60/windll/csharp/Unzip.cs:using System.Runtime.InteropServices;
+unzip60/man/funzip.1:.SH SYNOPSIS
+unzip60/man/unzip.1:.SH SYNOPSIS
+unzip60/man/unzipsfx.1:.SH SYNOPSIS
+unzip60/man/zipgrep.1:.SH SYNOPSIS
+unzip60/man/zipinfo.1:.SH SYNOPSIS
+unzip60/proginfo/CONTRIBS:  Frank Wancho           original TOPS-20 port
+unzip60/proginfo/ZipPorts:      it:  AMIGA, ATARI_ST, __human68k__, MACOS, MSDOS, MVS, OS2, TOPS20,
+unzip60/new-cmdparser/unz6-newcmdparser-diffs.txt:-                        /* break out of nested loops without "++argv;--argc" */
+unzip60/new-cmdparser/unz6-newcmdparser-diffs.txt:+                    /* break out of nested loops without "++argv;--argc" */
+unzip60/new-cmdparser/unz6-newcmdparser-diffs.txt:+ * stops option processing, returning any arguments following "--" as
+unzip60/new-cmdparser/unz6-newcmdparser-diffs.txt:+            /* Now -- stops permuting and forces the rest of

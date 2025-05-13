@@ -1,0 +1,151 @@
+  tops20/       support files for compiling under TOPS-20
+    buildpath, optimized code by removing overflow checks inside the copy loops
+    structure (e.g., ./unix/unix.c).  The sole exception is TOPS-20, where
+    tops20/* should be unpacked into the current directory, but TOPS-20
+      TOPS-20
+        directory only (including those in the zipfile's tops20 directory),
+Human68K, TOPS-20, AOS/VS, MVS, VM/CMS, etc.
+and TOPS-20 (partly).  UnZip features not found in PKUNZIP include source
+     (with -W: "*" stops at directory delimiter, "**" matches unlimited)
+SYNOPSIS
+SYNOPSIS
+SYNOPSIS
+SYNOPSIS
+SYNOPSIS
+#ifndef NO_UNROLLED_LOOPS
+#endif /* !NO_UNROLLED_LOOPS */
+ * Loop unrolling can be disabled by defining the macro NO_UNROLLED_LOOPS.
+#ifndef  NO_UNROLLED_LOOPS
+#endif /* !NO_UNROLLED_LOOPS */
+    block.  Thus this routine contains two small(er) loops within a very
+    the outer one loops over blocks.  There's some file-pointer positioning
+            Trace((stderr, "oops!  (BZ2_bzDecompressInit() err = %d)\n", err));
+                Trace((stderr, "oops!  (bzip(first loop) err = %d)\n", err));
+            Trace((stderr, "oops!  (bzip(final loop) err = %d)\n", err));
+        Trace((stderr, "oops!  (BZ2_bzDecompressEnd() err = %d)\n", err));
+#ifdef TOPS20
+#else /* !TOPS20 */
+#endif /* !TOPS20 */
+#ifdef TOPS20
+#else /* !TOPS20 */
+#endif /* ?TOPS20 */
+#ifdef TOPS20
+#else /* !TOPS20 */
+#endif /* ?TOPS20 */
+            Trace((stderr, "oops!  (inflateBack9Init() err = %d)\n", err));
+                Trace((stderr, "oops!  (inflateBack9() err = %d)\n", err));
+                Trace((stderr, "oops!  (inflateBack9() err = %d)\n", err));
+                Trace((stderr, "oops!  (inflateBack9() err = %d)\n", err));
+            Trace((stderr, "oops!  (inflateBack9End() err = %d)\n", err));
+                Trace((stderr, "oops!  (inflateBackInit() err = %d)\n", err));
+                Trace((stderr, "oops!  (inflateBack() err = %d)\n", err));
+                Trace((stderr, "oops!  (inflateBack() err = %d)\n", err));
+                Trace((stderr, "oops!  (inflateBack() err = %d)\n", err));
+            Trace((stderr, "oops!  (inflateBackEnd() err = %d)\n", err));
+            Trace((stderr, "oops!  (inflateInit2() err = %d)\n", err));
+                Trace((stderr, "oops!  (inflate(first loop) err = %d)\n", err));
+            Trace((stderr, "oops!  (inflate(final loop) err = %d)\n", err));
+        Trace((stderr, "oops!  (inflateReset() err = %d)\n", err));
+        /* sorry for this goto, but we have to exit two loops at once */
+            case TOPS20_:
+              and TOPS-20.
+                        /* break out of nested loops without "++argv;--argc" */
+#    define TOPS20
+    TOPS-20 section:
+#ifdef TOPS20
+#    define NO_STRNICMP           /* probably not provided by TOPS20 C RTL  */
+#endif /* TOPS20 */
+#if (defined(TOPS20) || defined(VMS))
+#ifdef TOPS20          /* TOPS-20 MODERN?  You kidding? */
+#endif /* TOPS20 */
+#ifdef REALLY_SHORT_SYMS            /* TOPS-20 linker:  first 6 chars */
+#define TOPS20_           10
+    TOPS20-only functions:
+#ifdef TOPS20
+   int    upper               OF((char *s));                     /* tops20.c */
+   int    enquote             OF((char *s));                     /* tops20.c */
+   int    dequote             OF((char *s));                     /* tops20.c */
+   int    fnlegal             OF(()); /* error if prototyped? */ /* tops20.c */
+static ZCONST char Far OS_TOPS20[] = "TOPS-20";
+        OS_Macintosh, OS_ZSystem, OS_CPM, OS_TOPS20, OS_NTFS, OS_QDOS,
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+        case TOPS20_:
+; Define NO_UNROLLED_LOOPS to use a simple short loop which might be more
+; processing short strings.  If loops are unrolled, the textlen parm must be
+    IFD     NO_UNROLLED_LOOPS
+    ELSE    ; !NO_UNROLLED_LOOPS
+    ENDC    ; ?NO_UNROLLED_LOOPS
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+CCopts = 'LONGNAME RENT LANGLVL(EXTENDED) NOEXECOPS'
+pragma On(Callee_pops_when_possible);
+; Define NO_UNROLLED_LOOPS to use a simple short loop which might be more
+; processing short strings.  If loops are unrolled, the textlen parm must be
+    ifdef   NO_UNROLLED_LOOPS
+    ELSE    ; !NO_UNROLLED_LOOPS
+    ENDC    ; ?NO_UNROLLED_LOOPS
+        CtoPstr((char *)file->name);
+ifndef NO_UNROLLED_LOOPS
+ifndef NO_UNROLLED_LOOPS
+endif ; !NO_UNROLLED_LOOPS
+   of code (containing to deeply nested loops) that break MSC 5.1's loop
+   optimization. I have guarded these loops with "#pragma loop_opt (off)"
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+     * (GRR:  oops, small bug--if char was quoted, no longer have any
+                *pEndFAT = pEnd;   /* oops...didn't have 8 chars to truncate */
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+                 non-WIDE mode. If DEFLATE64 is used and non-WIDE then it drops
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+Contents of the "tops20" sub-archive for UnZip 5.3 and later:
+  tops20.c       TOPS20-specific routines for UnZip
+@cc -c -q tops20
+@cc -o unzip unzip.rel crc32.rel crypt.rel envarg.rel explod.rel extrac.rel fileio.rel global.rel inflat.rel match.rel proces.rel ttyio.rel unredu.rel unshri.rel zipinf.rel tops20.rel -ltmx
+  tops20.c
+  TOPS20-specific routines for use with Info-ZIP's UnZip 5.1 and later.
+        case TOPS20_:
+        case TOPS20_:
+      "TOPS-20",
+{                   /*  in s, assuming that s is a TOPS-20 filename */
+# -malign-functions=2 -malign-jumps=2 -malign-loops=2" for Pentium [Pro]
+        case TOPS20_:
+/* GRR:  for VMS and TOPS-20, add up to 13 to strlen */
+        case TOPS20_:
+        prop = char_prop[uchr = *src];          /* Get source char, props. */
+        prop = char_prop[uchr];                 /* Get source char props. */
+        prop = char_prop[uchr];                 /* Get source char props. */
+;      unrolled loops                NO_UNROLLED_LOOPS
+;   Enlarged unrolling loops to "do 16 bytes per turn"; optimized access to
+; Loop unrolling can be disabled by defining the macro NO_UNROLLED_LOOPS.
+    IFNDEF  NO_UNROLLED_LOOPS
+    ENDIF ; !NO_UNROLLED_LOOPS
+ *      unrolled loops                NO_UNROLLED_LOOPS
+ *   Enlarged unrolling loops to "do 16 bytes per turn"; optimized access to
+ * Loop unrolling can be disabled by defining the macro NO_UNROLLED_LOOPS.
+#ifndef NO_UNROLLED_LOOPS
+#endif /* !NO_UNROLLED_LOOPS */
+// building for release, then we turn all calls to DebugOut() into no-ops.  The
+   // We don't need to jump through any hoops to make it work like on Windows CE.
+using System.Runtime.InteropServices;
+.SH SYNOPSIS
+.SH SYNOPSIS
+.SH SYNOPSIS
+.SH SYNOPSIS
+.SH SYNOPSIS
+  Frank Wancho           original TOPS-20 port
+      it:  AMIGA, ATARI_ST, __human68k__, MACOS, MSDOS, MVS, OS2, TOPS20,
+-                        /* break out of nested loops without "++argv;--argc" */
++                    /* break out of nested loops without "++argv;--argc" */
++ * stops option processing, returning any arguments following "--" as
++            /* Now -- stops permuting and forces the rest of
