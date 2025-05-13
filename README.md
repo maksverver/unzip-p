@@ -10,4 +10,13 @@ and [CHANGES.md](CHANGES.md) for a high-level description of other changes.
 
 The goal is to create a modern, secure fork that is easy to compile and and run on modern POSIX systems (primarily Linux), without most of the baggage from supporting archaic and esoteric platforms. Further feature development is explicitly *not* a goal, though cleanups that make the code more secure or easier to audit are.
 
-EOF.
+## Building, testing, and installing.
+
+```
+% make all
+% make check
+% make install
+```
+
+To create a package, the `prefix` and `DESTDIR` variables are useful.
+Consult the comments in [Makefile](Makefile) for details.
