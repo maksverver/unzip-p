@@ -1669,7 +1669,7 @@ int mapname(__G__ renamed)
 #endif
     int killed_ddot = FALSE;    /* is set when skipping "../" pathcomp */
     int error;
-    register unsigned workch;   /* hold the character being tested */
+    unsigned workch;            /* hold the character being tested */
 
 
 /*---------------------------------------------------------------------------
@@ -1994,7 +1994,7 @@ static void map2fat(pathcomp, pEndFAT)
     char *pEnd = *pEndFAT;      /* variable pointer to buildpathFAT */
     char *pBegin = *pEndFAT;    /* constant pointer to start of this comp. */
     char *last_dot = NULL;      /* last dot not converted to underscore */
-    register unsigned workch;   /* hold the character being tested */
+    unsigned workch;            /* hold the character being tested */
 
 
     /* Only need check those characters which are legal in NTFS but not

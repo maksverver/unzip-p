@@ -362,7 +362,7 @@ int mapname(__G__ renamed)
     char *pp, *cp=(char *)NULL;    /* character pointers */
     char *lastsemi=(char *)NULL;   /* pointer to last semi-colon in pathcomp */
     int error = MPN_OK;
-    register unsigned workch;      /* hold the character being tested */
+    unsigned workch;               /* hold the character being tested */
     char *checkswap=NULL;          /* pointer the the extension to check */
 
 

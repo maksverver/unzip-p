@@ -137,7 +137,7 @@
 #define OEM_TO_INTERN(src, dst)  {if ((src) != (dst)) strcpy((dst), (src));}
 #define INTERN_TO_ISO(src, dst)  {if ((src) != (dst)) strcpy((dst), (src));}
 #define INTERN_TO_OEM(src, dst)  {register uch c;\
-    register uch *dstp = (uch *)(dst), *srcp = (uch *)(src);\
+    uch *dstp = (uch *)(dst), *srcp = (uch *)(src);\
     do {\
         c = (uch)foreign(*srcp++);\
         *dstp++ = (uch)ASCII2OEM(c);\

@@ -407,7 +407,7 @@ void set_TZ(long time_zone, int day_light)
 
 /* set state as well as possible from settings found in locale.library */
 int GetPlatformLocalTimezone(sp, fill_tzstate_from_rules)
-     register struct state * ZCONST sp;
+     struct state * ZCONST sp;
      void (*fill_tzstate_from_rules)(struct state * ZCONST sp_res,
                                      ZCONST struct rule * ZCONST start,
                                      ZCONST struct rule * ZCONST end);

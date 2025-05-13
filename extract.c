@@ -1670,7 +1670,7 @@ static int extract_or_test_member(__G)    /* return PK-type error code */
 #ifdef CMS_MVS
     char *ebc="[ebcdic]";
 #endif
-    register int b;
+    int b;
     int r, error=PK_COOL;
 
 
@@ -2381,7 +2381,7 @@ int memextract(__G__ tgt, tgtsize, src, srcsize)  /* extract compressed */
     G.mem_mode = FALSE;
 
     if (!error) {
-        register ulg crcval = crc32(CRCVAL_INITIAL, tgt, (extent)G.outcnt);
+        ulg crcval = crc32(CRCVAL_INITIAL, tgt, (extent)G.outcnt);
 
         if (crcval != extra_field_crc) {
             if (uO.tflag)

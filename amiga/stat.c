@@ -226,10 +226,10 @@ char **_argv, *_arg_lin;
 
 void _cli_parse(struct Process *pp, long alen, register UBYTE *aptr)
 {
-    register UBYTE *cp;
-    register struct CommandLineInterface *cli;
-    register short c;
-    register short starred = 0;
+    UBYTE *cp;
+    struct CommandLineInterface *cli;
+    short c;
+    short starred = 0;
 #  ifdef PRESTART_HOOK
     void Prestart_Hook(void);
 #  endif

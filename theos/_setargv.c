@@ -96,9 +96,9 @@ static char* libname(char* path)
 
 int _setargv(int *argc, char ***argv)
 {
-    register int nargc;     /* New arguments counter */
+    int nargc;              /* New arguments counter */
     char **nargv;           /* New arguments pointers */
-    register int i, j;
+    int i, j;
     int asize;              /* argv array size */
     char *arg;
     char lib[256];

@@ -579,9 +579,9 @@ void defer_leftover_input(__G)
 unsigned readbuf(__G__ buf, size)   /* return number of bytes read into buf */
     __GDEF
     char *buf;
-    register unsigned size;
+    unsigned size;
 {
-    register unsigned count;
+    unsigned count;
     unsigned n;
 
     n = size;
@@ -819,8 +819,8 @@ static int partflush(__G__ rawbuf, size, unshrink)
     int unshrink;
 #endif /* USE_DEFLATE64 && __16BIT__ */
 {
-    register uch *p;
-    register uch *q;
+    uch *p;
+    uch *q;
     uch *transbuf;
 #if (defined(SMALL_MEM) || defined(MED_MEM) || defined(VMS_TEXT_CONV))
     ulg transbufsiz;
@@ -2118,8 +2118,8 @@ int do_string(__G__ length, option)   /* return PK-type error code */
         comment_bytes_left = length;
         block_len = OUTBUFSIZ;       /* for the while statement, first time */
         while (comment_bytes_left > 0 && block_len > 0) {
-            register uch *p = G.outbuf;
-            register uch *q = G.outbuf;
+            uch *p = G.outbuf;
+            uch *q = G.outbuf;
 
             if ((block_len = readbuf(__G__ (char *)G.outbuf,
                    MIN((unsigned)OUTBUFSIZ, comment_bytes_left))) == 0)
@@ -2588,13 +2588,13 @@ char *fzofft(__G__ val, pre, post)
 
 char *str2iso(dst, src)
     char *dst;                          /* destination buffer */
-    register ZCONST char *src;          /* source string */
+    ZCONST char *src;                   /* source string */
 {
 #ifdef INTERN_TO_ISO
     INTERN_TO_ISO(src, dst);
 #else
-    register uch c;
-    register char *dstp = dst;
+    uch c;
+    char *dstp = dst;
 
     do {
         c = (uch)foreign(*src++);
@@ -2614,13 +2614,13 @@ char *str2iso(dst, src)
 
 char *str2oem(dst, src)
     char *dst;                          /* destination buffer */
-    register ZCONST char *src;          /* source string */
+    ZCONST char *src;                   /* source string */
 {
 #ifdef INTERN_TO_OEM
     INTERN_TO_OEM(src, dst);
 #else
-    register uch c;
-    register char *dstp = dst;
+    uch c;
+    char *dstp = dst;
 
     do {
         c = (uch)foreign(*src++);
@@ -2644,9 +2644,9 @@ char *str2oem(dst, src)
 /*********************/
 
 void *memset(buf, init, len)
-    register void *buf;         /* buffer location */
-    register int init;          /* initializer character */
-    register unsigned int len;  /* length of the buffer */
+    void *buf;                  /* buffer location */
+    int init;                   /* initializer character */
+    unsigned int len;           /* length of the buffer */
 {
     void *start;
 
@@ -2663,11 +2663,11 @@ void *memset(buf, init, len)
 /*********************/
 
 int memcmp(b1, b2, len)
-    register ZCONST void *b1;
-    register ZCONST void *b2;
-    register unsigned int len;
+    ZCONST void *b1;
+    ZCONST void *b2;
+    unsigned int len;
 {
-    register int c;
+    int c;
 
     if (len > 0) do {
         if ((c = (int)(*((ZCONST unsigned char *)b1)++) -
@@ -2684,9 +2684,9 @@ int memcmp(b1, b2, len)
 /*********************/
 
 void *memcpy(dst, src, len)
-    register void *dst;
-    register ZCONST void *src;
-    register unsigned int len;
+    void *dst;
+    ZCONST void *src;
+    unsigned int len;
 {
     void *start;
 
@@ -2708,8 +2708,8 @@ void *memcpy(dst, src, len)
 /************************/
 
 int zstrnicmp(s1, s2, n)
-    register ZCONST char *s1, *s2;
-    register unsigned n;
+    ZCONST char *s1, *s2;
+    unsigned n;
 {
     for (; n > 0;  --n, ++s1, ++s2) {
 

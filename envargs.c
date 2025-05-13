@@ -54,7 +54,7 @@ int envargs(Pargc, Pargv, envstr, envstr2)
     char *envptr;       /* value returned by getenv */
     char *bufptr;       /* copy of env info */
     int argc = 0;       /* internal arg count */
-    register int ch;    /* spare temp value */
+    int ch;             /* spare temp value */
     char **argv;        /* internal arg vector */
     char **argvect;     /* copy of vector address */
 

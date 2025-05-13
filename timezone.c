@@ -130,9 +130,9 @@ static time_t transtime(janfirst, year, rulep, offset)
      ZCONST struct rule * ZCONST rulep;
      ZCONST long offset;
 {
-    register int    leapyear;
-    register time_t value;
-    register int    i;
+    int    leapyear;
+    time_t value;
+    int    i;
     int             d, m1, yy0, yy1, yy2, dow;
 
     value = 0;
@@ -216,18 +216,18 @@ static time_t transtime(janfirst, year, rulep, offset)
 }
 
 static void generate_transitions(sp, start, end)
-     register struct state * ZCONST sp;
+     struct state * ZCONST sp;
      ZCONST struct rule * ZCONST start;
      ZCONST struct rule * ZCONST end;
 {
-    register int             year;
-    register time_t          janfirst;
+    int             year;
+    time_t          janfirst;
     time_t                   starttime;
     time_t                   endtime;
     long                     stdoffset = -sp->ttis[0].tt_gmtoff;
     long                     dstoffset = -sp->ttis[1].tt_gmtoff;
-    register time_t *        atp;
-    register unsigned char * typep;
+    time_t *        atp;
+    unsigned char * typep;
 
     /*
     ** Two transitions per year, from EPOCH_YEAR to LAST_GOOD_YEAR.
@@ -257,7 +257,7 @@ static void generate_transitions(sp, start, end)
 static ZCONST char *getzname(strp)
      ZCONST char *strp;
 {
-    register char   c;
+    char   c;
 
     while ((c = *strp) != '\0' && !isdigit(c) && c != ',' && c != '-' &&
         c != '+')
@@ -271,8 +271,8 @@ static ZCONST char *getnum(strp, nump, min, max)
      ZCONST int min;
      ZCONST int max;
 {
-    register char   c;
-    register int    num;
+    char   c;
+    int    num;
 
     if (strp == NULL || !isdigit(c = *strp))
         return NULL;
@@ -327,7 +327,7 @@ static ZCONST char *getoffset(strp, offsetp)
      ZCONST char *strp;
      long * ZCONST offsetp;
 {
-    register int    neg = 0;
+    int    neg = 0;
 
     if (*strp == '-') {
         neg = 1;
@@ -392,7 +392,7 @@ static ZCONST char *getrule(strp, rulep)
 
 static int Parse_TZ(name, sp)
      ZCONST char *name;
-     register struct state * ZCONST sp;
+     struct state * ZCONST sp;
 {
     ZCONST char *            stdname;
     ZCONST char *            dstname;
@@ -400,7 +400,7 @@ static int Parse_TZ(name, sp)
     size_t                   dstlen;
     long                     stdoffset;
     long                     dstoffset;
-    register char *          cp;
+    char *                   cp;
 
     dstname = NULL;
     stdname = name;

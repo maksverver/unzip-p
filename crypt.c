@@ -169,7 +169,7 @@ int update_keys(__G__ c)
                        + (GLOBAL(keys[0]) & 0xff))
                       * 134775813L + 1;
     {
-      register int keyshift = (int)(GLOBAL(keys[1]) >> 24);
+      int keyshift = (int)(GLOBAL(keys[1]) >> 24);
       GLOBAL(keys[2]) = CRC32(GLOBAL(keys[2]), keyshift, CRY_CRC_TAB);
     }
     return c;

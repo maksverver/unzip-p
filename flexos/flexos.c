@@ -253,7 +253,7 @@ int mapname(__G__ renamed)
     int dotname = FALSE;           /* path component begins with dot? */
     int killed_ddot = FALSE;       /* is set when skipping "../" pathcomp */
     int error = MPN_OK;
-    register unsigned workch;      /* hold the character being tested */
+    unsigned workch;               /* hold the character being tested */
 
 
     if (G.pInfo->vollabel)

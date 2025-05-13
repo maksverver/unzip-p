@@ -2305,8 +2305,8 @@ char    *fzofft                  (__GPRO__ zoff_t val,
 #endif
 #ifdef NO_STRNICMP
    int   zstrnicmp               (register ZCONST char *s1,
-                                  register ZCONST char *s2,
-                                  register unsigned n);
+                                  ZCONST char *s2,
+                                  unsigned n);
 #endif
 #ifdef REGULUS
    int   zstat                   (ZCONST char *p, struct stat *s);
@@ -2314,9 +2314,9 @@ char    *fzofft                  (__GPRO__ zoff_t val,
 #ifdef ZMEM   /* MUST be ifdef'd because of conflicts with the standard def. */
    void *memset(register void *, register int, register unsigned int);
    int    memcmp(register ZCONST void*, register ZCONST void *,
-                     register unsigned int);
+                     unsigned int);
    void *memcpy(register void *, register ZCONST void *,
-                     register unsigned int);
+                     unsigned int);
 #endif
 #ifdef NEED_UZMBCLEN
    extent uzmbclen             (ZCONST unsigned char *ptr);

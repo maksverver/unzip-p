@@ -476,7 +476,7 @@ char **argv;
   }
   else
   {                             /* stored entry */
-    register ulg n;
+    ulg n;
 
     n = LG(h + LOCLEN);
 #if CRYPT

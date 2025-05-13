@@ -64,7 +64,7 @@ int stat(char *filename,struct stat *res)
  }
 
  if ((((unsigned int) load) >> 20) == 0xfff) {     /* date stamped file */
-   register unsigned int t1, t2, tc;
+   unsigned int t1, t2, tc;
 
    t1 = (unsigned int) (exec);
    t2 = (unsigned int) (load & 0xff);
@@ -259,9 +259,9 @@ void getRISCOSexts(char *envstr)
 
 int checkext(char *suff)
 {
- register char *extptr = exts2swap ? exts2swap : "";
- register char *suffptr;
- register int e,s;
+ char *extptr = exts2swap ? exts2swap : "";
+ char *suffptr;
+ int e,s;
 
  while(*extptr) {
    suffptr=suff;
@@ -285,8 +285,8 @@ int checkext(char *suff)
 void swapext(char *name, char *exptr)
 {
  char ext[MAXEXT];
- register char *p1=exptr+1;
- register char *p2=ext;
+ char *p1=exptr+1;
+ char *p2=ext;
  int extchar=*exptr;
 
  while(*p1 && *p1!='.' && *p1!='/')

@@ -303,7 +303,7 @@ vms_unzip_cmdline (int *argc_p, char ***argv_p)
 **      SS$_ABORT       - Bad time value
 **
 */
-    register unsigned long status;
+    unsigned long status;
     char options[256];
     char *the_cmd_line;                 /* buffer for argv strings */
     unsigned long cmdl_size;            /* allocated size of buffer */
@@ -885,7 +885,7 @@ get_list (struct dsc$descriptor_s *qual, struct dsc$descriptor_d *rawtail,
 **
 */
 
-    register unsigned long status;
+    unsigned long status;
     struct dsc$descriptor_d work_str;
 
     init_dyndesc(work_str);

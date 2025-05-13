@@ -17,7 +17,7 @@
 
 short _isatty(int fd)
 {
-    register short lub;
+    short lub;
 
     lub = (int) _fcntl(&stdin[fd], 5, (size_t) 0);
     return (lub >= CONIN && lub <= CONOUT)

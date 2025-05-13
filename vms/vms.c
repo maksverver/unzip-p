@@ -1751,8 +1751,8 @@ static int find_vms_attrs(__GPRO__ int set_date_time)
              *  PKWARE-style extra block decoding.
              */
             struct  PK_header   *blk;
-            register byte   *scn;
-            register int    len;
+            byte   *scn;
+            int    len;
 
             type = VAT_PK;
 
@@ -1771,7 +1771,7 @@ static int find_vms_attrs(__GPRO__ int set_date_time)
 
             while (len > PK_FLDHDR_SIZE)
             {
-                register struct  PK_field  *fld;
+                struct  PK_field  *fld;
                 int skip=0;
 
                 fld = (struct PK_field *)scn;

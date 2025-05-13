@@ -238,7 +238,7 @@ int mapname(__G__ renamed)
     char *lastsemi=(char *)NULL;   /* pointer to last semi-colon in pathcomp */
     char *last_dot=(char *)NULL;   /* last dot */
     int error = MPN_OK;
-    register unsigned workch;      /* hold the character being tested */
+    unsigned workch;               /* hold the character being tested */
 
 #ifdef HAVE_TWONCALL_H
     static char twentyone_flag;

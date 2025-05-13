@@ -57,8 +57,8 @@ static char         *argv[MAX_ARGS + 1];
 
 unsigned char *CToPCpy(unsigned char *pstr, char *cstr)
 {
-    register char *dptr;
-    register unsigned len;
+    char *dptr;
+    unsigned len;
 
         len=0;
         dptr=(char *)pstr+1;
@@ -356,7 +356,7 @@ void MakeCompatibleString(char *MacOS_Str,
             short CurrTextEncodingBase)
 {
     char *tmpPtr;
-    register uch curch;
+    uch curch;
 
     Assert_it(MacOS_Str,"MakeCompatibleString MacOS_Str == NULL","")
     for (tmpPtr = MacOS_Str; (curch = *tmpPtr) != '\0'; tmpPtr++)

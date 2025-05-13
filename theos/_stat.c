@@ -108,7 +108,7 @@ char _um2tm_(unsigned short mask)
 
 static int rdirstat(char* fn, struct stat *st)
 {
-    register char* p = strchr(fn, ':');
+    char* p = strchr(fn, ':');
     char drive;
 
     drive = p ? p[1] : 'S';
@@ -138,8 +138,8 @@ int _stat(const char *fn, struct stat *st)
 {
     char buf[256], buf2[256];
     char *ifn;
-    register struct fdb *fdb;
-    register char *p;
+    struct fdb *fdb;
+    char *p;
 
     if ((ifn = (char *)malloc(strlen(fn)+1)) == NULL) {
         errno = _errnum = ENOMEM;
@@ -218,10 +218,10 @@ int _fstat(int fd, struct stat *st)
 {
     unsigned short fsanum;
     struct fsa fsa;
-    register FILE *fp;
+    FILE *fp;
     int status;
-    register int i;
-    register char *p;
+    int i;
+    char *p;
 
     if (fd < FOPEN_MAX) {
         fp = &stdin[fd];
@@ -254,9 +254,9 @@ static int _isprt(int dev)
 /* device stat */
 
 int _dstat_(st)
-register struct stat* st;
+struct stat* st;
 {
-    register struct ucb* ucb;
+    struct ucb* ucb;
 
     ucb = getucb(st->st_dev);
     st->st_ino = 0;
@@ -289,8 +289,8 @@ register struct stat* st;
 /* regular file stat */
 
 int _stat_(st, fdb)
-register struct stat* st;
-register struct fdb* fdb;
+struct stat* st;
+struct fdb* fdb;
 {
     st->st_rdev = st->st_dev;
     st->st_ino = 0;

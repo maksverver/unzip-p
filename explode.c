@@ -259,14 +259,14 @@ unsigned bdl;                   /* number of distance low bits */
    window (of size 2^(6+bdl) bytes). */
 {
   zusz_t s;             /* bytes to decompress */
-  register unsigned e;  /* table entry flag/number of extra bits */
+  unsigned e;           /* table entry flag/number of extra bits */
   unsigned n, d;        /* length and index for copy */
   unsigned w;           /* current window position */
   struct huft *t;       /* pointer to table entry */
   unsigned mb, ml, md;  /* masks for bb, bl, and bd bits */
   unsigned mdl;         /* mask for bdl (distance lower) bits */
-  register ulg b;       /* bit buffer */
-  register unsigned k;  /* number of bits in bit buffer */
+  ulg b;                /* bit buffer */
+  unsigned k;           /* number of bits in bit buffer */
   unsigned u;           /* true if unflushed */
   int retval = 0;       /* error code returned: initialized to "no error" */
 
@@ -377,14 +377,14 @@ unsigned bdl;           /* number of distance low bits */
    window (of size 2^(6+bdl) bytes). */
 {
   zusz_t s;             /* bytes to decompress */
-  register unsigned e;  /* table entry flag/number of extra bits */
+  unsigned e;           /* table entry flag/number of extra bits */
   unsigned n, d;        /* length and index for copy */
   unsigned w;           /* current window position */
   struct huft *t;       /* pointer to table entry */
   unsigned ml, md;      /* masks for bl and bd bits */
   unsigned mdl;         /* mask for bdl (distance lower) bits */
-  register ulg b;       /* bit buffer */
-  register unsigned k;  /* number of bits in bit buffer */
+  ulg b;                /* bit buffer */
+  unsigned k;           /* number of bits in bit buffer */
   unsigned u;           /* true if unflushed */
   int retval = 0;       /* error code returned: initialized to "no error" */
 

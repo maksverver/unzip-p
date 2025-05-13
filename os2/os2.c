@@ -1192,7 +1192,7 @@ int mapname(__G__ renamed)
 #endif
     int killed_ddot = FALSE;       /* is set when skipping "../" pathcomp */
     int error = MPN_OK;
-    register unsigned workch;      /* hold the character being tested */
+    unsigned workch;               /* hold the character being tested */
 
 
 /*---------------------------------------------------------------------------
@@ -1912,7 +1912,7 @@ static void map2fat(pathcomp, pEndFAT)
     char *last_dot = (char *)NULL; /* last dot not converted to underscore */
     int dotname = FALSE;           /* flag:  path component begins with dot */
                                    /*  ("." and ".." don't count) */
-    register unsigned workch;      /* hold the character being tested */
+    unsigned workch;               /* hold the character being tested */
 
 
     /* Only need check those characters which are legal in HPFS but not

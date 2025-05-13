@@ -547,7 +547,7 @@ static int fn_is_dir(__G)    /* returns TRUE if G.filename is directory */
     __GDEF
 {
     extent fn_len = strlen(G.filename);
-    register char   endc;
+    char   endc;
 
     return  fn_len > 0 &&
             ((endc = lastchar(G.filename, fn_len)) == '/' ||

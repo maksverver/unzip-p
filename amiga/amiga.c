@@ -68,7 +68,7 @@ const char version_id[]  = "\0$VER: UnZip " UZ_VER_STRING " ("
 
 static int ispattern(ZCONST char *p)
 {
-    register char c;
+    char c;
     while (c = *p++)
         if (c == '\\') {
             if (!*++p)
@@ -326,7 +326,7 @@ int mapname(__G__ renamed)
     char *lastsemi = NULL;      /* pointer to last semi-colon in pathcomp */
     int killed_ddot = FALSE;    /* is set when skipping "../" pathcomp */
     int error = MPN_OK;
-    register unsigned workch;   /* hold the character being tested */
+    unsigned workch;            /* hold the character being tested */
 
 
 /*---------------------------------------------------------------------------

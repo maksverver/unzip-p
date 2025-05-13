@@ -101,7 +101,7 @@ int unshrink(__G)
      __GDEF
 {
     uch *stacktop = stack + (HSIZE - 1);
-    register uch *newstr;
+    uch *newstr;
     uch finalval;
     int codesize=9, len, error;
     shrint code, oldcode, curcode;
@@ -239,7 +239,7 @@ int unshrink(__G)
           len));
 
         {
-            register uch *p;
+            uch *p;
 
             for (p = newstr;  p < newstr+len;  ++p) {
                 *G.outptr++ = *p;
@@ -308,13 +308,13 @@ static void partial_clear(__G__ lastcodeused)
     __GDEF
     int lastcodeused;
 {
-    register shrint code;
+    shrint code;
 
     /* clear all nodes which have no children (i.e., leaf nodes only) */
 
     /* first loop:  mark each parent as such */
     for (code = BOGUSCODE+1;  code <= lastcodeused;  ++code) {
-        register shrint cparent = (shrint)(parent[code] & CODE_MASK);
+        shrint cparent = (shrint)(parent[code] & CODE_MASK);
 
         if (cparent > BOGUSCODE)
             FLAG_BITS[cparent] |= HAS_CHILD;   /* set parent's child-bit */

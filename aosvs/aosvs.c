@@ -539,7 +539,7 @@ int mapname(__G__ renamed)
 #endif
     int killed_ddot = FALSE;       /* is set when skipping "../" pathcomp */
     int error = MPN_OK;
-    register unsigned workch;      /* hold the character being tested */
+    unsigned workch;               /* hold the character being tested */
 
 
 /*---------------------------------------------------------------------------
