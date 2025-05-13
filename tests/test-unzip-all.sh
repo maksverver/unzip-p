@@ -5,7 +5,7 @@
 # Simply extracts all files into a temporary directory and then
 # verifies the contents are as expected.
 
-set -e -E -o pipefail
+set -eu -o pipefail
 
 UNZIP=${1:-../unzip}
 

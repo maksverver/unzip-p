@@ -5,7 +5,7 @@
 # This includes zipgrep -l (print matching file names only)
 # and zipgrep -h (output matches without file names)
 
-set -e -E -o pipefail
+set -eu -o pipefail
 
 ZIPGREP=${1:-../unix/zipgrep}
 

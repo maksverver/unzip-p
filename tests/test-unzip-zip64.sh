@@ -3,7 +3,7 @@
 # Verifies a basic zip64 file can be extracted.
 # (Note this doesn't work with funzip currently!)
 
-set -e -E -o pipefail
+set -eu -o pipefail
 
 UNZIP=${1:-../unzip}
 

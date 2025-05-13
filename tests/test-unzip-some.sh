@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Verifies unzip can extract only a subset of files given on the command line.
+# Verifies unzip can extract a subset of files given on the command line.
 
-set -e -E -o pipefail
+set -eu -o pipefail
 
 UNZIP=${1:-../unzip}
 

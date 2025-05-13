@@ -2,7 +2,7 @@
 
 # Basic smoke test for funzip
 
-set -e -E -o pipefail
+set -eu -o pipefail
 
 FUNZIP=${1:-../funzip}
 

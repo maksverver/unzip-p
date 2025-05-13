@@ -2,7 +2,7 @@
 
 # Basic smoke test for zipinfo.
 
-set -e -E -o pipefail
+set -eu -o pipefail
 
 ZIPINFO=${1:-../zipinfo}
 

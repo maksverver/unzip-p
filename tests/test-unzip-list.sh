@@ -2,7 +2,7 @@
 
 # Basic smoke test for `unzip -l`
 
-set -e -E -o pipefail
+set -eu -o pipefail
 
 UNZIP=${1:-../unzip}
 

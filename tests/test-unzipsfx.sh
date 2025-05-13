@@ -2,7 +2,7 @@
 
 # Basic smoke test for unzipsfx.
 
-set -e -E -o pipefail
+set -eu -o pipefail
 
 UNZIPSFX=${1:-../unzipsfx}
 
