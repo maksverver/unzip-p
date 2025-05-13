@@ -956,7 +956,7 @@ void version(__G)
 #endif
       );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)len, 0);
+    (*G.message)((void *)&G, slide, (ulg)len, 0);
 
 } /* end function version() */
 

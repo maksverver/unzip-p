@@ -231,10 +231,10 @@ zDIR *Opendir(name)
     Trace((stderr, "Opendir:  nbuf = [%s]\n", FnFilter1(nbuf)));
 
     if (FFIRST(nbuf, dirp, FATTR)) {
-        free((zvoid *)nbuf);
+        free((void *)nbuf);
         return (zDIR *)NULL;
     }
-    free((zvoid *)nbuf);
+    free((void *)nbuf);
     dirp->d_first = 1;
     return dirp;
 }
@@ -1966,7 +1966,7 @@ void version(__G)
 #endif
     );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)len, 0);
+    (*G.message)((void *)&G, slide, (ulg)len, 0);
                                 /* MSC can't handle huge macro expansion */
 
     /* temporary debugging code for Borland compilers only */
@@ -2020,8 +2020,8 @@ void version(__G)
 static int next_ptr = 0;
 
 typedef struct ptr_table_s {
-    zvoid far *org_ptr;
-    zvoid far *new_ptr;
+    void far *org_ptr;
+    void far *new_ptr;
 } ptr_table;
 
 static ptr_table table[MAX_PTR];
@@ -2032,9 +2032,9 @@ static ptr_table table[MAX_PTR];
  * a protected system like OS/2. Use Microsoft C instead.
  */
 
-zvoid far *zcalloc(unsigned items, unsigned size)
+void far *zcalloc(unsigned items, unsigned size)
 {
-    zvoid far *buf;
+    void far *buf;
     ulg bsize = (ulg)items*size;
 
     if (bsize < (65536L-16L)) {
@@ -2053,7 +2053,7 @@ zvoid far *zcalloc(unsigned items, unsigned size)
     return buf;
 }
 
-zvoid zcfree(zvoid far *ptr)
+void zcfree(void far *ptr)
 {
     int n;
     if (*(ush*)&ptr != 0) { /* object < 64K */
@@ -2081,12 +2081,12 @@ zvoid zcfree(zvoid far *ptr)
 #  define _hfree   hfree
 #endif
 
-zvoid far *zcalloc(unsigned items, unsigned size)
+void far *zcalloc(unsigned items, unsigned size)
 {
-    return (zvoid far *)_halloc((long)items, size);
+    return (void far *)_halloc((long)items, size);
 }
 
-zvoid zcfree(zvoid far *ptr)
+void zcfree(void far *ptr)
 {
     _hfree((void huge *)ptr);
 }

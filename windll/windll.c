@@ -58,16 +58,16 @@ extern jmp_buf dll_error_return;
 static void FreeDllMem(__GPRO);
 
 /* For displaying status messages and error messages */
-static int UZ_EXP DllMessagePrint(zvoid *pG, uch *buf, ulg size, int flag);
+static int UZ_EXP DllMessagePrint(void *pG, uch *buf, ulg size, int flag);
 
 #if 0 /* currently unused */
 /* For displaying files extracted to the display window */
-int DllDisplayPrint(zvoid *pG, uch *buf, ulg size, int flag);
+int DllDisplayPrint(void *pG, uch *buf, ulg size, int flag);
 #endif /* never */
 
 /* Callback function for status report and/or user interception */
-static int UZ_EXP Wiz_StatReportCB(zvoid *pG, int fnflag, ZCONST char *zfn,
-                                   ZCONST char *efn, ZCONST zvoid *details);
+static int UZ_EXP Wiz_StatReportCB(void *pG, int fnflag, ZCONST char *zfn,
+                                   ZCONST char *efn, ZCONST void *details);
 
 /* Dummy sound function for those applications that don't use sound */
 static void WINAPI DummySound(void);
@@ -283,7 +283,7 @@ static int UnzipParseString(LPCSTR s, unsigned int *pargCee, char ***pargVee)
 /* DLL calls */
 
 BOOL WINAPI Wiz_Init(pG, lpUserFunc)
-zvoid *pG;
+void *pG;
 LPUSERFUNCTIONS lpUserFunc;
 {
     G.message = DllMessagePrint;
@@ -345,7 +345,7 @@ LPUSERFUNCTIONS lpUserFunc;
  */
 
 BOOL WINAPI Wiz_SetOpts(pG, lpDCL)
-zvoid *pG;
+void *pG;
 LPDCL lpDCL;
 {
     if (lpDCL->StructVersID != UZ_DCL_STRUCTVER)
@@ -459,7 +459,7 @@ static void FreeDllMem(__GPRO)
 }
 
 int WINAPI Wiz_Unzip(pG, ifnc, ifnv, xfnc, xfnv)
-zvoid *pG;
+void *pG;
 int ifnc;
 char **ifnv;
 int xfnc;
@@ -659,7 +659,7 @@ int WINAPI Wiz_SingleEntryUnzip(int ifnc, char **ifnv, int xfnc, char **xfnv,
    int retcode;
    CONSTRUCTGLOBALS();
 
-   if (!Wiz_Init((zvoid *)&G, lpUserFunc))
+   if (!Wiz_Init((void *)&G, lpUserFunc))
    {
       DESTROYGLOBALS();
       return PK_BADERR;
@@ -672,7 +672,7 @@ int WINAPI Wiz_SingleEntryUnzip(int ifnc, char **ifnv, int xfnc, char **xfnv,
       return PK_NOZIP;
    }
 
-   if (!Wiz_SetOpts((zvoid *)&G, lpDCL))
+   if (!Wiz_SetOpts((void *)&G, lpDCL))
    {
       DESTROYGLOBALS();
       return PK_MEM;
@@ -686,7 +686,7 @@ int WINAPI Wiz_SingleEntryUnzip(int ifnc, char **ifnv, int xfnc, char **xfnv,
    /* Here is the actual call to "unzip" the files (or whatever else you
     * are doing.)
     */
-   retcode = Wiz_Unzip((zvoid *)&G, ifnc, ifnv, xfnc, xfnv);
+   retcode = Wiz_Unzip((void *)&G, ifnc, ifnv, xfnc, xfnv);
 
    DESTROYGLOBALS();
    return retcode;
@@ -758,7 +758,7 @@ int WINAPI Wiz_SingleEntryUnzpList(unsigned int ifnc, LPCSTR ExtList,
 }
 
 
-int win_fprintf(zvoid *pG, FILE *file, unsigned int size, char far *buffer)
+int win_fprintf(void *pG, FILE *file, unsigned int size, char far *buffer)
 {
    if ((file != stderr) && (file != stdout))
    {
@@ -778,7 +778,7 @@ int win_fprintf(zvoid *pG, FILE *file, unsigned int size, char far *buffer)
 #pragma argsused
 #endif
 static int UZ_EXP DllMessagePrint(pG, buf, size, flag)
-    zvoid *pG;      /* globals struct:  always passed */
+    void *pG;       /* globals struct:  always passed */
     uch *buf;       /* preformatted string to be printed */
     ulg size;       /* length of string (may include nulls) */
     int flag;       /* flag bits */
@@ -799,7 +799,7 @@ static int UZ_EXP DllMessagePrint(pG, buf, size, flag)
 #pragma argsused
 #endif
 int DllDisplayPrint(pG, buf, size, flag)
-    zvoid *pG;      /* globals struct:  always passed */
+    void *pG;       /* globals struct:  always passed */
     uch *buf;       /* preformatted string to be printed */
     ulg size;       /* length of string (may include nulls) */
     int flag;       /* flag bits */
@@ -820,7 +820,7 @@ int DllDisplayPrint(pG, buf, size, flag)
 #pragma argsused
 #endif
 int UZ_EXP UzpPassword(pG, rcnt, pwbuf, size, zfn, efn)
-    zvoid *pG;          /* globals struct: always passed */
+    void *pG;           /* globals struct: always passed */
     int *rcnt;          /* retry counter */
     char *pwbuf;        /* buffer for password */
     int size;           /* size of password buffer */
@@ -860,8 +860,8 @@ static void WINAPI DummySound(void)
 #ifdef __BORLANDC__
 #pragma argsused
 #endif
-static int WINAPI Wiz_StatReportCB(zvoid *pG, int fnflag, ZCONST char *zfn,
-                    ZCONST char *efn, ZCONST zvoid *details)
+static int WINAPI Wiz_StatReportCB(void *pG, int fnflag, ZCONST char *zfn,
+                    ZCONST char *efn, ZCONST void *details)
 {
     int rval = UZ_ST_CONTINUE;
 
@@ -932,7 +932,7 @@ int WINAPI Wiz_UnzipToMemory(LPSTR zip, LPSTR file,
 #   define zip intern_zip
 #   define file intern_file
 #endif
-    if (!Wiz_Init((zvoid *)&G, lpUserFunctions)) {
+    if (!Wiz_Init((void *)&G, lpUserFunctions)) {
        DESTROYGLOBALS();
        return PK_BADERR;
     }

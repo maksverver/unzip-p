@@ -2519,7 +2519,7 @@ static int WriteBuffer(__G__ buf, len)
 
     if (uO.cflag)
     {
-        (void)(*G.message)((zvoid *)&G, buf, len, 0);
+        (void)(*G.message)((void *)&G, buf, len, 0);
     }
     else
     {
@@ -2566,8 +2566,8 @@ static int WriteRecord(__G__ rec, len)
 
     if (uO.cflag)
     {
-        (void)(*G.message)((zvoid *)&G, rec, len, 0);
-        (void)(*G.message)((zvoid *)&G, (uch *) ("\n"), 1, 0);
+        (void)(*G.message)((void *)&G, rec, len, 0);
+        (void)(*G.message)((void *)&G, (uch *) ("\n"), 1, 0);
     }
     else
     {
@@ -5517,7 +5517,7 @@ void version(__G)
 #endif
     );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)len, 0);
+    (*G.message)((void *)&G, slide, (ulg)len, 0);
 
 } /* end function version() */
 

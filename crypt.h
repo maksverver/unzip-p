@@ -139,7 +139,7 @@ void init_keys(__GPRO__ ZCONST char *passwd);
      int zipcloak(struct zlist far *, FILE *, FILE *, ZCONST char *);
      int zipbare(struct zlist far *, FILE *, FILE *, ZCONST char *);
 #  else
-     unsigned zfwrite(zvoid *, extent, extent, FILE *);
+     unsigned zfwrite(void *, extent, extent, FILE *);
      extern char *key;
 #  endif
 #endif /* ZIP */

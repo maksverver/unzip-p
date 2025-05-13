@@ -11,7 +11,7 @@
 #define __vmmvs_h
 
 #ifndef NULL
-#  define NULL (zvoid *)0
+#  define NULL (void *)0
 #endif
 
 #ifdef MVS

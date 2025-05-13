@@ -1076,7 +1076,7 @@ void version(__G)
     sprintf((char *)slide, LoadFarString(CompiledWith),
            "c68", " v4.2x", "SMS/QDOS",
             " on ", __DATE__, "","");
-    (*G.message)((zvoid *)&G, slide, (ulg)strlen((char *)slide), 0);
+    (*G.message)((void *)&G, slide, (ulg)strlen((char *)slide), 0);
 
 } /* end function version() */
 

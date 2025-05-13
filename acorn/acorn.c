@@ -868,7 +868,7 @@ static int uxtime2acornftime(unsigned *pexadr, unsigned *pldadr, time_t ut)
 void close_outfile(__G)
     __GDEF
 {
-  zvoid *spark_ef;
+  void *spark_ef;
 
   fclose(G.outfile);
 
@@ -987,7 +987,7 @@ void version(__G)
 #endif
       );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)strlen((char *)slide), 0);
+    (*G.message)((void *)&G, slide, (ulg)strlen((char *)slide), 0);
 
 } /* end function version() */
 

@@ -106,7 +106,7 @@ BOOL SetExtractToDirectory(LPTSTR szDirectory);
 // (The "official" callback functions are declared in the UnZip DLL headers,
 // see "unzip.h".)
 void WINAPI Wiz_NoPrinting(int f);
-int  win_fprintf(zvoid *pG, FILE *file, unsigned int dwCount, char far *buffer);
+int  win_fprintf(void *pG, FILE *file, unsigned int dwCount, char far *buffer);
 
 
 //******************************************************************************

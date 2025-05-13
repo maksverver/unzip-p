@@ -34,9 +34,9 @@ extern "C" {
 
 void    WINAPI Wiz_NoPrinting(int f);
 int     WINAPI Wiz_Validate(LPSTR archive, int AllCodes);
-BOOL    WINAPI Wiz_Init(zvoid *, LPUSERFUNCTIONS);
-BOOL    WINAPI Wiz_SetOpts(zvoid *, LPDCL);
-int     WINAPI Wiz_Unzip(zvoid *, int, char **, int, char **);
+BOOL    WINAPI Wiz_Init(void *, LPUSERFUNCTIONS);
+BOOL    WINAPI Wiz_SetOpts(void *, LPDCL);
+int     WINAPI Wiz_Unzip(void *, int, char **, int, char **);
 int     WINAPI Wiz_SingleEntryUnzip(int, char **, int, char **,
                                     LPDCL, LPUSERFUNCTIONS);
 int     WINAPI Wiz_SingleEntryUnzpList(unsigned, LPCSTR, unsigned, LPCSTR,

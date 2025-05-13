@@ -53,7 +53,7 @@ extern int _sprintf(char *s, const char *fmt, ...);
      fprintf((flag)&1? stderr : stdout, (char *)(_sprintf sprf_arg, (buf)))
 #  else
 #    define Info(buf,flag,sprf_arg) \
-     UzpMessagePrnt((zvoid *)&G, (uch *)(buf), (ulg)_sprintf sprf_arg, (flag))
+     UzpMessagePrnt((void *)&G, (uch *)(buf), (ulg)_sprintf sprf_arg, (flag))
 #  endif
 #endif /* !Info */
 #endif /* ?NO_BOGUS_SPC */

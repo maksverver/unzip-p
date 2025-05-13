@@ -196,10 +196,10 @@ extern "C" {
 
 // Local variants of callbacks from Info-ZIP code.
 // (These functions are not referenced by name outside this source module.)
-int UZ_EXP UzpMessagePrnt2(zvoid *pG, uch *buffer, ulg size, int flag);
-int UZ_EXP UzpInput2(zvoid *pG, uch *buffer, int *size, int flag);
-int UZ_EXP CheckForAbort2(zvoid *pG, int fnflag, ZCONST char *zfn,
-                          ZCONST char *efn, ZCONST zvoid *details);
+int UZ_EXP UzpMessagePrnt2(void *pG, uch *buffer, ulg size, int flag);
+int UZ_EXP UzpInput2(void *pG, uch *buffer, int *size, int flag);
+int UZ_EXP CheckForAbort2(void *pG, int fnflag, ZCONST char *zfn,
+                          ZCONST char *efn, ZCONST void *details);
 int WINAPI UzpReplace(LPSTR szFile, unsigned nbufsiz);
 void WINAPI UzpSound(void);
 #ifdef Z_UINT8_DEFINED
@@ -686,7 +686,7 @@ static BOOL SmartCreateDirectory(__GPRO__ LPCSTR szDirectory, BOOL *pNewDir)
 //***** Callbacks from Info-ZIP code.
 //******************************************************************************
 
-int UZ_EXP UzpMessagePrnt2(zvoid *pG, uch *buffer, ulg size, int flag)
+int UZ_EXP UzpMessagePrnt2(void *pG, uch *buffer, ulg size, int flag)
 {
 
    // Some ZIP files cause us to get called during DoListFiles(). We only handle
@@ -762,20 +762,20 @@ int UZ_EXP UzpMessagePrnt2(zvoid *pG, uch *buffer, ulg size, int flag)
 }
 
 //******************************************************************************
-int UZ_EXP UzpInput2(zvoid *pG, uch *buffer, int *size, int flag)
+int UZ_EXP UzpInput2(void *pG, uch *buffer, int *size, int flag)
 {
    DebugOut(TEXT("WARNING: UzpInput2(...) called"));
    return 0;
 }
 
 //******************************************************************************
-void UZ_EXP UzpMorePause(zvoid *pG, const char *szPrompt, int flag)
+void UZ_EXP UzpMorePause(void *pG, const char *szPrompt, int flag)
 {
    DebugOut(TEXT("WARNING: UzpMorePause(...) called"));
 }
 
 //******************************************************************************
-int UZ_EXP UzpPassword(zvoid *pG, int *pcRetry, char *szPassword, int nSize,
+int UZ_EXP UzpPassword(void *pG, int *pcRetry, char *szPassword, int nSize,
                        const char *szZipFile, const char *szFile)
 {
    // Return Values:
@@ -811,8 +811,8 @@ int UZ_EXP UzpPassword(zvoid *pG, int *pcRetry, char *szPassword, int nSize,
 }
 
 //******************************************************************************
-int UZ_EXP CheckForAbort2(zvoid *pG, int fnflag, ZCONST char *zfn,
-                    ZCONST char *efn, ZCONST zvoid *details)
+int UZ_EXP CheckForAbort2(void *pG, int fnflag, ZCONST char *zfn,
+                    ZCONST char *efn, ZCONST void *details)
 {
    int rval = UZ_ST_CONTINUE;
 
@@ -939,7 +939,7 @@ void WINAPI SendAppMsg(ulg uzSize, ulg uzCompressedSize,
 }
 
 //******************************************************************************
-int win_fprintf(zvoid *pG, FILE *file, unsigned int dwCount, char far *buffer)
+int win_fprintf(void *pG, FILE *file, unsigned int dwCount, char far *buffer)
 {
 
    // win_fprintf() is used within Info-ZIP to write to a file as well as log

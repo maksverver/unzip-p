@@ -1245,7 +1245,7 @@ typedef size_t extent;
    /* Any system without a special calloc function */
 # ifndef zcalloc
 #  define zcalloc(items, size) \
-          (zvoid far *)calloc((unsigned)(items), (unsigned)(size))
+          (void far *)calloc((unsigned)(items), (unsigned)(size))
 # endif
 # ifndef zcfree
 #  define zcfree    free
@@ -2235,7 +2235,7 @@ unsigned ef_scan_for_izux           (ZCONST uch *ef_buf, unsigned ef_len,
                                      int ef_is_c, ulg dos_mdatetime,
                                      iztimes *z_utim, ulg *z_uidgid);
 #if (defined(RISCOS) || defined(ACORN_FTYPE_NFS))
-   zvoid *getRISCOSexfield          (ZCONST uch *ef_buf, unsigned ef_len);
+   void *getRISCOSexfield          (ZCONST uch *ef_buf, unsigned ef_len);
 #endif
 
 #ifndef SFX
@@ -2312,10 +2312,10 @@ char    *fzofft                  (__GPRO__ zoff_t val,
    int   zstat                   (ZCONST char *p, struct stat *s);
 #endif
 #ifdef ZMEM   /* MUST be ifdef'd because of conflicts with the standard def. */
-   zvoid *memset(register zvoid *, register int, register unsigned int);
-   int    memcmp(register ZCONST zvoid*, register ZCONST zvoid *,
+   void *memset(register void *, register int, register unsigned int);
+   int    memcmp(register ZCONST void*, register ZCONST void *,
                      register unsigned int);
-   zvoid *memcpy(register zvoid *, register ZCONST zvoid *,
+   void *memcpy(register void *, register ZCONST void *,
                      register unsigned int);
 #endif
 #ifdef NEED_UZMBCLEN
@@ -2602,8 +2602,8 @@ char    *GetLoadPath        (__GPRO);                              /* local */
    void  prepare_ISO_OEM_translat      (__GPRO);                   /* local */
 #endif
 #if (defined(MALLOC_WORK) && defined(MY_ZCALLOC))
-   zvoid far *zcalloc       (unsigned int, unsigned int);
-   zvoid zcfree             (zvoid far *);
+   void far *zcalloc       (unsigned int, unsigned int);
+   void zcfree             (void far *);
 #endif /* MALLOC_WORK && MY_ZCALLOC */
 #ifdef SYSTEM_SPECIFIC_CTOR
    void  SYSTEM_SPECIFIC_CTOR      (__GPRO);                       /* local */
@@ -2682,10 +2682,10 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 #  else
 #    ifdef INT_SPRINTF  /* optimized version for "int sprintf()" flavour */
 #      define Info(buf,flag,sprf_arg) \
-       (*G.message)((zvoid *)&G, (uch *)(buf), (ulg)sprintf sprf_arg, (flag))
+       (*G.message)((void *)&G, (uch *)(buf), (ulg)sprintf sprf_arg, (flag))
 #    else          /* generic version, does not use sprintf() return value */
 #      define Info(buf,flag,sprf_arg) \
-       (*G.message)((zvoid *)&G, (uch *)(buf), \
+       (*G.message)((void *)&G, (uch *)(buf), \
                      (ulg)(sprintf sprf_arg, strlen((char *)(buf))), (flag))
 #    endif
 #  endif
@@ -2709,7 +2709,7 @@ char    *GetLoadPath        (__GPRO);                              /* local */
                  (extent)(WSIZE>>2))
 
 #ifndef FUNZIP   /* used only in inflate.c */
-#  define MESSAGE(str,len,flag)  (*G.message)((zvoid *)&G,(str),(len),(flag))
+#  define MESSAGE(str,len,flag)  (*G.message)((void *)&G,(str),(len),(flag))
 #endif
 
 #if 0            /* Optimization: use the (const) result of crc32(0L,NULL,0) */

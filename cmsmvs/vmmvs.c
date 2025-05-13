@@ -676,7 +676,7 @@ void version(__G)
       liblvlmsg
     );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)len, 0);
+    (*G.message)((void *)&G, slide, (ulg)len, 0);
 
 } /* end function version() */
 

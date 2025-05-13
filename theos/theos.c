@@ -1199,7 +1199,7 @@ void version(__G)
 
     sprintf(slide, CompiledWith,
         "THEOS C ","5.28", "THEOS ", "4.x", " on ", __DATE__);
-    (*G.message)((zvoid *)&G, slide, (ulg)strlen((char *)slide), 0);
+    (*G.message)((void *)&G, slide, (ulg)strlen((char *)slide), 0);
 
 } /* end function version() */
 

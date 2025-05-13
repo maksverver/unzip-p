@@ -591,7 +591,7 @@ unsigned readbuf(__G__ buf, size)   /* return number of bytes read into buf */
                 return (n-size);
             else if (G.incnt < 0) {
                 /* another hack, but no real harm copying same thing twice */
-                (*G.message)((zvoid *)&G,
+                (*G.message)((void *)&G,
                   (uch *)LoadFarString(ReadError),  /* CANNOT use slide */
                   (ulg)strlen(LoadFarString(ReadError)), 0x401);
                 return 0;  /* discarding some data; better than lock-up */
@@ -634,7 +634,7 @@ int readbyte(__G)   /* refill inbuf and return a byte if available, else EOF */
             return EOF;
         } else if (G.incnt < 0) {  /* "fail" (abort, retry, ...) returns this */
             /* another hack, but no real harm copying same thing twice */
-            (*G.message)((zvoid *)&G,
+            (*G.message)((void *)&G,
               (uch *)LoadFarString(ReadError),
               (ulg)strlen(LoadFarString(ReadError)), 0x401);
             echon();
@@ -874,7 +874,7 @@ static int partflush(__G__ rawbuf, size, unshrink)
 #endif
         if (!uO.cflag && WriteError(rawbuf, size, G.outfile))
             return disk_error(__G);
-        else if (uO.cflag && (*G.message)((zvoid *)&G, rawbuf, size, 0))
+        else if (uO.cflag && (*G.message)((void *)&G, rawbuf, size, 0))
             return PK_OK;
     } else {   /* textmode:  aflag is true */
         if (unshrink) {
@@ -960,7 +960,7 @@ static int partflush(__G__ rawbuf, size, unshrink)
                                 if (!uO.cflag && WriteError(transbuf,
                                     (extent)(q-transbuf), G.outfile))
                                     return disk_error(__G);
-                                else if (uO.cflag && (*G.message)((zvoid *)&G,
+                                else if (uO.cflag && (*G.message)((void *)&G,
                                          transbuf, (ulg)(q-transbuf), 0))
                                     return PK_OK;
                                 q = transbuf;
@@ -985,7 +985,7 @@ static int partflush(__G__ rawbuf, size, unshrink)
                                 WriteError(transbuf, (extent)(q-transbuf),
                                   G.outfile))
                                 return disk_error(__G);
-                            else if (uO.cflag && (*G.message)((zvoid *)&G,
+                            else if (uO.cflag && (*G.message)((void *)&G,
                                      transbuf, (ulg)(q-transbuf), 0))
                                 return PK_OK;
                             q = transbuf;
@@ -1044,7 +1044,7 @@ static int partflush(__G__ rawbuf, size, unshrink)
                         if (!uO.cflag && WriteError(transbuf,
                             (extent)(q-transbuf), G.outfile))
                             return disk_error(__G);
-                        else if (uO.cflag && (*G.message)((zvoid *)&G,
+                        else if (uO.cflag && (*G.message)((void *)&G,
                                  transbuf, (ulg)(q-transbuf), 0))
                             return PK_OK;
                         q = transbuf;
@@ -1070,7 +1070,7 @@ static int partflush(__G__ rawbuf, size, unshrink)
             if (!uO.cflag && WriteError(transbuf, (extent)(q-transbuf),
                 G.outfile))
                 return disk_error(__G);
-            else if (uO.cflag && (*G.message)((zvoid *)&G, transbuf,
+            else if (uO.cflag && (*G.message)((void *)&G, transbuf,
                 (ulg)(q-transbuf), 0))
                 return PK_OK;
         }
@@ -1246,7 +1246,7 @@ static int disk_error(__G)
 /*****************************/
 
 int UZ_EXP UzpMessagePrnt(pG, buf, size, flag)
-    zvoid *pG;   /* globals struct:  always passed */
+    void *pG;    /* globals struct:  always passed */
     uch *buf;    /* preformatted string to be printed */
     ulg size;    /* length of string (may include nulls) */
     int flag;    /* flag bits */
@@ -1359,7 +1359,7 @@ int UZ_EXP UzpMessagePrnt(pG, buf, size, flag)
                 ++((Uz_Globs *)pG)->numlines;
                 ++((Uz_Globs *)pG)->lines;
                 if (((Uz_Globs *)pG)->lines >= ((Uz_Globs *)pG)->height)
-                    (*((Uz_Globs *)pG)->mpause)((zvoid *)pG,
+                    (*((Uz_Globs *)pG)->mpause)((void *)pG,
                       LoadFarString(MorePrompt), 1);
             }
 #endif /* MORE */
@@ -1419,7 +1419,7 @@ int UZ_EXP UzpMessagePrnt(pG, buf, size, flag)
                     fflush(outfp);
                     ((Uz_Globs *)pG)->sol = TRUE;
                     q = p + 1;
-                    (*((Uz_Globs *)pG)->mpause)((zvoid *)pG,
+                    (*((Uz_Globs *)pG)->mpause)((void *)pG,
                       LoadFarString(MorePrompt), 1);
                 }
             }
@@ -1469,7 +1469,7 @@ int UZ_EXP UzpMessagePrnt(pG, buf, size, flag)
 /*****************************/
 
 int UZ_EXP UzpMessageNull(pG, buf, size, flag)
-    zvoid *pG;    /* globals struct:  always passed */
+    void *pG;     /* globals struct:  always passed */
     uch *buf;     /* preformatted string to be printed */
     ulg size;     /* length of string (may include nulls) */
     int flag;     /* flag bits */
@@ -1489,7 +1489,7 @@ int UZ_EXP UzpMessageNull(pG, buf, size, flag)
 /***********************/
 
 int UZ_EXP UzpInput(pG, buf, size, flag)
-    zvoid *pG;    /* globals struct:  always passed */
+    void *pG;     /* globals struct:  always passed */
     uch *buf;     /* preformatted string to be printed */
     int *size;    /* (address of) size of buf and of returned string */
     int flag;     /* flag bits (bit 0: no echo) */
@@ -1513,7 +1513,7 @@ int UZ_EXP UzpInput(pG, buf, size, flag)
 /***************************/
 
 void UZ_EXP UzpMorePause(pG, prompt, flag)
-    zvoid *pG;            /* globals struct:  always passed */
+    void *pG;             /* globals struct:  always passed */
     ZCONST char *prompt;  /* "--More--" prompt */
     int flag;             /* 0 = any char OK; 1 = accept only '\n', ' ', q */
 {
@@ -1575,7 +1575,7 @@ void UZ_EXP UzpMorePause(pG, prompt, flag)
 /**************************/
 
 int UZ_EXP UzpPassword (pG, rcnt, pwbuf, size, zfn, efn)
-    zvoid *pG;         /* pointer to UnZip's internal global vars */
+    void *pG;          /* pointer to UnZip's internal global vars */
     int *rcnt;         /* retry counter */
     char *pwbuf;       /* buffer for password */
     int size;          /* size of password buffer */
@@ -1653,7 +1653,7 @@ void handler(signal)   /* upon interrupt, turn on echo and exit cleanly */
     GETGLOBALS();
 
 #if !(defined(SIGBUS) || defined(SIGSEGV))      /* add a newline if not at */
-    (*G.message)((zvoid *)&G, slide, 0L, 0x41); /*  start of line (to stderr; */
+    (*G.message)((void *)&G, slide, 0L, 0x41);  /*  start of line (to stderr; */
 #endif                                          /*  slide[] should be safe) */
 
     echon();
@@ -2164,12 +2164,12 @@ int do_string(__G__ length, option)   /* return PK-type error code */
 
 #ifdef WINDLL
             /* ran out of local mem -- had to cheat */
-            win_fprintf((zvoid *)&G, stdout, (extent)(q-G.outbuf),
+            win_fprintf((void *)&G, stdout, (extent)(q-G.outbuf),
                         (char *)G.outbuf);
-            win_fprintf((zvoid *)&G, stdout, 2, (char *)"\n\n");
+            win_fprintf((void *)&G, stdout, 2, (char *)"\n\n");
 #else /* !WINDLL */
 #ifdef NOANSIFILT       /* GRR:  can ANSI be used with EBCDIC? */
-            (*G.message)((zvoid *)&G, G.outbuf, (ulg)(q-G.outbuf), 0);
+            (*G.message)((void *)&G, G.outbuf, (ulg)(q-G.outbuf), 0);
 #else /* ASCII, filter out ANSI escape sequences and handle ^S (pause) */
             p = G.outbuf - 1;
             q = slide;
@@ -2190,18 +2190,18 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                 } else
                     *q++ = *p;
                 if ((unsigned)(q-slide) > WSIZE-3 || pause) {   /* flush */
-                    (*G.message)((zvoid *)&G, slide, (ulg)(q-slide), 0);
+                    (*G.message)((void *)&G, slide, (ulg)(q-slide), 0);
                     q = slide;
                     if (pause && G.extract_flag) /* don't pause for list/test */
-                        (*G.mpause)((zvoid *)&G, LoadFarString(QuitPrompt), 0);
+                        (*G.mpause)((void *)&G, LoadFarString(QuitPrompt), 0);
                 }
             }
-            (*G.message)((zvoid *)&G, slide, (ulg)(q-slide), 0);
+            (*G.message)((void *)&G, slide, (ulg)(q-slide), 0);
 #endif /* ?NOANSIFILT */
 #endif /* ?WINDLL */
         }
         /* add '\n' if not at start of line */
-        (*G.message)((zvoid *)&G, slide, 0L, 0x40);
+        (*G.message)((void *)&G, slide, 0L, 0x40);
         break;
 
     /*
@@ -2643,12 +2643,12 @@ char *str2oem(dst, src)
 /* Function memset() */
 /*********************/
 
-zvoid *memset(buf, init, len)
-    register zvoid *buf;        /* buffer location */
+void *memset(buf, init, len)
+    register void *buf;         /* buffer location */
     register int init;          /* initializer character */
     register unsigned int len;  /* length of the buffer */
 {
-    zvoid *start;
+    void *start;
 
     start = buf;
     while (len--)
@@ -2663,8 +2663,8 @@ zvoid *memset(buf, init, len)
 /*********************/
 
 int memcmp(b1, b2, len)
-    register ZCONST zvoid *b1;
-    register ZCONST zvoid *b2;
+    register ZCONST void *b1;
+    register ZCONST void *b2;
     register unsigned int len;
 {
     register int c;
@@ -2683,12 +2683,12 @@ int memcmp(b1, b2, len)
 /* Function memcpy() */
 /*********************/
 
-zvoid *memcpy(dst, src, len)
-    register zvoid *dst;
-    register ZCONST zvoid *src;
+void *memcpy(dst, src, len)
+    register void *dst;
+    register ZCONST void *src;
     register unsigned int len;
 {
-    zvoid *start;
+    void *start;
 
     start = dst;
     while (len-- > 0)

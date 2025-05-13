@@ -969,7 +969,7 @@ sprintf(CompVer, "%x", __MWERKS__);
 #endif
     );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)strlen((char *)slide), 0);
+    (*G.message)((void *)&G, slide, (ulg)strlen((char *)slide), 0);
 
 } /* end function version() */
 

@@ -111,7 +111,7 @@ static int extract_or_test_member(__GPRO);
    static void set_deferred_symlink(__GPRO__ slinkentry *slnk_entry);
 #endif
 #ifdef SET_DIR_ATTRIB
-   static int Cdecl dircomp(ZCONST zvoid *a, ZCONST zvoid *b);
+   static int Cdecl dircomp(ZCONST void *a, ZCONST void *b);
 #endif
 
 
@@ -752,14 +752,14 @@ int extract_or_test_files(__G)    /* return PK-type error code */
                 if (error_in_archive <= PK_WARN)
                     error_in_archive = PK_FIND;   /* some files not found */
             }
-        free((zvoid *)fn_matched);
+        free((void *)fn_matched);
     }
     if (xn_matched) {
         if (reached_end) for (i = 0;  i < G.xfilespecs;  ++i)
             if (!xn_matched[i])
                 Info(slide, 0x401, ((char *)slide,
                   LoadFarString(ExclFilenameNotMatched), G.pxnames[i]));
-        free((zvoid *)xn_matched);
+        free((void *)xn_matched);
     }
 
 /*---------------------------------------------------------------------------
@@ -1624,7 +1624,7 @@ reprompt:
 #ifdef DLL
         if ((G.statreportcb != NULL) &&
             (*G.statreportcb)(__G__ UZ_ST_FINISH_MEMBER, G.zipfn,
-                              G.filename, (zvoid *)&G.lrec.ucsize)) {
+                              G.filename, (void *)&G.lrec.ucsize)) {
             return IZ_CTRLC;        /* cancel operation by user request */
         }
 #endif
@@ -2901,7 +2901,7 @@ wchar_t *fnfilterw( src, dst, siz)
 /************************/
 
 static int Cdecl dircomp(a, b)  /* used by qsort(); swiped from Zip */
-    ZCONST zvoid *a, *b;
+    ZCONST void *a, *b;
 {
     /* order is significant:  this sorts in reverse order (deepest first) */
     return strcmp((*(direntry **)b)->fn, (*(direntry **)a)->fn);

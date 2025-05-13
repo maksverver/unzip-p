@@ -311,7 +311,6 @@ extern "C" {
   ---------------------------------------------------------------------------*/
 
 #ifndef _IZ_TYPES_DEFINED
-   typedef void zvoid;
 typedef unsigned char   uch;    /* code assumes unsigned bytes; these type-  */
 typedef unsigned short  ush;    /*  defs replace byte/UWORD/ULONG (which are */
 typedef unsigned long   ulg;    /*  predefined on some systems) & match zip  */
@@ -319,14 +318,14 @@ typedef unsigned long   ulg;    /*  predefined on some systems) & match zip  */
 #endif /* !_IZ_TYPES_DEFINED */
 
 /* InputFn is not yet used and is likely to change: */
-typedef int   (UZ_EXP MsgFn)     (zvoid *pG, uch *buf, ulg size, int flag);
-typedef int   (UZ_EXP InputFn)   (zvoid *pG, uch *buf, int *size, int flag);
-typedef void  (UZ_EXP PauseFn)   (zvoid *pG, ZCONST char *prompt, int flag);
-typedef int   (UZ_EXP PasswdFn)  (zvoid *pG, int *rcnt, char *pwbuf,
+typedef int   (UZ_EXP MsgFn)     (void *pG, uch *buf, ulg size, int flag);
+typedef int   (UZ_EXP InputFn)   (void *pG, uch *buf, int *size, int flag);
+typedef void  (UZ_EXP PauseFn)   (void *pG, ZCONST char *prompt, int flag);
+typedef int   (UZ_EXP PasswdFn)  (void *pG, int *rcnt, char *pwbuf,
                                   int size, ZCONST char *zfn,
                                   ZCONST char *efn);
-typedef int   (UZ_EXP StatCBFn)  (zvoid *pG, int fnflag, ZCONST char *zfn,
-                                  ZCONST char *efn, ZCONST zvoid *details);
+typedef int   (UZ_EXP StatCBFn)  (void *pG, int fnflag, ZCONST char *zfn,
+                                  ZCONST char *efn, ZCONST void *details);
 typedef void  (UZ_EXP UsrIniFn)  (void);
 
 typedef struct _UzpBuffer {    /* rxstr */
@@ -604,11 +603,11 @@ int      UZ_EXP UzpValidate           (char *archive, int AllCodes);
 
 /* default I/O functions (can be swapped out via UzpAltMain() entry point): */
 
-int      UZ_EXP UzpMessagePrnt      (zvoid *pG, uch *buf, ulg size, int flag);
-int      UZ_EXP UzpMessageNull      (zvoid *pG, uch *buf, ulg size, int flag);
-int      UZ_EXP UzpInput            (zvoid *pG, uch *buf, int *size, int flag);
-void     UZ_EXP UzpMorePause        (zvoid *pG, ZCONST char *prompt, int flag);
-int      UZ_EXP UzpPassword         (zvoid *pG, int *rcnt, char *pwbuf,
+int      UZ_EXP UzpMessagePrnt      (void *pG, uch *buf, ulg size, int flag);
+int      UZ_EXP UzpMessageNull      (void *pG, uch *buf, ulg size, int flag);
+int      UZ_EXP UzpInput            (void *pG, uch *buf, int *size, int flag);
+void     UZ_EXP UzpMorePause        (void *pG, ZCONST char *prompt, int flag);
+int      UZ_EXP UzpPassword         (void *pG, int *rcnt, char *pwbuf,
                                      int size, ZCONST char *zfn,
                                      ZCONST char *efn);
 

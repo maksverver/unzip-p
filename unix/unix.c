@@ -237,7 +237,7 @@ char *do_wild(__G__ wildspec)
             G.have_dirname = TRUE;
         }
 
-        if ((G.wild_dir = (zvoid *)opendir(G.dirname)) != (zvoid *)NULL) {
+        if ((G.wild_dir = (void *)opendir(G.dirname)) != (void *)NULL) {
             while ((file = readdir((DIR *)G.wild_dir)) !=
                    (struct dirent *)NULL) {
                 Trace((stderr, "do_wild:  readdir returns %s\n",
@@ -258,7 +258,7 @@ char *do_wild(__G__ wildspec)
             }
             /* if we get to here directory is exhausted, so close it */
             closedir((DIR *)G.wild_dir);
-            G.wild_dir = (zvoid *)NULL;
+            G.wild_dir = (void *)NULL;
         }
         Trace((stderr, "do_wild:  opendir(%s) returns NULL\n",
           FnFilter1(G.dirname)));
@@ -299,7 +299,7 @@ char *do_wild(__G__ wildspec)
     }
 
     closedir((DIR *)G.wild_dir);  /* at least one entry read; nothing left */
-    G.wild_dir = (zvoid *)NULL;
+    G.wild_dir = (void *)NULL;
     G.notfirstcall = FALSE;       /* reset for new wildspec */
     if (G.have_dirname)
         free(G.dirname);
@@ -1318,7 +1318,7 @@ int set_symlnk_attribs(__G__ slnk_entry)
     if (slnk_entry->attriblen > 0) {
 # if (!defined(NO_LCHOWN))
       if (slnk_entry->attriblen > sizeof(unsigned)) {
-        ulg *z_uidgid_p = (zvoid *)(slnk_entry->buf + sizeof(unsigned));
+        ulg *z_uidgid_p = (void *)(slnk_entry->buf + sizeof(unsigned));
         /* check that both uid and gid values fit into their data sizes */
         if (((ulg)(uid_t)(z_uidgid_p[0]) == z_uidgid_p[0]) &&
             ((ulg)(gid_t)(z_uidgid_p[1]) == z_uidgid_p[1])) {
@@ -1341,7 +1341,7 @@ int set_symlnk_attribs(__G__ slnk_entry)
         "set_symlnk_attribs:  restoring Unix attributes for\n        %s\n",
         FnFilter1(slnk_entry->fname)));
       if (lchmod(slnk_entry->fname,
-                 filtattr(__G__ *(unsigned *)(zvoid *)slnk_entry->buf)))
+                 filtattr(__G__ *(unsigned *)(void *)slnk_entry->buf)))
           perror("lchmod (file attributes) error");
 # endif /* !NO_LCHMOD */
     }
@@ -1750,7 +1750,7 @@ void version(__G)
 #endif
     );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)strlen((char *)slide), 0);
+    (*G.message)((void *)&G, slide, (ulg)strlen((char *)slide), 0);
 
 } /* end function version() */
 

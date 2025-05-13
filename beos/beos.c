@@ -161,7 +161,7 @@ char *do_wild(__G__ wildspec)
             G.have_dirname = TRUE;
         }
 
-        if ((G.wild_dir = (zvoid *)opendir(G.dirname)) != (zvoid *)NULL) {
+        if ((G.wild_dir = (void *)opendir(G.dirname)) != (void *)NULL) {
             while ((file = readdir((DIR *)G.wild_dir)) !=
                    (struct dirent *)NULL) {
                 Trace((stderr, "do_wild:  readdir returns %s\n",
@@ -182,7 +182,7 @@ char *do_wild(__G__ wildspec)
             }
             /* if we get to here directory is exhausted, so close it */
             closedir((DIR *)G.wild_dir);
-            G.wild_dir = (zvoid *)NULL;
+            G.wild_dir = (void *)NULL;
         }
         Trace((stderr, "do_wild:  opendir(%s) returns NULL\n",
           FnFilter1(G.dirname)));
@@ -223,7 +223,7 @@ char *do_wild(__G__ wildspec)
     }
 
     closedir((DIR *)G.wild_dir);  /* at least one entry read; nothing left */
-    G.wild_dir = (zvoid *)NULL;
+    G.wild_dir = (void *)NULL;
     G.notfirstcall = FALSE;       /* reset for new wildspec */
     if (G.have_dirname)
         free(G.dirname);
@@ -1261,7 +1261,7 @@ void version(__G)
 #endif
     );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)strlen((char *)slide), 0);
+    (*G.message)((void *)&G, slide, (ulg)strlen((char *)slide), 0);
 
 } /* end function version() */
 

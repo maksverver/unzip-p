@@ -1335,9 +1335,9 @@ int mapname(__G__ renamed)
                     Info(slide, 1, ((char *)slide, LoadFarString(TruncEAs),
                       makeword(G.extra_field+2)-10, "\n"));
                 } else if (!uO.qflag)
-                    (*G.message)((zvoid *)&G, (uch *)"\n", 1L, 0);
+                    (*G.message)((void *)&G, (uch *)"\n", 1L, 0);
             } else if (!uO.qflag)
-                (*G.message)((zvoid *)&G, (uch *)"\n", 1L, 0);
+                (*G.message)((void *)&G, (uch *)"\n", 1L, 0);
 
             /* set date/time stamps */
             SetPathAttrTimes(__G__ G.pInfo->file_attr & ~A_ARCHIVE, 1);
@@ -2253,7 +2253,7 @@ void version(__G)
 #endif
     );
 
-    (*G.message)((zvoid *)&G, slide, (ulg)len, 0);
+    (*G.message)((void *)&G, slide, (ulg)len, 0);
                                 /* MSC can't handle huge macro expansions */
 
     /* temporary debugging code for Borland compilers only */
@@ -2284,12 +2284,12 @@ void version(__G)
 #  define _hfree   hfree
 #endif
 
-zvoid far *zcalloc (unsigned items, unsigned size)
+void far *zcalloc (unsigned items, unsigned size)
 {
-    return (zvoid far *)_halloc((long)items, size);
+    return (void far *)_halloc((long)items, size);
 }
 
-zvoid zcfree (zvoid far *ptr)
+void zcfree (void far *ptr)
 {
     _hfree((void huge *)ptr);
 }
