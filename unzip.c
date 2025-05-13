@@ -2427,7 +2427,7 @@ static void help_extended(__G)
 
 
 #ifndef _WIN32_WCE /* Win CE does not support environment variables */
-#if (!defined(MODERN) || defined(NO_STDLIB_H))
+#if (defined(NO_STDLIB_H))
 /* Declare getenv() to be sure (might be missing in some environments) */
 extern char *getenv();
 #endif

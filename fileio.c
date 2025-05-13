@@ -1756,7 +1756,7 @@ time_t dos_to_unix_time(dosdatetime)
     TIME_ZONE_INFORMATION tzinfo;
     DWORD res;
 #else /* ! WIN32 */
-#ifndef BSD4_4   /* GRR:  change to !defined(MODERN) ? */
+#ifndef BSD4_4
 #if (defined(BSD) || defined(MTS) || defined(__GO32__))
     struct timeb tbp;
 #else /* !(BSD || MTS || __GO32__) */

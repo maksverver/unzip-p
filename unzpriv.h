@@ -136,7 +136,7 @@
 
 #if (defined(M_XENIX) && !defined(M_UNIX))   /* SCO Xenix only, not SCO Unix */
 #  define SCO_XENIX
-#  define NO_LIMITS_H        /* no limits.h, but MODERN defined */
+#  define NO_LIMITS_H        /* no limits.h */
 #  define NO_UID_GID         /* no uid_t/gid_t */
 #  define size_t int
 #endif
@@ -641,7 +641,7 @@
 #else
 #  include <string.h>    /* strcpy, strcmp, memcpy, strchr/strrchr, etc. */
 #endif
-#if (defined(MODERN) && !defined(NO_LIMITS_H))
+#if (!defined(NO_LIMITS_H))
 #  include <limits.h>    /* MAX/MIN constant symbols for system types... */
 #endif
 
@@ -649,25 +649,13 @@
 #include <signal.h>      /* used in unzip.c, fileio.c */
 
 
-#ifdef MODERN
-#  ifndef NO_STDDEF_H
-#    include <stddef.h>
-#  endif
-#  ifndef NO_STDLIB_H
-#    include <stdlib.h>  /* standard library prototypes, malloc(), etc. */
-#  endif
-   typedef size_t extent;
-#else /* !MODERN */
-#  ifndef AOS_VS         /* mostly modern? */
-     Z_OFF_T lseek();
-#    ifdef VAXC          /* not fully modern, but has stdlib.h and void */
-#      include <stdlib.h>
-#    else
-       char *malloc();
-#    endif /* ?VAXC */
-#  endif /* !AOS_VS */
-   typedef unsigned int extent;
-#endif /* ?MODERN */
+#ifndef NO_STDDEF_H
+#  include <stddef.h>
+#endif
+#ifndef NO_STDLIB_H
+#  include <stdlib.h>  /* standard library prototypes, malloc(), etc. */
+#endif
+typedef size_t extent;
 
 
 
@@ -1123,7 +1111,6 @@
 #endif /* TOPS20 */
 
 /* Defaults when nothing special has been defined previously. */
-#ifdef MODERN
 #  ifndef FOPR
 #    define FOPR "rb"
 #  endif
@@ -1139,23 +1126,6 @@
 #  ifndef FOPWR
 #    define FOPWR "w+b"
 #  endif
-#else /* !MODERN */
-#  ifndef FOPR
-#    define FOPR "r"
-#  endif
-#  ifndef FOPM
-#    define FOPM "r+"
-#  endif
-#  ifndef FOPW
-#    define FOPW "w"
-#  endif
-#  ifndef FOPWT
-#    define FOPWT "w"
-#  endif
-#  ifndef FOPWR
-#    define FOPWR "w+"
-#  endif
-#endif /* ?MODERN */
 
 /*
  * If <limits.h> exists on most systems, should include that, since it may
@@ -1917,7 +1887,7 @@
 # endif
 #endif
 #ifndef Z_UINT4_DEFINED
-# if (defined(MODERN) && !defined(NO_LIMITS_H))
+# if (!defined(NO_LIMITS_H))
 #  if (defined(UINT_MAX) && (UINT_MAX == 0xffffffffUL))
      typedef unsigned int       z_uint4;
 #    define Z_UINT4_DEFINED
@@ -1932,7 +1902,7 @@
 #  endif
 #  endif
 #  endif
-# endif /* MODERN && !NO_LIMITS_H */
+# endif /* !NO_LIMITS_H */
 #endif /* !Z_UINT4_DEFINED */
 #ifndef Z_UINT4_DEFINED
   typedef ulg                   z_uint4;
