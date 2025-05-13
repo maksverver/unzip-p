@@ -1,12 +1,13 @@
 # POSIX-only fork of Info-ZIP UnZip 6.0 with security patches
 
-This repository contains an up-to-date version of Info-Tools unzip with security patches applied and with unnecessary cruft removed.
+This repository contains a fork of
+[Info-ZIP's Unzip](https://infozip.sourceforge.net/UnZip.html).
+It is based on the latest official release (UnZip 6.0) but with:
 
-The goal is to create a single repository with just the code necessary to compile and run on POSIX systems (primarily Linux), without most of the baggage from supporting archaic and esoteric platforms, and with the confidence that the code is reasonably simple and well-vetted. Further feature development is explicitly *not* a goal.
+  - Security patches from various sources (see [patches/](patches/) for details)
+  - Automated tests added to verify basic functionality
+  - A simplified [Makefile](Makefile)
 
-See [patches/](patches/) for details about which external patches have been applied.
-
-a5b558cfef0dddab1fad1a1a35cef71c3945bb6e
-ZIP bomb vulnerability (CVE-2024-0450) was addressed with [my own patch](https://github.com/maksverver/unzip/commit/0c9dab6dc00b873791087ead0d7e54494bfc71f1), which is simple and effective. By comparison, Mark Adler's solution is vulnerable to [quadratic runtime on maliciously constructed files](https://github.com/madler/unzip/issues/13).
+The goal is to create a modern, secure fork that is easy to compile and and run on modern POSIX systems (primarily Linux), without most of the baggage from supporting archaic and esoteric platforms. Further feature development is explicitly *not* a goal, though cleanups that make the code more secure or easier to audit are.
 
 EOF.

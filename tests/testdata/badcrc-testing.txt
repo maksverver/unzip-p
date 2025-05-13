@@ -1,0 +1,3 @@
+Archive:  testdata/badcrc.zip
+    testing: hello.txt                bad CRC 16d3065e  (should be 7b55a718)
+At least one error was detected in testdata/badcrc.zip.

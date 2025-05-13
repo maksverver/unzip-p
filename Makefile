@@ -19,6 +19,12 @@
 # % make CFLAGS_EXTRA=-DUSE_BZIP2 LDLIBS_EXTRA=-lbz2
 #
 #
+# TESTING
+# -------
+#
+# % make check
+#
+#
 # INSTALLING
 # ----------
 #
@@ -113,6 +119,9 @@ UNZIP_H = unzip.h unzpriv.h globals.h unix/unxcfg.h
 
 
 all: $(BINS)
+
+check: all
+	tests/run-tests.sh
 
 install: $(UNZIPS) $(MANS)
 	$(INSTALL) -d "$(DESTDIR)$(BINDIR)"
@@ -222,4 +231,4 @@ inflatef$O:	inflate.c inflate.h $(UNZIP_H) crypt.h
 ttyiof$O:	ttyio.c $(UNZIP_H) zip.h crypt.h ttyio.h
 	$(CC) -c $(CFLAGS) -DFUNZIP -o $@ ttyio.c
 
-.PHONY: all docs clean
+.PHONY: all check clean docs
