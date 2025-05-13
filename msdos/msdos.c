@@ -61,15 +61,15 @@
 
 static void maskDOSdevice(__GPRO__ char *pathcomp, char *last_dot);
 #ifdef MAYBE_PLAIN_FAT
-   static void map2fat OF((char *pathcomp, char *last_dot));
+   static void map2fat(char *pathcomp, char *last_dot);
 #endif
-static int isfloppy OF((int nDrive));
-static int z_dos_chmod OF((__GPRO__ ZCONST char *fname, int attributes));
-static int volumelabel OF((ZCONST char *newlabel));
+static int isfloppy(int nDrive);
+static int z_dos_chmod(__GPRO__ ZCONST char *fname, int attributes);
+static int volumelabel(ZCONST char *newlabel);
 #if (!defined(SFX) && !defined(WINDLL))
-   static int is_running_on_windows OF((void));
+   static int is_running_on_windows(void);
 #endif
-static int getdoscodepage OF((void));
+static int getdoscodepage(void);
 
 static int created_dir;        /* used by mapname(), checkdir() */
 static int renamed_fullpath;   /* ditto */
@@ -193,8 +193,8 @@ static ZCONST char Far AttribsMayBeWrong[] =
        char d_name[13];
        int d_first;
    } zDIR;
-   zDIR *Opendir OF((const char *));
-   struct zdirent *Readdir OF((zDIR *));
+   zDIR *Opendir(const char *);
+   struct zdirent *Readdir(zDIR *);
 #  define Closedir free
 
 

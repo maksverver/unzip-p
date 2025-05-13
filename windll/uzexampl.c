@@ -83,7 +83,7 @@ int WINAPI DisplayBuf(LPSTR, unsigned long);
 int WINAPI GetReplaceDlgRetVal(LPSTR, unsigned);
 int WINAPI password(LPSTR, int, LPCSTR, LPCSTR);
 
-ZCONST UzpVer * UZ_EXP UzpVersion  OF((void));
+ZCONST UzpVer * UZ_EXP UzpVersion     (void);
 _DLL_UZVER pUzpVersion;
 _DLL_UNZIP pWiz_SingleEntryUnzip;
 

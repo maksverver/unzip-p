@@ -59,23 +59,23 @@ extern int real_timezone_is_set;        /* set by tzset() */
 
 /* prototypes of functions not in time.h */
 
-void __tzset OF((void));
+void __tzset(void);
 
 #ifdef NEED__ISINDST
-int _isindst OF((struct tm *tb));
+int _isindst(struct tm *tb);
 #endif
 
 /* callback function to be supplied by the program that uses this library */
-int GetPlatformLocalTimezone OF((register struct state * ZCONST sp,
+int GetPlatformLocalTimezone(register struct state * ZCONST sp,
         void (*fill_tzstate_from_rules)(struct state * ZCONST sp_res,
                                         ZCONST struct rule * ZCONST start,
-                                        ZCONST struct rule * ZCONST end)));
+                                        ZCONST struct rule * ZCONST end));
 #ifdef IZTZ_SETLOCALTZINFO
-void set_TZ OF((long time_zone, int day_light));
+void set_TZ(long time_zone, int day_light);
 #endif
 
 #endif /* !IZ_MKTIME_ONLY */
 
-time_t mkgmtime OF((struct tm *tm));
+time_t mkgmtime(struct tm *tm);
 
 #endif

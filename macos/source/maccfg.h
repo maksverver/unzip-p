@@ -233,23 +233,23 @@ typedef struct _MacInfo {
 /*  Prototypes                                                               */
 /*****************************************************************************/
 
-void    screenOpen      OF((char *));                         /* macscreen.c */
-void    screenControl   OF((char *, int));                    /* macscreen.c */
-void    screenDump      OF((char *, long));                   /* macscreen.c */
-void    screenUpdate    OF((WindowPtr));                      /* macscreen.c */
-void    screenClose     OF((void));                           /* macscreen.c */
-int     macgetch        OF((void));                           /* macscreen.c */
+void    screenOpen         (char *);                         /* macscreen.c */
+void    screenControl      (char *, int);                    /* macscreen.c */
+void    screenDump         (char *, long);                   /* macscreen.c */
+void    screenUpdate       (WindowPtr);                      /* macscreen.c */
+void    screenClose        (void);                           /* macscreen.c */
+int     macgetch           (void);                           /* macscreen.c */
 
-int     macmkdir        OF((char *));                             /* macos.c */
-short   macopen         OF((char *, short));                      /* macos.c */
-short   maccreat        OF((char *));                             /* macos.c */
-short   macread         OF((short, char *, unsigned));            /* macos.c */
-long    macwrite        OF((short, char *, unsigned));            /* macos.c */
-short   macclose        OF((short));                              /* macos.c */
-long    maclseek        OF((short, long, short));                 /* macos.c */
-char   *macfgets        OF((char *, int, FILE *));                /* macos.c */
-int     macfprintf      OF((FILE *, char *, ...));                /* macos.c */
-int     macprintf       OF((char *, ...));                        /* macos.c */
+int     macmkdir           (char *);                             /* macos.c */
+short   macopen            (char *, short);                      /* macos.c */
+short   maccreat           (char *);                             /* macos.c */
+short   macread            (short, char *, unsigned);            /* macos.c */
+long    macwrite           (short, char *, unsigned);            /* macos.c */
+short   macclose           (short);                              /* macos.c */
+long    maclseek           (short, long, short);                 /* macos.c */
+char   *macfgets           (char *, int, FILE *);                /* macos.c */
+int     macfprintf         (FILE *, char *, ...);                /* macos.c */
+int     macprintf          (char *, ...);                        /* macos.c */
 
 ulg    makePPClong(ZCONST uch *sig);
 ush    makePPCword(ZCONST uch *b);

@@ -120,12 +120,12 @@
 
 #define LFLAG  3   /* short "ls -l" type listing */
 
-static int   zi_long   OF((__GPRO__ zusz_t *pEndprev, int error_in_archive));
-static int   zi_short  OF((__GPRO));
+static int   zi_long      (__GPRO__ zusz_t *pEndprev, int error_in_archive);
+static int   zi_short     (__GPRO);
 static void  zi_showMacTypeCreator
-                       OF((__GPRO__ uch *ebfield));
-static char *zi_time   OF((__GPRO__ ZCONST ulg *datetimez,
-                           ZCONST time_t *modtimez, char *d_t_str));
+                          (__GPRO__ uch *ebfield);
+static char *zi_time      (__GPRO__ ZCONST ulg *datetimez,
+                           ZCONST time_t *modtimez, char *d_t_str);
 
 
 /**********************************************/

@@ -320,7 +320,7 @@
  * avoids leaving unabsorbed LFs in the keyboard buffer under Windows95,
  * and supports the <ALT>+[0]<digit><digit><digit> feature.
  */
-int getch_win32  OF((void));
+int getch_win32     (void);
 
 /* Up to now, all versions of Microsoft C runtime libraries lack the support
  * for customized (non-US) switching rules between daylight saving time and

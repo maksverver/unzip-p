@@ -233,7 +233,7 @@ void UZ_EXP UzpFreeMemBuffer(UzpBuffer *retstr)
 
 #ifndef WINDLL
 
-static int UzpDLL_Init OF((zvoid *pG, UzpCB *UsrFuncts));
+static int UzpDLL_Init(zvoid *pG, UzpCB *UsrFuncts);
 
 static int UzpDLL_Init(pG, UsrFuncts)
 zvoid *pG;

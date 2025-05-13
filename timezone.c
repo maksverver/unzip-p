@@ -109,19 +109,19 @@ static struct state statism;
 
 
 /* prototypes of static functions */
-static time_t transtime OF((ZCONST time_t janfirst, ZCONST int year,
+static time_t transtime(ZCONST time_t janfirst, ZCONST int year,
                             ZCONST struct rule * ZCONST rulep,
-                            ZCONST long offset));
-static void generate_transitions OF((register struct state * ZCONST sp,
+                            ZCONST long offset);
+static void generate_transitions(register struct state * ZCONST sp,
                                      ZCONST struct rule * ZCONST start,
-                                     ZCONST struct rule * ZCONST end));
-static ZCONST char *getzname OF((ZCONST char *strp));
-static ZCONST char *getnum OF((ZCONST char *strp, int * ZCONST nump,
-                               ZCONST int min, ZCONST int max));
-static ZCONST char *getsecs OF((ZCONST char *strp, long * ZCONST secsp));
-static ZCONST char *getoffset OF((ZCONST char *strp, long * ZCONST offsetp));
-static ZCONST char *getrule OF((ZCONST char *strp, struct rule * ZCONST rulep));
-static int Parse_TZ OF((ZCONST char *name, register struct state * ZCONST sp));
+                                     ZCONST struct rule * ZCONST end);
+static ZCONST char *getzname(ZCONST char *strp);
+static ZCONST char *getnum(ZCONST char *strp, int * ZCONST nump,
+                               ZCONST int min, ZCONST int max);
+static ZCONST char *getsecs(ZCONST char *strp, long * ZCONST secsp);
+static ZCONST char *getoffset(ZCONST char *strp, long * ZCONST offsetp);
+static ZCONST char *getrule(ZCONST char *strp, struct rule * ZCONST rulep);
+static int Parse_TZ(ZCONST char *name, register struct state * ZCONST sp);
 
 
 static time_t transtime(janfirst, year, rulep, offset)

@@ -132,12 +132,12 @@
 #endif
 
 #if (defined(USE_DEFLATE64) && defined(__16BIT__))
-static int partflush OF((__GPRO__ uch *rawbuf, ulg size, int unshrink));
+static int partflush(__GPRO__ uch *rawbuf, ulg size, int unshrink);
 #endif
 #ifdef VMS_TEXT_CONV
-static int is_vms_varlen_txt OF((__GPRO__ uch *ef_buf, unsigned ef_len));
+static int is_vms_varlen_txt(__GPRO__ uch *ef_buf, unsigned ef_len);
 #endif
-static int disk_error OF((__GPRO));
+static int disk_error(__GPRO);
 
 
 /****************************/

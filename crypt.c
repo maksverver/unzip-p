@@ -91,8 +91,8 @@
 #ifdef UNZIP
    /* char *key = (char *)NULL; moved to globals.h */
 #  ifndef FUNZIP
-     local int testp OF((__GPRO__ ZCONST uch *h));
-     local int testkey OF((__GPRO__ ZCONST uch *h, ZCONST char *key));
+     local int testp(__GPRO__ ZCONST uch *h);
+     local int testkey(__GPRO__ ZCONST uch *h, ZCONST char *key);
 #  endif
 #endif /* UNZIP */
 
@@ -135,7 +135,7 @@
 #ifdef IZ_CRC_BE_OPTIMIZ
    local z_uint4 near crycrctab[256];
    local z_uint4 near *cry_crctb_p = NULL;
-   local z_uint4 near *crytab_init OF((__GPRO));
+   local z_uint4 near *crytab_init(__GPRO);
 #  define CRY_CRC_TAB  cry_crctb_p
 #  undef CRC32
 #  define CRC32(c, b, crctab) (crctab[((int)(c) ^ (b)) & 0xff] ^ ((c) >> 8))

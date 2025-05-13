@@ -28,6 +28,6 @@
 #  define DECLARE_TIMEZONE
 #  define SCREENWIDTH 80
 #  define SCREENSIZE(scrrows, scrcols)  screensize(scrrows, scrcols)
-   void InitUnZipConsole OF((void));
-   int screensize        OF((int *tt_rows, int *tt_cols));
+   void InitUnZipConsole(void);
+   int screensize           (int *tt_rows, int *tt_cols);
 #endif /* NLM */

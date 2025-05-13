@@ -34,7 +34,7 @@
 #include "tannsk.h"
 
 
-char *in2ex OF((__GPRO__ char *));
+char *in2ex(__GPRO__ char *);
 
 static nsk_file_attrs *ef_scan_for_tandem (
     uch *ef_buf,

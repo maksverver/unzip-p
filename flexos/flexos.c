@@ -36,7 +36,7 @@
 /* The following should really be a static declaration,  but the compiler
    complains (crappy compiler can't cope with a static forward declaration).
  */
-extern void map2fat OF((char *pathcomp, char *last_dot));
+extern void map2fat(char *pathcomp, char *last_dot);
 
 static int created_dir;        /* used by mapname(), checkdir() */
 static int renamed_fullpath;   /* ditto */

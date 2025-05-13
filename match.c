@@ -132,14 +132,14 @@
 #else
 #define match(s,p,ic)    (recmatch((ZCONST uch *)p,(ZCONST uch *)s,ic) == 1)
 #endif
-int recmatch OF((ZCONST uch *pattern, ZCONST uch *string,
-                 int ignore_case __WDLPRO));
+int recmatch(ZCONST uch *pattern, ZCONST uch *string,
+                 int ignore_case __WDLPRO);
 #endif
 #endif /* 0 */
-static int recmatch OF((ZCONST char *, ZCONST char *,
-                        int));
-static char *isshexp OF((ZCONST char *p));
-static int namecmp OF((ZCONST char *s1, ZCONST char *s2));
+static int recmatch(ZCONST char *, ZCONST char *,
+                        int);
+static char *isshexp(ZCONST char *p);
+static int namecmp(ZCONST char *s1, ZCONST char *s2);
 
 
 /* match() is a shell to recmatch() to return only Boolean values. */

@@ -89,12 +89,12 @@ typedef struct _sign_info
 /*******************/
 
 #if (defined(REENTRANT) && !defined(NO_EXCEPT_SIGNALS))
-static int setsignalhandler OF((__GPRO__ savsigs_info **p_savedhandler_chain,
-                                int signal_type, void (*newhandler)(int)));
+static int setsignalhandler (__GPRO__ savsigs_info **p_savedhandler_chain,
+                                int signal_type, void (*newhandler)(int));
 #endif
 #ifndef SFX
-static void  help_extended      OF((__GPRO));
-static void  show_version_info  OF((__GPRO));
+static void  help_extended         (__GPRO);
+static void  show_version_info     (__GPRO);
 #endif
 
 

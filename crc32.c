@@ -82,7 +82,7 @@
  * the table dynamically.
  */
 
-local void make_crc_table OF((void));
+local void make_crc_table(void);
 
 #if (defined(DYNALLOC_CRCTAB) && defined(REENTRANT))
    error: Dynamic allocation of CRC table not safe with reentrant code.
@@ -612,11 +612,11 @@ local ZCONST ulg near crc_table[CRC_TBLS*256] = {
 };
 #endif /* ?DYNAMIC_CRC_TABLE */
 
-/* use "OF((void))" here to work around a Borland TC++ 1.0 problem */
+/* use "(void)" here to work around a Borland TC++ 1.0 problem */
 #ifdef USE_ZLIB
-ZCONST uLongf *get_crc_table OF((void))
+ZCONST uLongf *get_crc_table(void)
 #else
-ZCONST ulg near *get_crc_table OF((void))
+ZCONST ulg near *get_crc_table(void)
 #endif
 {
 #ifdef DYNAMIC_CRC_TABLE

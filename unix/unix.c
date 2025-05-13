@@ -106,7 +106,7 @@ typedef struct {
 /* static int created_dir;      */      /* used in mapname(), checkdir() */
 /* static int renamed_fullpath; */      /* ditto */
 
-static unsigned filtattr OF((__GPRO__ unsigned perms));
+static unsigned filtattr(__GPRO__ unsigned perms);
 
 
 /*****************************/
@@ -137,9 +137,9 @@ typedef struct zdir {
     FILE *dirhandle;
     struct dirent *entry;
 } DIR
-DIR *opendir OF((ZCONST char *dirspec));
-void closedir OF((DIR *dirp));
-struct dirent *readdir OF((DIR *dirp));
+DIR *opendir(ZCONST char *dirspec);
+void closedir(DIR *dirp);
+struct dirent *readdir(DIR *dirp);
 
 DIR *opendir(dirspec)
     ZCONST char *dirspec;
@@ -1042,7 +1042,7 @@ int mkdir(path, mode)
 
 
 #if (!defined(MTS) || defined(SET_DIR_ATTRIB))
-static int get_extattribs OF((__GPRO__ iztimes *pzt, ulg z_uidgid[2]));
+static int get_extattribs(__GPRO__ iztimes *pzt, ulg z_uidgid[2]);
 
 static int get_extattribs(__G__ pzt, z_uidgid)
     __GDEF
@@ -1231,7 +1231,7 @@ int close_outfile(__G)
 
 #ifdef QLZIP
     if (G.extra_field) {
-        static void qlfix OF((__GPRO__ uch *ef_ptr, unsigned ef_len));
+        static void qlfix(__GPRO__ uch *ef_ptr, unsigned ef_len);
 
         qlfix(__G__ G.extra_field, G.lrec.extra_field_length);
     }

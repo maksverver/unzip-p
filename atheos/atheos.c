@@ -39,10 +39,10 @@
 #include <dirent.h>
 #include <atheos/fs_attribs.h>
 
-static unsigned filtattr OF((__GPRO__ unsigned perms));
-static uch *scanAtheOSexfield  OF((const uch *ef_ptr, unsigned ef_len));
+static unsigned filtattr(__GPRO__ unsigned perms);
+static uch *scanAtheOSexfield     (const uch *ef_ptr, unsigned ef_len);
 static int  set_file_attrs( const char *, const unsigned char *, const off_t );
-static void setAtheOSexfield   OF((const char *path, uch *extra_field));
+static void setAtheOSexfield      (const char *path, uch *extra_field);
 
 #ifdef SET_DIR_ATTRIB
 typedef struct uxdirattr {      /* struct for holding unix style directory */
@@ -858,7 +858,7 @@ int checkdir(__G__ pathcomp, flag)
 
 
 
-static int get_extattribs OF((__GPRO__ iztimes *pzt, ulg z_uidgid[2]));
+static int get_extattribs(__GPRO__ iztimes *pzt, ulg z_uidgid[2]);
 
 static int get_extattribs(__G__ pzt, z_uidgid)
     __GDEF

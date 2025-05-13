@@ -43,22 +43,22 @@
 #  include "crc32.h"
 #endif
 
-static int    do_seekable        OF((__GPRO__ int lastchance));
+static int    do_seekable           (__GPRO__ int lastchance);
 #ifdef DO_SAFECHECK_2GB
 # ifdef USE_STRM_INPUT
-static zoff_t file_size          OF((FILE *file));
+static zoff_t file_size             (FILE *file);
 # else
-static zoff_t file_size          OF((int fh));
+static zoff_t file_size             (int fh);
 # endif
 #endif /* DO_SAFECHECK_2GB */
-static int    rec_find           OF((__GPRO__ zoff_t, char *, int));
-static int    find_ecrec64       OF((__GPRO__ zoff_t searchlen));
-static int    find_ecrec         OF((__GPRO__ zoff_t searchlen));
-static int    process_zip_cmmnt  OF((__GPRO));
-static int    get_cdir_ent       OF((__GPRO));
+static int    rec_find              (__GPRO__ zoff_t, char *, int);
+static int    find_ecrec64          (__GPRO__ zoff_t searchlen);
+static int    find_ecrec            (__GPRO__ zoff_t searchlen);
+static int    process_zip_cmmnt     (__GPRO);
+static int    get_cdir_ent          (__GPRO);
 #ifdef IZ_HAVE_UXUIDGID
-static int    read_ux3_value     OF((ZCONST uch *dbuf, unsigned uidgid_sz,
-                                     ulg *p_uidgid));
+static int    read_ux3_value        (ZCONST uch *dbuf, unsigned uidgid_sz,
+                                     ulg *p_uidgid);
 #endif /* IZ_HAVE_UXUIDGID */
 
 
@@ -2131,10 +2131,10 @@ int getUnicodeData(__G__ ef_buf, ef_len)
    encoded as UTF-8.
 */
 
-static int utf8_char_bytes OF((ZCONST char *utf8));
-static ulg ucs4_char_from_utf8 OF((ZCONST char **utf8));
-static int utf8_to_ucs4_string OF((ZCONST char *utf8, ulg *ucs4buf,
-                                   int buflen));
+static int utf8_char_bytes(ZCONST char *utf8);
+static ulg ucs4_char_from_utf8(ZCONST char **utf8);
+static int utf8_to_ucs4_string(ZCONST char *utf8, ulg *ucs4buf,
+                                   int buflen);
 
 /* utility functions for managing UTF-8 and UCS-4 strings */
 

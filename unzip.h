@@ -205,56 +205,6 @@ freely, subject to the above disclaimer and the following restrictions:
 #  define MACOS
 #endif
 
-/* use prototypes and ANSI libraries if __STDC__, or MS-DOS, or OS/2, or Win32,
- * or IBM C Set/2, or Borland C, or Watcom C, or GNU gcc (emx or Cygwin),
- * or Macintosh, or Sequent, or Atari, or IBM RS/6000, or Silicon Graphics,
- * or Convex?, or AtheOS, or BeOS.
- */
-#if (defined(__STDC__) || defined(MSDOS) || defined(OS2) || defined(WIN32))
-#  ifndef PROTO
-#    define PROTO
-#  endif
-#endif
-#if (defined(__IBMC__) || defined(__BORLANDC__) || defined(__WATCOMC__))
-#  ifndef PROTO
-#    define PROTO
-#  endif
-#endif
-#if (defined(__EMX__) || defined(__CYGWIN__))
-#  ifndef PROTO
-#    define PROTO
-#  endif
-#endif
-#if (defined(MACOS) || defined(ATARI_ST) || defined(RISCOS) || defined(THEOS))
-#  ifndef PROTO
-#    define PROTO
-#  endif
-#endif
-/* Sequent running Dynix/ptx:  non-modern compiler */
-#if (defined(_AIX) || defined(sgi) || (defined(_SEQUENT_) && !defined(PTX)))
-#  ifndef PROTO
-#    define PROTO
-#  endif
-#endif
-#if (defined(CMS_MVS) || defined(__ATHEOS__) || defined(__BEOS__))
-/* || defined(CONVEX) ? */
-#  ifndef PROTO
-#    define PROTO
-#  endif
-#endif
-
-/* turn off prototypes if requested */
-#if (defined(NOPROTO) && defined(PROTO))
-#  undef PROTO
-#endif
-
-/* used to remove arguments in function prototypes for non-ANSI C */
-#ifdef PROTO
-#  define OF(a) a
-#else
-#  define OF(a) ()
-#endif
-
 #if (!defined(ZCONST) && (defined(USE_CONST) || !defined(NO_CONST)))
 #  define ZCONST const
 #endif
@@ -369,24 +319,15 @@ typedef unsigned long   ulg;    /*  predefined on some systems) & match zip  */
 #endif /* !_IZ_TYPES_DEFINED */
 
 /* InputFn is not yet used and is likely to change: */
-#ifdef PROTO
-   typedef int   (UZ_EXP MsgFn)     (zvoid *pG, uch *buf, ulg size, int flag);
-   typedef int   (UZ_EXP InputFn)   (zvoid *pG, uch *buf, int *size, int flag);
-   typedef void  (UZ_EXP PauseFn)   (zvoid *pG, ZCONST char *prompt, int flag);
-   typedef int   (UZ_EXP PasswdFn)  (zvoid *pG, int *rcnt, char *pwbuf,
-                                     int size, ZCONST char *zfn,
-                                     ZCONST char *efn);
-   typedef int   (UZ_EXP StatCBFn)  (zvoid *pG, int fnflag, ZCONST char *zfn,
-                                     ZCONST char *efn, ZCONST zvoid *details);
-   typedef void  (UZ_EXP UsrIniFn)  (void);
-#else /* !PROTO */
-   typedef int   (UZ_EXP MsgFn)     ();
-   typedef int   (UZ_EXP InputFn)   ();
-   typedef void  (UZ_EXP PauseFn)   ();
-   typedef int   (UZ_EXP PasswdFn)  ();
-   typedef int   (UZ_EXP StatCBFn)  ();
-   typedef void  (UZ_EXP UsrIniFn)  ();
-#endif /* ?PROTO */
+typedef int   (UZ_EXP MsgFn)     (zvoid *pG, uch *buf, ulg size, int flag);
+typedef int   (UZ_EXP InputFn)   (zvoid *pG, uch *buf, int *size, int flag);
+typedef void  (UZ_EXP PauseFn)   (zvoid *pG, ZCONST char *prompt, int flag);
+typedef int   (UZ_EXP PasswdFn)  (zvoid *pG, int *rcnt, char *pwbuf,
+                                  int size, ZCONST char *zfn,
+                                  ZCONST char *efn);
+typedef int   (UZ_EXP StatCBFn)  (zvoid *pG, int fnflag, ZCONST char *zfn,
+                                  ZCONST char *efn, ZCONST zvoid *details);
+typedef void  (UZ_EXP UsrIniFn)  (void);
 
 typedef struct _UzpBuffer {    /* rxstr */
     ulg   strlength;           /* length of string */
@@ -641,35 +582,35 @@ typedef struct _Uzp_cdir_Rec {
 
 #define  UzpMatch match
 
-int      UZ_EXP UzpMain            OF((int argc, char **argv));
-int      UZ_EXP UzpAltMain         OF((int argc, char **argv, UzpInit *init));
-ZCONST UzpVer * UZ_EXP UzpVersion  OF((void));
-void     UZ_EXP UzpFreeMemBuffer   OF((UzpBuffer *retstr));
+int      UZ_EXP UzpMain               (int argc, char **argv);
+int      UZ_EXP UzpAltMain            (int argc, char **argv, UzpInit *init);
+ZCONST UzpVer * UZ_EXP UzpVersion     (void);
+void     UZ_EXP UzpFreeMemBuffer      (UzpBuffer *retstr);
 #ifndef WINDLL
-int      UZ_EXP UzpUnzipToMemory   OF((char *zip, char *file, UzpOpts *optflgs,
-                                       UzpCB *UsrFunc, UzpBuffer *retstr));
-int      UZ_EXP UzpGrep            OF((char *archive, char *file,
+int      UZ_EXP UzpUnzipToMemory      (char *zip, char *file, UzpOpts *optflgs,
+                                       UzpCB *UsrFunc, UzpBuffer *retstr);
+int      UZ_EXP UzpGrep               (char *archive, char *file,
                                        char *pattern, int cmd, int SkipBin,
-                                       UzpCB *UsrFunc));
+                                       UzpCB *UsrFunc);
 #endif
 #ifdef OS2
-int      UZ_EXP UzpFileTree        OF((char *name, cbList(callBack),
-                                       char *cpInclude[], char *cpExclude[]));
+int      UZ_EXP UzpFileTree           (char *name, cbList(callBack),
+                                       char *cpInclude[], char *cpExclude[]);
 #endif
 
-unsigned UZ_EXP UzpVersion2        OF((UzpVer2 *version));
-int      UZ_EXP UzpValidate        OF((char *archive, int AllCodes));
+unsigned UZ_EXP UzpVersion2           (UzpVer2 *version);
+int      UZ_EXP UzpValidate           (char *archive, int AllCodes);
 
 
 /* default I/O functions (can be swapped out via UzpAltMain() entry point): */
 
-int      UZ_EXP UzpMessagePrnt   OF((zvoid *pG, uch *buf, ulg size, int flag));
-int      UZ_EXP UzpMessageNull   OF((zvoid *pG, uch *buf, ulg size, int flag));
-int      UZ_EXP UzpInput         OF((zvoid *pG, uch *buf, int *size, int flag));
-void     UZ_EXP UzpMorePause     OF((zvoid *pG, ZCONST char *prompt, int flag));
-int      UZ_EXP UzpPassword      OF((zvoid *pG, int *rcnt, char *pwbuf,
+int      UZ_EXP UzpMessagePrnt      (zvoid *pG, uch *buf, ulg size, int flag);
+int      UZ_EXP UzpMessageNull      (zvoid *pG, uch *buf, ulg size, int flag);
+int      UZ_EXP UzpInput            (zvoid *pG, uch *buf, int *size, int flag);
+void     UZ_EXP UzpMorePause        (zvoid *pG, ZCONST char *prompt, int flag);
+int      UZ_EXP UzpPassword         (zvoid *pG, int *rcnt, char *pwbuf,
                                      int size, ZCONST char *zfn,
-                                     ZCONST char *efn));
+                                     ZCONST char *efn);
 
 #ifdef __cplusplus
 }

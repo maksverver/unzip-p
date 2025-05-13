@@ -89,7 +89,7 @@ APIDocStruct APIDoc[] = {
 };
 
 
-static int function_help OF((__GPRO__ APIDocStruct *doc, char *fname));
+static int function_help(__GPRO__ APIDocStruct *doc, char *fname);
 
 
 

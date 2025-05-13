@@ -170,11 +170,11 @@ ulg LG(uch* p) { return ((ulg)(SH(p)) | ((ulg)(SH((p)+2)) << 16)); }
 #endif /* ?THEOS */
 
 /* Function prototypes */
-static void err OF((int, char *));
+static void err(int, char *);
 #if (defined(USE_DEFLATE64) && defined(__16BIT__))
-static int partflush OF((uch *rawbuf, unsigned w));
+static int partflush(uch *rawbuf, unsigned w);
 #endif
-int main OF((int, char **));
+int main(int, char **);
 
 /* Globals */
 FILE *out;                      /* output file (*in moved to G struct) */

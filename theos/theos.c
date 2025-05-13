@@ -988,7 +988,7 @@ int screenlines()
 
 
 #if (!defined(MTS) || defined(SET_DIR_ATTRIB))
-static void get_extattribs OF((__GPRO__ iztimes *pzt));
+static void get_extattribs(__GPRO__ iztimes *pzt);
 
 static int get_extattribs(__G__ pzt)
     __GDEF

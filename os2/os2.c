@@ -77,22 +77,22 @@ extern ZCONST char Far TruncEAs[];
   static int SetFileTime(ZCONST char *name, ulg stamp);
 #endif
 #if defined(USE_EF_UT_TIME) || defined(TIMESTAMP)
-  static ulg Utime2DosDateTime  OF((time_t uxtime));
+  static ulg Utime2DosDateTime     (time_t uxtime);
 #endif
-static int   getOS2filetimes    OF((__GPRO__
-                                    ulg *pM_dt, ulg *pA_dt, ulg *pC_dt));
-static void  SetPathAttrTimes   OF((__GPRO__ int flags, int dir));
-static int   SetEAs             OF((__GPRO__ const char *path,
-                                    void *ef_block));
-static int   SetACL             OF((__GPRO__ const char *path,
-                                    void *ef_block));
-static int   EvalExtraFields    OF((__GPRO__ const char *path,
-                                    void *extra_field, unsigned ef_len));
-static int   isfloppy           OF((int nDrive));
-static int   IsFileNameValid    OF((const char *name));
-static void  map2fat            OF((char *pathcomp, char **pEndFAT));
-static int   SetLongNameEA      OF((char *name, char *longname));
-static void  InitNLS            OF((void));
+static int   getOS2filetimes       (__GPRO__
+                                    ulg *pM_dt, ulg *pA_dt, ulg *pC_dt);
+static void  SetPathAttrTimes      (__GPRO__ int flags, int dir);
+static int   SetEAs                (__GPRO__ const char *path,
+                                    void *ef_block);
+static int   SetACL                (__GPRO__ const char *path,
+                                    void *ef_block);
+static int   EvalExtraFields       (__GPRO__ const char *path,
+                                    void *extra_field, unsigned ef_len);
+static int   isfloppy              (int nDrive);
+static int   IsFileNameValid       (const char *name);
+static void  map2fat               (char *pathcomp, char **pEndFAT);
+static int   SetLongNameEA         (char *name, char *longname);
+static void  InitNLS               (void);
 
 
 #ifdef ACORN_FTYPE_NFS

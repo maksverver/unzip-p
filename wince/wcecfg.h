@@ -225,7 +225,7 @@
  * avoids leaving unabsorbed LFs in the keyboard buffer under Windows95,
  * and supports the <ALT>+[0]<digit><digit><digit> feature.
  */
-int getch_win32  OF((void));
+int getch_win32     (void);
 
 #endif /* ?POCKET_UNZIP */
 

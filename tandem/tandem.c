@@ -183,7 +183,7 @@ _tal _priv short FILE_CHANGELABEL_ (
  const short _far *    /* IN */
  );
 
-_c _callable int changelabel OF((short, const short *, const short *));
+_c _callable int changelabel(short, const short *, const short *);
 
 _c _callable int changelabel(fnum, modtime, actime)
   short fnum;

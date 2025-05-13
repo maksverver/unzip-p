@@ -365,9 +365,9 @@
 
 #if USE_ZLIB_INFLATCB
 
-static unsigned zlib_inCB OF((void FAR *pG, unsigned char FAR * FAR * pInbuf));
-static int zlib_outCB OF((void FAR *pG, unsigned char FAR *outbuf,
-                          unsigned outcnt));
+static unsigned zlib_inCB(void FAR *pG, unsigned char FAR * FAR * pInbuf);
+static int zlib_outCB(void FAR *pG, unsigned char FAR *outbuf,
+                          unsigned outcnt);
 
 static unsigned zlib_inCB(pG, pInbuf)
     void FAR *pG;
@@ -717,19 +717,12 @@ uzinflate_cleanup_exit:
 
 
 /* Function prototypes */
-#ifndef OF
-#  ifdef __STDC__
-#    define OF(a) a
-#  else
-#    define OF(a) ()
-#  endif
-#endif /* !OF */
-int inflate_codes OF((__GPRO__ struct huft *tl, struct huft *td,
-                      unsigned bl, unsigned bd));
-static int inflate_stored OF((__GPRO));
-static int inflate_fixed OF((__GPRO));
-static int inflate_dynamic OF((__GPRO));
-static int inflate_block OF((__GPRO__ int *e));
+int inflate_codes(__GPRO__ struct huft *tl, struct huft *td,
+                      unsigned bl, unsigned bd);
+static int inflate_stored(__GPRO);
+static int inflate_fixed(__GPRO);
+static int inflate_dynamic(__GPRO);
+static int inflate_block(__GPRO__ int *e);
 
 
 /* The inflate algorithm uses a sliding 32K byte window on the uncompressed

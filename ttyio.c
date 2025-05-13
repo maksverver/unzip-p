@@ -108,7 +108,7 @@
 #if (defined(UNZIP) && !defined(FUNZIP) && defined(UNIX) && defined(MORE))
 #  include <sys/ioctl.h>
 #  define GOT_IOCTL_H
-   /* int ioctl OF((int, int, zvoid *));   GRR: may need for some systems */
+   /* int ioctl(int, int, zvoid *);   GRR: may need for some systems */
 #endif
 
 #ifndef HAVE_WORKING_GETCH
@@ -161,8 +161,8 @@
               */
              /*
               * GRR: let's find out...   Hmmm, appears not...
-             int gtty OF((int, struct sgttyb *));
-             int stty OF((int, struct sgttyb *));
+             int gtty(int, struct sgttyb *);
+             int stty(int, struct sgttyb *);
               */
 #          endif
 #        endif /* !CMS_MVS */
@@ -173,7 +173,7 @@
 #        include <fcntl.h>
 #      endif
 #    else
-       char *ttyname OF((int));
+       char *ttyname(int);
 #    endif
 #  endif /* ?VMS */
 #endif /* !HAVE_WORKING_GETCH */

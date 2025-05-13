@@ -66,7 +66,7 @@ ZCONST char *fnames[2] = {"*", NULL};   /* default filenames vector */
        "error:  global pointer in table does not match pointer passed as\
  parameter\n";
 
-static void registerGlobalPointer OF((__GPRO));
+static void registerGlobalPointer(__GPRO);
 
 
 

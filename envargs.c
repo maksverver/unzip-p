@@ -41,7 +41,7 @@
 #if (!defined(RISCOS) && defined(NO_STDLIB_H))
 extern char *getenv();
 #endif
-static int count_args OF((ZCONST char *));
+static int count_args(ZCONST char *);
 
 
 /* envargs() returns PK-style error code */

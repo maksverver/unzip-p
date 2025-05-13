@@ -47,12 +47,12 @@
 #include <support/byteorder.h>
 #include <storage/Mime.h>
 
-static unsigned filtattr OF((__GPRO__ unsigned perms));
-static uch *scanBeOSexfield  OF((const uch *ef_ptr, unsigned ef_len));
+static unsigned filtattr(__GPRO__ unsigned perms);
+static uch *scanBeOSexfield     (const uch *ef_ptr, unsigned ef_len);
 static int  set_file_attrs( const char *, const unsigned char *, const off_t );
-static void setBeOSexfield   OF((const char *path, uch *extra_field));
+static void setBeOSexfield      (const char *path, uch *extra_field);
 #ifdef BEOS_USE_PRINTEXFIELD
-static void printBeOSexfield OF((int isdir, uch *extra_field));
+static void printBeOSexfield(int isdir, uch *extra_field);
 #endif
 #ifdef BEOS_ASSIGN_FILETYPE
 static void assign_MIME( const char * );
@@ -896,7 +896,7 @@ int checkdir(__G__ pathcomp, flag)
 
 
 
-static int get_extattribs OF((__GPRO__ iztimes *pzt, ulg z_uidgid[2]));
+static int get_extattribs(__GPRO__ iztimes *pzt, ulg z_uidgid[2]);
 
 static int get_extattribs(__G__ pzt, z_uidgid)
     __GDEF
