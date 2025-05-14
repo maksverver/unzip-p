@@ -13,8 +13,6 @@
 # % cleanup/unifdef.sh
 
 sources=(
-    ./api.c
-    ./apihelp.c
     ./consts.h
     ./crc32.c
     ./crc32.h
@@ -45,7 +43,6 @@ sources=(
     ./unshrink.c
     ./unzip.c
     ./unzip.h
-    ./unzipstb.c
     ./unzpriv.h
     ./unzvers.h
     ./zip.h

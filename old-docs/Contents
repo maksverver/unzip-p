@@ -1,0 +1,12 @@
+Obsolete documentation originally from the UnZip 6.00 source archive. 
+
+  Contents      this file
+  README        what UnZip is; general information
+  COPYING.OLD   historic copyrights and distribution policy (obsolete)
+  INSTALL       how to compile and install UnZip and related utilities
+  WHERE         where Zip/UnZip and encryption/decryption support can be found
+  History.600   new features and fixes of the last major release
+  ToDo          rough priority list of new features to be added in next release
+  BUGS          known bugs, problems, and (possible) other features to be added
+  file_id.diz   BBS-oriented file describing this archive
+  proginfo/     programming docs, additional technical info, contributor list
