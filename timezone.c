@@ -112,7 +112,7 @@ static struct state statism;
 static time_t transtime(const time_t janfirst, const int year,
                             const struct rule * const rulep,
                             const long offset);
-static void generate_transitions(register struct state * const sp,
+static void generate_transitions(struct state * const sp,
                                      const struct rule * const start,
                                      const struct rule * const end);
 static const char *getzname(const char *strp);
@@ -121,7 +121,7 @@ static const char *getnum(const char *strp, int * const nump,
 static const char *getsecs(const char *strp, long * const secsp);
 static const char *getoffset(const char *strp, long * const offsetp);
 static const char *getrule(const char *strp, struct rule * const rulep);
-static int Parse_TZ(const char *name, register struct state * const sp);
+static int Parse_TZ(const char *name, struct state * const sp);
 
 
 static time_t transtime(janfirst, year, rulep, offset)

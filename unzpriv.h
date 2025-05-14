@@ -1380,7 +1380,7 @@ int      open_input_file         (__GPRO);
 int      open_outfile            (__GPRO);                    /* also vms.c */
 void     undefer_input           (__GPRO);
 void     defer_leftover_input    (__GPRO);
-unsigned readbuf                 (__GPRO__ char *buf, register unsigned len);
+unsigned readbuf                 (__GPRO__ char *buf, unsigned len);
 int      readbyte                (__GPRO);
 int      fillinbuf               (__GPRO);
 int      seek_zipf               (__GPRO__ zoff_t abs_offset);
@@ -1406,9 +1406,7 @@ char    *fzofft                  (__GPRO__ zoff_t val,
    char *str2oem                 (char *dst, const char *src);
 #  endif
 #  ifdef NO_STRNICMP
-   int   zstrnicmp               (register const char *s1,
-                                  const char *s2,
-                                  unsigned n);
+   int   zstrnicmp               (const char *s1, const char *s2, unsigned n);
 #  endif
 #  ifdef NEED_UZMBCLEN
    extent uzmbclen             (const unsigned char *ptr);
@@ -1765,7 +1763,7 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 #    ifndef NATIVE
 #      define NATIVE     "native chars"
 #    endif
-#    define A_TO_N(str1) {register uch *p;\
+#    define A_TO_N(str1) {uch *p;\
      for (p=(uch *)(str1); *p; p++) *p=native(*p);}
 #  endif
 /*
@@ -1798,7 +1796,7 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 #      ifndef IZ_ISO2OEM_ARRAY
 #        define IZ_ISO2OEM_ARRAY
 #      endif
-#      define _ISO_INTERN(str1) if (iso2oem) {register uch *p;\
+#      define _ISO_INTERN(str1) if (iso2oem) {uch *p;\
        for (p=(uch *)(str1); *p; p++)\
          *p = native((*p & 0x80) ? iso2oem[*p & 0x7f] : *p);}
 #    else
@@ -1813,7 +1811,7 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 #      ifndef IZ_OEM2ISO_ARRAY
 #        define IZ_OEM2ISO_ARRAY
 #      endif
-#      define _OEM_INTERN(str1) if (oem2iso) {register uch *p;\
+#      define _OEM_INTERN(str1) if (oem2iso) {uch *p;\
        for (p=(uch *)(str1); *p; p++)\
          *p = native((*p & 0x80) ? oem2iso[*p & 0x7f] : *p);}
 #    endif
