@@ -455,7 +455,7 @@ int open_outfile(__G)           /* return 1 if fail */
     Trace((stderr, "open_outfile:  doing fopen(%s) for writing\n",
       FnFilter1(G.filename)));
     {
-#if defined(ATH_BE_UNX) || defined(AOS_VS) || defined(QDOS) || defined(TANDEM)
+#if defined(ATH_BEO_UNX) || defined(AOS_VS) || defined(QDOS) || defined(TANDEM)
         mode_t umask_sav = umask(0077);
 #endif
 #if defined(SYMLINKS) || defined(QLZIP)
@@ -466,7 +466,7 @@ int open_outfile(__G)           /* return 1 if fail */
 #else
         G.outfile = zfopen(G.filename, FOPW);
 #endif
-#if defined(ATH_BE_UNX) || defined(AOS_VS) || defined(QDOS) || defined(TANDEM)
+#if defined(ATH_BEO_UNX) || defined(AOS_VS) || defined(QDOS) || defined(TANDEM)
         umask(umask_sav);
 #endif
     }
