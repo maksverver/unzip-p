@@ -348,14 +348,6 @@ typedef size_t extent;
 #    define INBUFSIZ  8192  /* larger buffers for real OSes */
 #  endif
 
-
-/* Logic for case of small memory, length of EOL > 1:  if OUTBUFSIZ == 2048,
- * OUTBUFSIZ>>1 == 1024 and OUTBUFSIZ>>7 == 16; therefore rawbuf is 1008 bytes
- * and transbuf 1040 bytes.  Have room for 32 extra EOL chars; 1008/32 == 31.5
- * chars/line, smaller than estimated 35-70 characters per line for C source
- * and normal text.  Hence difference is sufficient for most "average" files.
- * (Argument scales for larger OUTBUFSIZ.)
- */
 #  define zfstrcpy(dest, src)       strcpy((dest), (src))
 #  define zfstrcmp(s1, s2)          strcmp((s1), (s2))
 #  define zfmalloc                  malloc
