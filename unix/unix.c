@@ -128,62 +128,6 @@ static const char CannotSetTimestamps[] =
 
 
 #ifndef SFX
-#ifdef NO_DIR                  /* for AT&T 3B1 */
-
-#define opendir(path) fopen(path,"r")
-#define closedir(dir) fclose(dir)
-typedef FILE DIR;
-typedef struct zdir {
-    FILE *dirhandle;
-    struct dirent *entry;
-} DIR
-DIR *opendir(const char *dirspec);
-void closedir(DIR *dirp);
-struct dirent *readdir(DIR *dirp);
-
-DIR *opendir(dirspec)
-    const char *dirspec;
-{
-    DIR *dirp;
-
-    if ((dirp = malloc(sizeof(DIR)) != NULL) {
-        if ((dirp->dirhandle = fopen(dirspec, "r")) == NULL) {
-            free(dirp);
-            dirp = NULL;
-        }
-    }
-    return dirp;
-}
-
-void closedir(dirp)
-    DIR *dirp;
-{
-    fclose(dirp->dirhandle);
-    free(dirp);
-}
-
-/*
- *  Apparently originally by Rich Salz.
- *  Cleaned up and modified by James W. Birdsall.
- */
-struct dirent *readdir(dirp)
-    DIR *dirp;
-{
-
-    if (dirp == NULL)
-        return NULL;
-
-    for (;;)
-        if (fread(&(dirp->entry), sizeof (struct dirent), 1,
-                  dirp->dirhandle) == 0)
-            return (struct dirent *)NULL;
-        else if ((dirp->entry).d_ino)
-            return &(dirp->entry);
-
-} /* end function readdir() */
-
-#endif /* NO_DIR */
-
 
 /**********************/
 /* Function do_wild() */   /* for porting: dir separator; match(ignore_case) */
