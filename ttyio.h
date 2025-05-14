@@ -54,12 +54,6 @@
 #  endif
 #endif
 
-#if (defined(__ATHEOS__) || defined(__BEOS__) || defined(UNIX))
-#  ifndef ATH_BEO_UNX
-#    define ATH_BEO_UNX
-#  endif
-#endif
-
 #if (defined(VM_CMS) || defined(MVS))
 #  ifndef CMS_MVS
 #    define CMS_MVS

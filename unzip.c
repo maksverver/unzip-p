@@ -254,7 +254,7 @@ M  pipe through \"more\" pager              -s  spaces in filenames => '_'\n\n";
 \n\n";
 #endif
 #else /* !VMS */
-#ifdef ATH_BEO_UNX
+#ifdef UNIX
    static const char Far local2[] = " -X  restore UID/GID info";
 #ifdef MORE
    static const char Far local3[] = "\
@@ -263,7 +263,7 @@ M  pipe through \"more\" pager              -s  spaces in filenames => '_'\n\n";
    static const char Far local3[] = "\
   -K  keep setuid/setgid/tacky permissions\n";
 #endif
-#else /* !ATH_BEO_UNX */
+#else /* !UNIX */
 #ifdef TANDEM
    static const char Far local2[] = "\
  -X  restore Tandem User ID                 -r  remove file extensions\n\
@@ -300,7 +300,7 @@ M  pipe through \"more\" pager              -s  spaces in filenames => '_'\n\n";
 #endif /* ?MACOS */
 #endif /* ?AMIGA */
 #endif /* ?TANDEM */
-#endif /* ?ATH_BEO_UNX */
+#endif /* ?UNIX */
 #endif /* ?VMS */
 #endif /* ?DOS_FLX_OS2_W32 */
 #endif /* !SFX */
@@ -1593,7 +1593,7 @@ int uz_opts(__G__ pargc, pargv)
                     }
                     break;
 #endif /* ATH_BEO || MACOS */
-#ifdef ATH_BEO_UNX
+#ifdef UNIX
                 case ('K'):
                     if (negative) {
                         uO.K_flag = FALSE, negative = 0;
@@ -1601,7 +1601,7 @@ int uz_opts(__G__ pargc, pargv)
                         uO.K_flag = TRUE;
                     }
                     break;
-#endif /* ATH_BEO_UNX */
+#endif /* UNIX */
 #ifndef SFX
                 case ('l'):
                     if (negative) {

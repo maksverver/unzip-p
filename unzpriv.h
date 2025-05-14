@@ -285,22 +285,6 @@
 #endif
 
 /*---------------------------------------------------------------------------
-    AtheOS section:
-  ---------------------------------------------------------------------------*/
-
-#ifdef __ATHEOS__
-#  include "atheos/athcfg.h"
-#endif
-
-/*---------------------------------------------------------------------------
-    BeOS section:
-  ---------------------------------------------------------------------------*/
-
-#ifdef __BEOS__
-#  include "beos/beocfg.h"
-#endif
-
-/*---------------------------------------------------------------------------
     Human68k/X680x0 section:
   ---------------------------------------------------------------------------*/
 
@@ -719,17 +703,6 @@ typedef size_t extent;
 #  define DOS_T20_VMS
 #endif
 
-#if (defined(__ATHEOS__) || defined(__BEOS__))
-#  define ATH_BEO
-#endif
-
-#if (defined(ATH_BEO) || defined(UNIX))
-#  define ATH_BEO_UNX
-#endif
-
-#if (defined(ATH_BEO_UNX) || defined(THEOS))
-#  define ATH_BEO_THS_UNX
-#endif
 
 /* clean up with a few defaults */
 #ifndef DIR_END
@@ -770,7 +743,7 @@ typedef size_t extent;
 #endif
 
 
-#if (defined(DOS_FLX_NLM_OS2_W32) || defined(ATH_BEO_UNX) || defined(RISCOS))
+#if (defined(DOS_FLX_NLM_OS2_W32) || defined(UNIX) || defined(RISCOS))
 #  ifndef HAVE_UNLINK
 #    define HAVE_UNLINK
 #  endif
@@ -2558,12 +2531,12 @@ int      mapname            (__GPRO__ int renamed);                /* local */
 int      checkdir           (__GPRO__ char *pathcomp, int flag);   /* local */
 char    *do_wild            (__GPRO__ const char *wildzipfn);      /* local */
 char    *GetLoadPath        (__GPRO);                              /* local */
-#if (defined(MORE) && (defined(ATH_BEO_UNX) || defined(QDOS) || defined(VMS)))
+#if (defined(MORE) && (defined(UNIX) || defined(QDOS) || defined(VMS)))
    int screensize           (int *tt_rows, int *tt_cols);          /* local */
 # if defined(VMS)
    int screenlinewrap       (void);                                /* local */
 # endif
-#endif /* MORE && (ATH_BEO_UNX || QDOS || VMS) */
+#endif /* MORE && (UNIX || QDOS || VMS) */
 #ifdef OS2_W32
    int   SetFileSize        (FILE *file, zusz_t filesize);         /* local */
 #endif
