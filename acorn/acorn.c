@@ -44,9 +44,9 @@ static int has_mimemap = -1;   /* used in mimemap() */
 
 extern int mkdir(const char *path, int mode);
 static int has_NFS_ext(const char *name);
-static void setRISCOSexfield(ZCONST char *path, ZCONST void *ef_spark);
+static void setRISCOSexfield(const char *path, const void *ef_spark);
 #ifdef DEBUG
-static void printRISCOSexfield(int isdir, ZCONST void *extra_field);
+static void printRISCOSexfield(int isdir, const void *extra_field);
 #endif
 static int uxtime2acornftime(unsigned *pexadr, unsigned *pldadr, time_t ut);
 static int mimemap(const char *name);
@@ -60,10 +60,10 @@ static int mimemap(const char *name);
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;  /* only used first time on a given dir */
 {
     static DIR *wild_dir = (DIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname, dirnamelen;
     struct dirent *file;
@@ -76,8 +76,8 @@ char *do_wild(__G__ wildspec)
         notfirstcall = TRUE;
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((wildname = (ZCONST char *)strrchr(wildspec, '.')) ==
-            (ZCONST char *)NULL)
+        if ((wildname = (const char *)strrchr(wildspec, '.')) ==
+            (const char *)NULL)
         {
             dirname = ".";
             dirnamelen = 1;
@@ -789,7 +789,7 @@ int mkdir(path, mode)
 /* extra_field-related functions */
 /*********************************/
 
-static void setRISCOSexfield(ZCONST char *path, ZCONST void *ef_spark)
+static void setRISCOSexfield(const char *path, const void *ef_spark)
 {
   if (ef_spark!=NULL) {
     extra_block *block=(extra_block *)ef_spark;
@@ -798,7 +798,7 @@ static void setRISCOSexfield(ZCONST char *path, ZCONST void *ef_spark)
 }
 
 #ifdef DEBUG
-static void printRISCOSexfield(int isdir, ZCONST void *extra_field)
+static void printRISCOSexfield(int isdir, const void *extra_field)
 {
  extra_block *block=(extra_block *)extra_field;
  printf("\n  This file has RISC OS file informations in the local extra field.\n");
@@ -932,7 +932,7 @@ void close_outfile(__G)
 /***************************/
 
 int stamp_file(fname, modtime)
-    ZCONST char *fname;
+    const char *fname;
     time_t modtime;
 {
     unsigned int loadaddr, execaddr;

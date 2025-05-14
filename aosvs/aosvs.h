@@ -29,14 +29,14 @@
 
 /* functions defined in zvs_create.c */
 
-extern int   zvs_create(ZCONST char *fname, long cretim, long modtim,
+extern int   zvs_create(const char *fname, long cretim, long modtim,
                         long acctim, char *pacl, int ftyp, int eltsize,
                         int maxindlev);
-extern int   zvs_credir(ZCONST char *dname, long cretim, long modtim,
+extern int   zvs_credir(const char *dname, long cretim, long modtim,
                         long acctim, char *pacl, int ftyp, long maxblocks,
                         int hashfsize, int maxindlev);
 extern long  dgdate(short mm, short dd, short yy);
-extern char  *ux_to_vs_name(char *outname, ZCONST char *inname);
+extern char  *ux_to_vs_name(char *outname, const char *inname);
 
 
 /* could probably avoid the unions - all elements in each one are the same

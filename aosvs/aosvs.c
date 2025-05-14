@@ -75,9 +75,9 @@ static ZVSCREATE_STRU zzcreatepacket;       /* packet for sys_create(), any
 /* Strings used in aosvs.c */
 /***************************/
 
-static ZCONST char Far CannotDeleteOldFile[] =
+static const char Far CannotDeleteOldFile[] =
   "error:  cannot delete old %s\n";
-static ZCONST char Far CannotCreateFile[] = "error:  cannot create %s\n";
+static const char Far CannotCreateFile[] = "error:  cannot create %s\n";
 
 
 #ifndef SFX
@@ -116,10 +116,10 @@ struct dirent *readdir(dirp)
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;  /* only used first time on a given dir */
 {
     static DIR *wild_dir = (DIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname, dirnamelen;
     struct dirent *file;
@@ -140,7 +140,7 @@ char *do_wild(__G__ wildspec)
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((wildname = strrchr(wildspec, '/')) == (ZCONST char *)NULL) {
+        if ((wildname = strrchr(wildspec, '/')) == (const char *)NULL) {
             dirname = ".";
             dirnamelen = 1;
             have_dirname = FALSE;
@@ -1357,7 +1357,7 @@ void version(__G)
  *
  */
 
-int zvs_create(ZCONST char *fname, long cretim, long modtim, long acctim,
+int zvs_create(const char *fname, long cretim, long modtim, long acctim,
                char *pacl, int ftyp, int eltsize, int maxindlev)
 {
     P_CREATE    pcr_stru;
@@ -1407,7 +1407,7 @@ int zvs_create(ZCONST char *fname, long cretim, long modtim, long acctim,
  *
  */
 
-int zvs_credir(ZCONST char *dname, long cretim, long modtim, long acctim,
+int zvs_credir(const char *dname, long cretim, long modtim, long acctim,
                char *pacl, int ftyp, long maxblocks, int hashfsize,
                int maxindlev)
 {
@@ -1457,9 +1457,9 @@ int zvs_credir(ZCONST char *dname, long cretim, long modtim, long acctim,
  *           31-may-94 dbl
  *
  */
-char *ux_to_vs_name(char *outname, ZCONST char *inname)
+char *ux_to_vs_name(char *outname, const char *inname)
 {
-    ZCONST char *ip=inname, *op=outname;
+    const char *ip=inname, *op=outname;
 
 
     if (ip[0] == '.') {

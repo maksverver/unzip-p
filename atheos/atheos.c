@@ -84,11 +84,11 @@ typedef struct {
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;  /* only used first time on a given dir */
 {
 /* these statics are now declared in SYSTEM_SPECIFIC_GLOBALS in athcfg.h:
     static DIR *wild_dir = (DIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname, dirnamelen;
 */
@@ -110,7 +110,7 @@ char *do_wild(__G__ wildspec)
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((G.wildname = (ZCONST char *)strrchr(wildspec, '/')) == NULL) {
+        if ((G.wildname = (const char *)strrchr(wildspec, '/')) == NULL) {
             G.dirname = ".";
             G.dirnamelen = 1;
             G.have_dirname = FALSE;
@@ -1088,12 +1088,12 @@ int set_symlnk_attribs(__G__ slnk_entry)
 
 #ifdef SET_DIR_ATTRIB
 /* messages of code for setting directory attributes */
-static ZCONST char Far DirlistUidGidFailed[] =
+static const char Far DirlistUidGidFailed[] =
   "warning:  cannot set UID %lu and/or GID %lu for %s\n";
-static ZCONST char Far DirlistUtimeFailed[] =
+static const char Far DirlistUtimeFailed[] =
   "warning:  cannot set modification, access times for %s\n";
 #  ifndef NO_CHMOD
-  static ZCONST char Far DirlistChmodFailed[] =
+  static const char Far DirlistChmodFailed[] =
     "warning:  cannot set permissions for %s\n";
 #  endif
 
@@ -1170,7 +1170,7 @@ int set_direc_attribs(__G__ d)
 /***************************/
 
 int stamp_file(fname, modtime)
-    ZCONST char *fname;
+    const char *fname;
     time_t modtime;
 {
     ztimbuf tp;

@@ -119,9 +119,9 @@ static uch *scanMacOSexfield(uch *ef_ptr, unsigned ef_len,
 static Boolean isMacOSexfield(unsigned id, unsigned size, short *MacZipMode);
 static void PrintMacExtraInfo(MACINFO *mi);
 static OSErr SetFileTime(__GPRO);
-static void DecodeMac3ExtraField(ZCONST uch *buff, MACINFO *mi);
-static void DecodeJLEEextraField(ZCONST uch *buff, MACINFO *mi);
-static void DecodeZPITextraField(ZCONST uch *buff, MACINFO *mi);
+static void DecodeMac3ExtraField(const uch *buff, MACINFO *mi);
+static void DecodeJLEEextraField(const uch *buff, MACINFO *mi);
+static void DecodeZPITextraField(const uch *buff, MACINFO *mi);
 static char *PrintTextEncoding(short script);
 static void BuildMacFilename(void);
 
@@ -129,56 +129,56 @@ static void BuildMacFilename(void);
 /*  Constants (strings, etc.)                                                */
 /*****************************************************************************/
 
-static ZCONST char Far CannotCreateFile[] = "error:  cannot create %s\n";
+static const char Far CannotCreateFile[] = "error:  cannot create %s\n";
 
-static ZCONST char Far OutOfMemEF[] = "Can't allocate memory to uncompress"\
+static const char Far OutOfMemEF[] = "Can't allocate memory to uncompress"\
                                       " file attributes.\n";
 
-static ZCONST char Far ErrUncmpEF[] = "Error uncompressing file attributes.\n";
+static const char Far ErrUncmpEF[] = "Error uncompressing file attributes.\n";
 
-static ZCONST char Far No64Time[]   = "Don't support 64 bit Timevalues; get "\
+static const char Far No64Time[]   = "Don't support 64 bit Timevalues; get "\
                                       " a newer version of MacZip \n";
 
-static ZCONST char Far NoUniCode[]  = "Don't support Unicoded Filenames; get"\
+static const char Far NoUniCode[]  = "Don't support Unicoded Filenames; get"\
                                       " a newer version of MacZip\n";
 
-static ZCONST char Far ZitIt_EF[]   = "warning: found ZipIt extra field  "\
+static const char Far ZitIt_EF[]   = "warning: found ZipIt extra field  "\
                                       " -> file is probably not "\
                                       "usable!!\n";
 
-static ZCONST char Far CantAllocateWildcard[] =
+static const char Far CantAllocateWildcard[] =
     "warning:  cannot allocate wildcard buffers\n";
 
-static ZCONST char Far ErrNoTimeSet[] = "error (%d): cannot set the time for"\
+static const char Far ErrNoTimeSet[] = "error (%d): cannot set the time for"\
                                         " %s\n";
 
-static ZCONST char Far MacBinaryMsg[] = "\n   ... decoding MacBinary ";
+static const char Far MacBinaryMsg[] = "\n   ... decoding MacBinary ";
 
-static ZCONST char Far WarnDirTraversSkip[] =
+static const char Far WarnDirTraversSkip[] =
   "warning:  skipped \"../\" path component(s) in %s\n";
 
-static ZCONST char Far Creating[] = "   creating: %s\n";
+static const char Far Creating[] = "   creating: %s\n";
 
-static ZCONST char Far ConversionFailed[] =
+static const char Far ConversionFailed[] =
   "mapname:  conversion of %s failed\n";
 
-static ZCONST char Far PathTooLong[] = "checkdir error:  path too long: %s\n";
+static const char Far PathTooLong[] = "checkdir error:  path too long: %s\n";
 
-static ZCONST char Far CantCreateDir[] = "checkdir error:  cannot create %s\n\
+static const char Far CantCreateDir[] = "checkdir error:  cannot create %s\n\
                  unable to process %s.\n";
 
-static ZCONST char Far DirIsntDirectory[] =
+static const char Far DirIsntDirectory[] =
   "checkdir error:  %s exists but is not directory\n\
                  unable to process %s.\n";
 
-static ZCONST char Far PathTooLongTrunc[] =
+static const char Far PathTooLongTrunc[] =
   "checkdir warning:  path too long; truncating\n                   %s\n\
                 -> %s\n";
 
-static ZCONST char Far CantCreateExtractDir[] =
+static const char Far CantCreateExtractDir[] =
   "checkdir:  cannot create extraction directory: %s\n";
 
-static ZCONST char Far FilenameToLong[] =
+static const char Far FilenameToLong[] =
   "Filename is to long; truncated: %s\n";
 
 /*****************************************************************************/
@@ -193,10 +193,10 @@ static ZCONST char Far FilenameToLong[] =
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;   /* only used first time on a given dir */
 {
     static DIR *wild_dir = (DIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname;
     static unsigned long dirnamelen;
@@ -219,8 +219,8 @@ char *do_wild(__G__ wildspec)
         if (MacUnzip_Noisy) printf("%s \n\n", GetUnZipInfoVersions());
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((wildname = (ZCONST char *)strrchr(wildspec, ':')) ==
-            (ZCONST char *)NULL) {
+        if ((wildname = (const char *)strrchr(wildspec, ':')) ==
+            (const char *)NULL) {
             dirname = ":";
             dirnamelen = 1;
             have_dirname = FALSE;
@@ -934,7 +934,7 @@ void version(__G)
     __GDEF
 {
 /*
-ZCONST char Far CompiledWith[] =
+const char Far CompiledWith[] =
                "Compiled with %s%s for %s%s%s%s.\n\n"; */
 
 char DateTime[50];
@@ -1487,7 +1487,7 @@ size = size;
 ** in big endian format
 */
 
-ulg makePPClong(ZCONST uch *sig)
+ulg makePPClong(const uch *sig)
 {
     return (((ulg)sig[0]) << 24)
          + (((ulg)sig[1]) << 16)
@@ -1503,7 +1503,7 @@ ulg makePPClong(ZCONST uch *sig)
 ** in big endian format
 */
 
-ush makePPCword(ZCONST uch *b)
+ush makePPCword(const uch *b)
 {
     return (ush)((b[0] << 8) | b[1]);
 }
@@ -1520,8 +1520,8 @@ static void PrintMacExtraInfo(MACINFO *mi)
 {
 #define MY_FNDRINFO fpb.hFileInfo.ioFlFndrInfo
     DateTimeRec  MacTime;
-    static ZCONST char space[] = "                                    ";
-    static ZCONST char line[]  = "------------------------------------"\
+    static const char space[] = "                                    ";
+    static const char line[]  = "------------------------------------"\
                                  "------------------------------";
 
     printf("\n\n%s", line);
@@ -1750,7 +1750,7 @@ return false;
 **
 */
 
-static void DecodeMac3ExtraField(ZCONST uch *buff, MACINFO *mi)
+static void DecodeMac3ExtraField(const uch *buff, MACINFO *mi)
 {               /* extra-field info of the new MacZip implementation */
                 /* compresssed extra-field starts here (if compressed) */
 
@@ -1824,7 +1824,7 @@ if (uO.i_flag) IgnoreEF_Macfilename = true;
 **
 */
 
-static void DecodeJLEEextraField(ZCONST uch *buff, MACINFO *mi)
+static void DecodeJLEEextraField(const uch *buff, MACINFO *mi)
 { /*  extra-field info of Johnny Lee's old MacZip  */
 
 Assert_it(buff, "", "");
@@ -1851,7 +1851,7 @@ newExtraField.fpb.hFileInfo.ioFlXFndrInfo.fdScript = smSystemScript;
 **
 */
 
-static void DecodeZPITextraField(ZCONST uch *buff, MACINFO *mi)
+static void DecodeZPITextraField(const uch *buff, MACINFO *mi)
 { /*  extra-field info of Johnny Lee's old MacZip  */
 unsigned char filelen;
 

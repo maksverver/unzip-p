@@ -205,14 +205,6 @@ freely, subject to the above disclaimer and the following restrictions:
 #  define MACOS
 #endif
 
-#if (!defined(ZCONST) && (defined(USE_CONST) || !defined(NO_CONST)))
-#  define ZCONST const
-#endif
-
-#ifndef ZCONST
-#  define ZCONST
-#endif
-
 /* Tell Microsoft Visual C++ 2005 (and newer) to leave us alone
  * and let us use standard C functions the way we're supposed to.
  * (These preprocessor symbols must appear before the first system
@@ -320,12 +312,12 @@ typedef unsigned long   ulg;    /*  predefined on some systems) & match zip  */
 /* InputFn is not yet used and is likely to change: */
 typedef int   (UZ_EXP MsgFn)     (void *pG, uch *buf, ulg size, int flag);
 typedef int   (UZ_EXP InputFn)   (void *pG, uch *buf, int *size, int flag);
-typedef void  (UZ_EXP PauseFn)   (void *pG, ZCONST char *prompt, int flag);
+typedef void  (UZ_EXP PauseFn)   (void *pG, const char *prompt, int flag);
 typedef int   (UZ_EXP PasswdFn)  (void *pG, int *rcnt, char *pwbuf,
-                                  int size, ZCONST char *zfn,
-                                  ZCONST char *efn);
-typedef int   (UZ_EXP StatCBFn)  (void *pG, int fnflag, ZCONST char *zfn,
-                                  ZCONST char *efn, ZCONST void *details);
+                                  int size, const char *zfn,
+                                  const char *efn);
+typedef int   (UZ_EXP StatCBFn)  (void *pG, int fnflag, const char *zfn,
+                                  const char *efn, const void *details);
 typedef void  (UZ_EXP UsrIniFn)  (void);
 
 typedef struct _UzpBuffer {    /* rxstr */
@@ -478,9 +470,9 @@ typedef struct _ver {
 typedef struct _UzpVer {
     ulg structlen;            /* length of the struct being passed */
     ulg flag;                 /* bit 0: is_beta   bit 1: uses_zlib */
-    ZCONST char *betalevel;   /* e.g. "g BETA" or "" */
-    ZCONST char *date;        /* e.g. "9 Oct 08" (beta) or "9 October 2008" */
-    ZCONST char *zlib_version;/* e.g. "1.2.3" or NULL */
+    const char *betalevel;    /* e.g. "g BETA" or "" */
+    const char *date;         /* e.g. "9 Oct 08" (beta) or "9 October 2008" */
+    const char *zlib_version; /* e.g. "1.2.3" or NULL */
     _version_type unzip;      /* current UnZip version */
     _version_type zipinfo;    /* current ZipInfo version */
     _version_type os2dll;     /* OS2DLL version (retained for compatibility */
@@ -583,7 +575,7 @@ typedef struct _Uzp_cdir_Rec {
 
 int      UZ_EXP UzpMain               (int argc, char **argv);
 int      UZ_EXP UzpAltMain            (int argc, char **argv, UzpInit *init);
-ZCONST UzpVer * UZ_EXP UzpVersion     (void);
+const UzpVer * UZ_EXP UzpVersion     (void);
 void     UZ_EXP UzpFreeMemBuffer      (UzpBuffer *retstr);
 #ifndef WINDLL
 int      UZ_EXP UzpUnzipToMemory      (char *zip, char *file, UzpOpts *optflgs,
@@ -606,10 +598,10 @@ int      UZ_EXP UzpValidate           (char *archive, int AllCodes);
 int      UZ_EXP UzpMessagePrnt      (void *pG, uch *buf, ulg size, int flag);
 int      UZ_EXP UzpMessageNull      (void *pG, uch *buf, ulg size, int flag);
 int      UZ_EXP UzpInput            (void *pG, uch *buf, int *size, int flag);
-void     UZ_EXP UzpMorePause        (void *pG, ZCONST char *prompt, int flag);
+void     UZ_EXP UzpMorePause        (void *pG, const char *prompt, int flag);
 int      UZ_EXP UzpPassword         (void *pG, int *rcnt, char *pwbuf,
-                                     int size, ZCONST char *zfn,
-                                     ZCONST char *efn);
+                                     int size, const char *zfn,
+                                     const char *efn);
 
 #ifdef __cplusplus
 }

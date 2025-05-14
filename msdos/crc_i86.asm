@@ -17,7 +17,7 @@
 ; (Turbo C). Watcom C (16bit) should also work.
 ; This module was inspired by a similar module for the Amiga (Paul Kienitz).
 ;
-; It replaces the `ulg crc32(ulg crc, ZCONST uch *buf, extent len)' function
+; It replaces the `ulg crc32(ulg crc, const uch *buf, extent len)' function
 ; in crc32.c.
 ;
 ; In March/April 1997, the code has been revised to incorporate Rodney Brown's
@@ -339,7 +339,7 @@ endif
 
 ;
 ;ulg crc32(ulg crc,
-;    ZCONST uch *buf,
+;    const uch *buf,
 ;    extent len)
 ;
         PUBLIC  _crc32

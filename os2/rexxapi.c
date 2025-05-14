@@ -651,7 +651,7 @@ ULONG UZUnZip(CHAR *name, ULONG numargs, RXSTRING args[],
   return RexxReturn(__G__ 1,retstr);
 }
 
-int varmessage(__GPRO__ ZCONST uch *buf, ulg size)
+int varmessage(__GPRO__ const uch *buf, ulg size)
 {
   if (size > 0)
     memcpy(G.os2.buffer+G.os2.putchar_idx,buf,size);

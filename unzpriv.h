@@ -1205,21 +1205,21 @@ typedef size_t extent;
 #  define ___TMP_PTR      ___tmp_ptr
 #  ifndef CLEN
 #    define NEED_UZMBCLEN
-#    define CLEN(ptr) (int)uzmbclen((ZCONST unsigned char *)(ptr))
+#    define CLEN(ptr) (int)uzmbclen((const unsigned char *)(ptr))
 #  endif
 #  ifndef PREINCSTR
 #    define PREINCSTR(ptr) (ptr += CLEN(ptr))
 #  endif
 #  define POSTINCSTR(ptr) (___TMP_PTR=(char *)(ptr), PREINCSTR(ptr),___TMP_PTR)
-   char *plastchar(ZCONST char *ptr, extent len);
+   char *plastchar(const char *ptr, extent len);
 #  define lastchar(ptr, len) ((int)(unsigned)*plastchar(ptr, len))
 #  ifndef MBSCHR
 #    define NEED_UZMBSCHR
-#    define MBSCHR(str,c) (char *)uzmbschr((ZCONST unsigned char *)(str), c)
+#    define MBSCHR(str,c) (char *)uzmbschr((const unsigned char *)(str), c)
 #  endif
 #  ifndef MBSRCHR
 #    define NEED_UZMBSRCHR
-#    define MBSRCHR(str,c) (char *)uzmbsrchr((ZCONST unsigned char *)(str), c)
+#    define MBSRCHR(str,c) (char *)uzmbsrchr((const unsigned char *)(str), c)
 #  endif
 #  ifndef SETLOCALE
 #    define SETLOCALE(category, locale) setlocale(category, locale)
@@ -2225,17 +2225,17 @@ void     free_G_buffers             (__GPRO);
 /* static int    process_central_comment(__GPRO); */
 int      process_cdir_file_hdr      (__GPRO);
 int      process_local_file_hdr     (__GPRO);
-int      getZip64Data               (__GPRO__ ZCONST uch *ef_buf,
+int      getZip64Data               (__GPRO__ const uch *ef_buf,
                                      unsigned ef_len);
 #ifdef UNICODE_SUPPORT
-  int    getUnicodeData             (__GPRO__ ZCONST uch *ef_buf,
+  int    getUnicodeData             (__GPRO__ const uch *ef_buf,
                                      unsigned ef_len);
 #endif
-unsigned ef_scan_for_izux           (ZCONST uch *ef_buf, unsigned ef_len,
+unsigned ef_scan_for_izux           (const uch *ef_buf, unsigned ef_len,
                                      int ef_is_c, ulg dos_mdatetime,
                                      iztimes *z_utim, ulg *z_uidgid);
 #if (defined(RISCOS) || defined(ACORN_FTYPE_NFS))
-   void *getRISCOSexfield          (ZCONST uch *ef_buf, unsigned ef_len);
+   void *getRISCOSexfield          (const uch *ef_buf, unsigned ef_len);
 #endif
 
 #ifndef SFX
@@ -2252,8 +2252,8 @@ void     zi_end_central             (__GPRO);
 int      zipinfo                    (__GPRO);
 /* static int      zi_long          (__GPRO__ zusz_t *pEndprev); */
 /* static int      zi_short         (__GPRO); */
-/* static char    *zi_time          (__GPRO__ ZCONST ulg *datetimez,
-                                     ZCONST time_t *modtimez, char *d_t_str);*/
+/* static char    *zi_time          (__GPRO__ const ulg *datetimez,
+                                     const time_t *modtimez, char *d_t_str);*/
 #endif /* !NO_ZIPINFO */
 
 /*---------------------------------------------------------------------------
@@ -2292,40 +2292,40 @@ void     handler                 (int signal);
 time_t   dos_to_unix_time        (ulg dos_datetime);
 int      check_for_newer         (__GPRO__ char *filename); /* os2,vmcms,vms */
 int      do_string               (__GPRO__ unsigned int length, int option);
-ush      makeword                (ZCONST uch *b);
-ulg      makelong                (ZCONST uch *sig);
-zusz_t   makeint64               (ZCONST uch *sig);
+ush      makeword                (const uch *b);
+ulg      makelong                (const uch *sig);
+zusz_t   makeint64               (const uch *sig);
 char    *fzofft                  (__GPRO__ zoff_t val,
-                                  ZCONST char *pre, ZCONST char *post);
+                                  const char *pre, const char *post);
 #if (!defined(STR_TO_ISO) || defined(NEED_STR2ISO))
-   char *str2iso                 (char *dst, ZCONST char *src);
+   char *str2iso                 (char *dst, const char *src);
 #endif
 #if (!defined(STR_TO_OEM) || defined(NEED_STR2OEM))
-   char *str2oem                 (char *dst, ZCONST char *src);
+   char *str2oem                 (char *dst, const char *src);
 #endif
 #ifdef NO_STRNICMP
-   int   zstrnicmp               (register ZCONST char *s1,
-                                  ZCONST char *s2,
+   int   zstrnicmp               (register const char *s1,
+                                  const char *s2,
                                   unsigned n);
 #endif
 #ifdef REGULUS
-   int   zstat                   (ZCONST char *p, struct stat *s);
+   int   zstat                   (const char *p, struct stat *s);
 #endif
 #ifdef ZMEM   /* MUST be ifdef'd because of conflicts with the standard def. */
    void *memset(register void *, register int, register unsigned int);
-   int    memcmp(register ZCONST void*, register ZCONST void *,
+   int    memcmp(register const void*, register const void *,
                      unsigned int);
-   void *memcpy(register void *, register ZCONST void *,
+   void *memcpy(register void *, register const void *,
                      unsigned int);
 #endif
 #ifdef NEED_UZMBCLEN
-   extent uzmbclen             (ZCONST unsigned char *ptr);
+   extent uzmbclen             (const unsigned char *ptr);
 #endif
 #ifdef NEED_UZMBSCHR
-   unsigned char *uzmbschr     (ZCONST unsigned char *str, unsigned int c);
+   unsigned char *uzmbschr     (const unsigned char *str, unsigned int c);
 #endif
 #ifdef NEED_UZMBSRCHR
-   unsigned char *uzmbsrchr(ZCONST unsigned char *str, unsigned int c);
+   unsigned char *uzmbsrchr(const unsigned char *str, unsigned int c);
 #endif
 #ifdef SMALL_MEM
    char *fLoadFarString          (__GPRO__ const char Far *sz);
@@ -2354,18 +2354,18 @@ int    extract_or_test_files        (__GPRO);
   unsigned find_compr_idx           (unsigned compr_methodnum);
 #endif
 int    memextract                   (__GPRO__ uch *tgt, ulg tgtsize,
-                                     ZCONST uch *src, ulg srcsize);
-int    memflush                     (__GPRO__ ZCONST uch *rawbuf, ulg size);
+                                     const uch *src, ulg srcsize);
+int    memflush                     (__GPRO__ const uch *rawbuf, ulg size);
 #if (defined(VMS) || defined(VMS_TEXT_CONV))
-   uch   *extract_izvms_block       (__GPRO__ ZCONST uch *ebdata,
+   uch   *extract_izvms_block       (__GPRO__ const uch *ebdata,
                                      unsigned size, unsigned *retlen,
-                                     ZCONST uch *init, unsigned needlen);
+                                     const uch *init, unsigned needlen);
 #endif
-char  *fnfilter                     (ZCONST char *raw, uch *space,
+char  *fnfilter                     (const char *raw, uch *space,
                                      extent size);
 
 # if defined( UNICODE_SUPPORT) && defined( _MBCS)
-wchar_t *fnfilterw                  (ZCONST wchar_t *src, wchar_t *dst,
+wchar_t *fnfilterw                  (const wchar_t *src, wchar_t *dst,
                                      extent siz);
 #endif
 
@@ -2378,8 +2378,8 @@ wchar_t *fnfilterw                  (ZCONST wchar_t *src, wchar_t *dst,
 int    explode                      (__GPRO);                  /* explode.c */
 #endif
 int    huft_free                    (struct huft *t);          /* inflate.c */
-int    huft_build                   (__GPRO__ ZCONST unsigned *b, unsigned n,
-                                     unsigned s, ZCONST ush *d, ZCONST uch *e,
+int    huft_build                   (__GPRO__ const unsigned *b, unsigned n,
+                                     unsigned s, const ush *d, const uch *e,
                                      struct huft **t, unsigned *m);
 #ifdef USE_ZLIB
    int    UZinflate                 (__GPRO__ int is_defl64);  /* inflate.c */
@@ -2413,13 +2413,13 @@ int    huft_build                   (__GPRO__ ZCONST unsigned *b, unsigned n,
    int      unzipToMemory            (__GPRO__ char *zip, char *file,
                                       UzpBuffer *retstr);          /* api.c */
    int      redirect_outfile         (__GPRO);                     /* api.c */
-   int      writeToMemory            (__GPRO__ ZCONST uch *rawbuf,
+   int      writeToMemory            (__GPRO__ const uch *rawbuf,
                                       extent size);                /* api.c */
    int      close_redirect           (__GPRO);                     /* api.c */
    /* this obsolescent entry point kept for compatibility: */
    int      UzpUnzip                 (int argc, char **argv);/* use UzpMain */
 #ifdef OS2DLL
-   int      varmessage               (__GPRO__ ZCONST uch *buf, ulg size);
+   int      varmessage               (__GPRO__ const uch *buf, ulg size);
    int      varputchar               (__GPRO__ int c);         /* rexxapi.c */
    int      finish_REXX_redirect     (__GPRO);                 /* rexxapi.c */
 #endif
@@ -2434,7 +2434,7 @@ int    huft_build                   (__GPRO__ ZCONST unsigned *b, unsigned n,
 
 #ifdef MSDOS
 #if (!defined(FUNZIP) && !defined(SFX) && !defined(WINDLL))
-   void     check_for_windows        (ZCONST char *app);         /* msdos.c */
+   void     check_for_windows        (const char *app);          /* msdos.c */
 #endif
 #if (defined(__GO32__) || defined(__EMX__))
    unsigned _dos_getcountryinfo(void *);                          /* msdos.c */
@@ -2457,7 +2457,7 @@ int    huft_build                   (__GPRO__ ZCONST unsigned *b, unsigned n,
    ulg   GetThreadId             (void);
 #endif
    int   GetCountryInfo          (void);                           /* os2.c */
-   long  GetFileTime             (ZCONST char *name);              /* os2.c */
+   long  GetFileTime             (const char *name);               /* os2.c */
 /* static void  SetPathAttrTimes(__GPRO__ int flags, int dir);    os2.c */
 /* static int   SetEAs           (__GPRO__ const char *path,
                                   void *eablock);                     os2.c */
@@ -2550,13 +2550,13 @@ int    huft_build                   (__GPRO__ ZCONST unsigned *b, unsigned n,
 Uz_Globs *globalsCtor       (void);                            /* globals.c */
 
 int      envargs            (int *Pargc, char ***Pargv,
-                             ZCONST char *envstr, ZCONST char *envstr2);
+                             const char *envstr, const char *envstr2);
                                                                 /* envargs.c */
 void     mksargs            (int *argcp, char ***argvp);       /* envargs.c */
 
-int      match              (ZCONST char *s, ZCONST char *p,
+int      match              (const char *s, const char *p,
                              int ic __WDLPRO);                   /* match.c */
-int      iswild             (ZCONST char *p);                    /* match.c */
+int      iswild             (const char *p);                     /* match.c */
 
 /* declarations of public CRC-32 functions have been moved into crc32.h
    (free_crc_table(), get_crc_table(), crc32())                      crc32.c */
@@ -2569,7 +2569,7 @@ char     dateseparator      (void);                                /* local */
 int      mapattr            (__GPRO);                              /* local */
 int      mapname            (__GPRO__ int renamed);                /* local */
 int      checkdir           (__GPRO__ char *pathcomp, int flag);   /* local */
-char    *do_wild            (__GPRO__ ZCONST char *wildzipfn);     /* local */
+char    *do_wild            (__GPRO__ const char *wildzipfn);      /* local */
 char    *GetLoadPath        (__GPRO);                              /* local */
 #if (defined(MORE) && (defined(ATH_BEO_UNX) || defined(QDOS) || defined(VMS)))
    int screensize           (int *tt_rows, int *tt_cols);          /* local */
@@ -2593,9 +2593,9 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 #ifdef TIMESTAMP
 # ifdef WIN32
    int   stamp_file         (__GPRO__
-                             ZCONST char *fname, time_t modtime);  /* local */
+                             const char *fname, time_t modtime);   /* local */
 # else
-   int   stamp_file         (ZCONST char *fname, time_t modtime);  /* local */
+   int   stamp_file         (const char *fname, time_t modtime);   /* local */
 # endif
 #endif
 #ifdef NEED_ISO_OEM_INIT
@@ -2998,34 +2998,34 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 /*  Global constants  */
 /**********************/
 
-   extern ZCONST unsigned near mask_bits[17];
-   extern ZCONST char *fnames[2];
+   extern const unsigned near mask_bits[17];
+   extern const char *fnames[2];
 
 #ifdef EBCDIC
-   extern ZCONST uch ebcdic[];
+   extern const uch ebcdic[];
 #endif
 #ifdef IZ_ISO2OEM_ARRAY
-   extern ZCONST uch Far *iso2oem;
-   extern ZCONST uch Far iso2oem_850[];
+   extern const uch Far *iso2oem;
+   extern const uch Far iso2oem_850[];
 #endif
 #ifdef IZ_OEM2ISO_ARRAY
-   extern ZCONST uch Far *oem2iso;
-   extern ZCONST uch Far oem2iso_850[];
+   extern const uch Far *oem2iso;
+   extern const uch Far oem2iso_850[];
 #endif
 
-   extern ZCONST char Far  VersionDate[];
-   extern ZCONST char Far  CentSigMsg[];
+   extern const char Far  VersionDate[];
+   extern const char Far  CentSigMsg[];
 #ifndef SFX
-   extern ZCONST char Far  EndSigMsg[];
+   extern const char Far  EndSigMsg[];
 #endif
-   extern ZCONST char Far  SeekMsg[];
-   extern ZCONST char Far  FilenameNotMatched[];
-   extern ZCONST char Far  ExclFilenameNotMatched[];
-   extern ZCONST char Far  ReportMsg[];
+   extern const char Far  SeekMsg[];
+   extern const char Far  FilenameNotMatched[];
+   extern const char Far  ExclFilenameNotMatched[];
+   extern const char Far  ReportMsg[];
 
 #ifndef SFX
-   extern ZCONST char Far  Zipnfo[];
-   extern ZCONST char Far  CompiledWith[];
+   extern const char Far  Zipnfo[];
+   extern const char Far  CompiledWith[];
 #endif /* !SFX */
 
 
@@ -3057,21 +3057,21 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 
 # if 0 /* currently unused */
   /* check if string is all ASCII */
-  int is_ascii_string(ZCONST char *mbstring);
+  int is_ascii_string(const char *mbstring);
 # endif /* unused */
 
   /* convert UTF-8 string to multi-byte string */
-  char *utf8_to_local_string(ZCONST char *utf8_string, int escape_all);
+  char *utf8_to_local_string(const char *utf8_string, int escape_all);
 
   /* convert UTF-8 string to wide string */
-  zwchar *utf8_to_wide_string(ZCONST char *utf8_string);
+  zwchar *utf8_to_wide_string(const char *utf8_string);
 
   /* convert wide string to multi-byte string */
-  char *wide_to_local_string(ZCONST zwchar *wide_string, int escape_all);
+  char *wide_to_local_string(const zwchar *wide_string, int escape_all);
 
 # if 0 /* currently unused */
   /* convert local string to multi-byte display string */
-  char *local_to_display_string(ZCONST char *local_string);
+  char *local_to_display_string(const char *local_string);
 # endif /* unused */
 
   /* convert wide character to escape string */
@@ -3082,16 +3082,16 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 
 # if 0 /* currently unused */
   /* convert escape string to wide character */
-  unsigned long escape_string_to_wide(ZCONST char *escape_string);
+  unsigned long escape_string_to_wide(const char *escape_string);
 
   /* convert local to UTF-8 */
-  char *local_to_utf8_string(ZCONST char *local_string);
+  char *local_to_utf8_string(const char *local_string);
 
   /* convert local to wide string */
-  zwchar *local_to_wide_string(ZCONST char *local_string);
+  zwchar *local_to_wide_string(const char *local_string);
 
   /* convert wide string to UTF-8 */
-  char *wide_to_utf8_string(ZCONST zwchar *wide_string);
+  char *wide_to_utf8_string(const zwchar *wide_string);
 # endif /* unused */
 
 #endif /* UNICODE_SUPPORT && UNICODE_WCHAR */

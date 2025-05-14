@@ -66,10 +66,10 @@ int _isindst(struct tm *tb);
 #endif
 
 /* callback function to be supplied by the program that uses this library */
-int GetPlatformLocalTimezone(register struct state * ZCONST sp,
-        void (*fill_tzstate_from_rules)(struct state * ZCONST sp_res,
-                                        ZCONST struct rule * ZCONST start,
-                                        ZCONST struct rule * ZCONST end));
+int GetPlatformLocalTimezone(register struct state * const sp,
+        void (*fill_tzstate_from_rules)(struct state * const sp_res,
+                                        const struct rule * const start,
+                                        const struct rule * const end));
 #ifdef IZTZ_SETLOCALTZINFO
 void set_TZ(long time_zone, int day_light);
 #endif

@@ -166,8 +166,8 @@
 #ifdef __FILEIO_C       /* get the ISO8859-1 <--> MacROMAN conversion tables */
 #  include "charmap.h"
 #else
-   extern ZCONST uch WinCP1252_to_MacRoman[128];
-   extern ZCONST uch MacRoman_to_WinCP1252[128];
+   extern const uch WinCP1252_to_MacRoman[128];
+   extern const uch MacRoman_to_WinCP1252[128];
 #endif
 
 
@@ -251,8 +251,8 @@ char   *macfgets           (char *, int, FILE *);                /* macos.c */
 int     macfprintf         (FILE *, char *, ...);                /* macos.c */
 int     macprintf          (char *, ...);                        /* macos.c */
 
-ulg    makePPClong(ZCONST uch *sig);
-ush    makePPCword(ZCONST uch *b);
+ulg    makePPClong(const uch *sig);
+ush    makePPCword(const uch *b);
 void   UserStop(void);
 
 #endif /* !__maccfg_h */

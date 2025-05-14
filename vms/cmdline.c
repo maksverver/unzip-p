@@ -985,9 +985,9 @@ check_cli (struct dsc$descriptor_s *qual)
 
 int VMSCLI_usage(__GPRO__ int error)    /* returns PK-type error code */
 {
-    extern ZCONST char UnzipSFXBanner[];
+    extern const char UnzipSFXBanner[];
 #ifdef BETA
-    extern ZCONST char BetaVersion[];
+    extern const char BetaVersion[];
 #endif
     int flag;
 
@@ -1021,9 +1021,9 @@ Modifying options are /TEXT, /BINARY, /JUNK, /EXISTING, /QUIET,\n\
 
 int VMSCLI_usage(__GPRO__ int error)    /* returns PK-type error code */
 {
-    extern ZCONST char UnzipUsageLine1[];
+    extern const char UnzipUsageLine1[];
 #ifdef BETA
-    extern ZCONST char BetaVersion[];
+    extern const char BetaVersion[];
 #endif
     int flag;
 

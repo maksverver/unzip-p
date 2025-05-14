@@ -198,8 +198,8 @@ extern "C" {
 // (These functions are not referenced by name outside this source module.)
 int UZ_EXP UzpMessagePrnt2(void *pG, uch *buffer, ulg size, int flag);
 int UZ_EXP UzpInput2(void *pG, uch *buffer, int *size, int flag);
-int UZ_EXP CheckForAbort2(void *pG, int fnflag, ZCONST char *zfn,
-                          ZCONST char *efn, ZCONST void *details);
+int UZ_EXP CheckForAbort2(void *pG, int fnflag, const char *zfn,
+                          const char *efn, const void *details);
 int WINAPI UzpReplace(LPSTR szFile, unsigned nbufsiz);
 void WINAPI UzpSound(void);
 #ifdef Z_UINT8_DEFINED
@@ -811,8 +811,8 @@ int UZ_EXP UzpPassword(void *pG, int *pcRetry, char *szPassword, int nSize,
 }
 
 //******************************************************************************
-int UZ_EXP CheckForAbort2(void *pG, int fnflag, ZCONST char *zfn,
-                    ZCONST char *efn, ZCONST void *details)
+int UZ_EXP CheckForAbort2(void *pG, int fnflag, const char *zfn,
+                    const char *efn, const void *details)
 {
    int rval = UZ_ST_CONTINUE;
 
@@ -1392,7 +1392,7 @@ void close_outfile(__GPRO)
 
 //******************************************************************************
 // Called by PROCESS.C
-char* do_wild(__GPRO__ ZCONST char *wildspec)
+char* do_wild(__GPRO__ const char *wildspec)
 {
    // This is a very slimmed down version of do_wild() taken from WIN32.C.
    // Since we don't support wildcards, we basically just return the wildspec
@@ -1760,7 +1760,7 @@ int checkdir(__GPRO__ char *pathcomp, int flag) {
 #ifdef POCKET_UNZIP
 //******************************************************************************
 // Called from EXTRACT.C and LIST.C
-int match(ZCONST char *string, ZCONST char *pattern, int ignore_case __WDLPRO)
+int match(const char *string, const char *pattern, int ignore_case __WDLPRO)
 {
    // match() for the other ports compares a file in the Zip file with some
    // command line file pattern.  In our case, we always pass in exact matches,
@@ -1770,7 +1770,7 @@ int match(ZCONST char *string, ZCONST char *pattern, int ignore_case __WDLPRO)
 
 //******************************************************************************
 // Called from PROCESS.C
-int iswild(ZCONST char *pattern) {
+int iswild(const char *pattern) {
    // Our file patterns never contain wild characters.  They are always exact
    // matches of file names in our Zip file.
    return FALSE;
@@ -1798,7 +1798,7 @@ int getch_win32(void)
 
 #if (defined(UNICODE_SUPPORT))
 /* convert wide character string to multi-byte character string */
-char *wide_to_local_string(ZCONST zwchar *wide_string,
+char *wide_to_local_string(const zwchar *wide_string,
                            int escape_all)
 {
   int i;

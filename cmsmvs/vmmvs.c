@@ -243,7 +243,7 @@ extent getVMMVSexfield(type, ef_block, datalen)
 
 char *do_wild(__G__ wld)
     __GDEF
-    ZCONST char *wld;      /* only used first time on a given dir */
+    const char *wld;      /* only used first time on a given dir */
 {
     static int First = 0;
     static char filename[256];

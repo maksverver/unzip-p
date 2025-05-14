@@ -114,8 +114,8 @@ int dateformat()
 
 /* Returns non-zero if string matches the literal mask */
 int match(string, pattern, ignore_case __WDL)
-    ZCONST char *string;
-    ZCONST char *pattern;
+    const char *string;
+    const char *pattern;
     int ignore_case;            /* unused in this variant of match()! */
     __WDLDEF
 {
@@ -161,10 +161,10 @@ int match(string, pattern, ignore_case __WDL)
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;   /* only used first time on a given dir */
 {
     static DIR *wild_dir = (DIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname, dirnamelen;
     struct dirent *file;
@@ -184,8 +184,8 @@ char *do_wild(__G__ wildspec)
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((wildname = (ZCONST char *)strrchr(wildspec, '/')) ==
-            (ZCONST char *)NULL)
+        if ((wildname = (const char *)strrchr(wildspec, '/')) ==
+            (const char *)NULL)
         {
             dirname = ".";
             dirnamelen = 1;
@@ -1105,12 +1105,12 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
 
 #ifdef SET_DIR_ATTRIB
 /* messages of code for setting directory attributes */
-static ZCONST char Far DirlistUidGidFailed[] =
+static const char Far DirlistUidGidFailed[] =
   "warning:  cannot set UID %d and/or GID %d for %s\n";
-static ZCONST char Far DirlistUtimeFailed[] =
+static const char Far DirlistUtimeFailed[] =
   "warning:  cannot set modification, access times for %s\n";
 #  ifndef NO_CHMOD
-  static ZCONST char Far DirlistChmodFailed[] =
+  static const char Far DirlistChmodFailed[] =
     "warning:  cannot set permissions for %s\n";
 #  endif
 
@@ -1170,7 +1170,7 @@ int set_direc_attribs(__G__ d)
 /***************************/
 
 int stamp_file(fname, modtime)
-    ZCONST char *fname;
+    const char *fname;
     time_t modtime;
 {
     ztimbuf tp;

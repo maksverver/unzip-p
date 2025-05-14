@@ -108,7 +108,7 @@ struct os2Global {
    USHORT nLastDrive, nResult;
 
    DIR *wild_dir;
-   ZCONST char *wildname;
+   const char *wildname;
    char *dirname, matchname[FILNAMSIZ];
    int notfirstcall, have_dirname, dirnamelen;
 

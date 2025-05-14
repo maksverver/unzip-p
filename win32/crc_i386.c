@@ -83,10 +83,6 @@
 #  define __686
 #endif
 
-#ifndef ZCONST
-#  define ZCONST const
-#endif
-
 /* Select wether the following inline-assember code is supported. */
 #if (defined(_MSC_VER) && _MSC_VER >= 700)
 #if (defined(_M_IX86) && _M_IX86 >= 300)
@@ -194,7 +190,7 @@
 /* ========================================================================= */
 ulg crc32(crc, buf, len)
     ulg crc;                    /* crc shift register */
-    ZCONST uch *buf;            /* pointer to bytes to pump through */
+    const uch *buf;             /* pointer to bytes to pump through */
     extent len;                 /* number of bytes in buf[] */
 /* Run a set of bytes through the crc shift register.  If buf is a NULL
    pointer, then initialize the crc shift register contents instead.

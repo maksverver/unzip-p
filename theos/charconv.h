@@ -8,7 +8,7 @@
 */
 
 #ifdef IZ_THS2ISO_ARRAY
-ZCONST uch Far ths2iso[] = {
+const uch Far ths2iso[] = {
     0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,  /* 80 - 87 */
     0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,  /* 88 - 8F */
     0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,  /* 90 - 97 */
@@ -29,7 +29,7 @@ ZCONST uch Far ths2iso[] = {
 #endif /* IZ_THS2ISO_ARRAY */
 
 #ifdef IZ_THS2OEM_ARRAY
-ZCONST uch Far ths2oem[] = {
+const uch Far ths2oem[] = {
     254,254,254,254, 254,254,134,135,   /* 80 - 87 */
     136,137,138,139, 140,141,142,143,   /* 88 - 8F */
     144,145,146,147, 148,149,150,151,   /* 90 - 97 */
@@ -50,7 +50,7 @@ ZCONST uch Far ths2oem[] = {
 #endif /* IZ_THS2OEM_ARRAY */
 
 #ifdef IZ_ISO2THS_ARRAY
-ZCONST uch Far iso2ths[] = {
+const uch Far iso2ths[] = {
     0x3F, 0x3F, 0x27, 0x3F, 0x22, 0x2E, 0xA4, 0xB3,  /* 80 - 87 */
     0x5E, 0x25, 0x53, 0x3C, 0x4F, 0x3F, 0x3F, 0x3F,  /* 88 - 8F */
     0x3F, 0x27, 0x27, 0x22, 0x22, 0x07, 0x2D, 0x2D,  /* 90 - 97 */
@@ -71,7 +71,7 @@ ZCONST uch Far iso2ths[] = {
 #endif /* IZ_ISO2THS_ARRAY */
 
 #ifdef IZ_OEM2THS_ARRAY
-ZCONST uch Far oem2ths[] = {
+const uch Far oem2ths[] = {
     216,212,201,194, 193,195,223,217,   /* 80 - 87 */
     199,198,200,202, 203,204,192,222,   /* 88 - 8F */
     197,221,220,208, 207,209,213,214,   /* 90 - 97 */

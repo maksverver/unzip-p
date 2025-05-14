@@ -18,22 +18,18 @@
  * (the latter with UNZIP_INTERNAL defined...).
  */
 
-#ifndef ZCONST
-#  define ZCONST const
-#endif
-
 #ifdef DYNALLOC_CRCTAB
    void     free_crc_table     (void);
 #endif
 #ifndef USE_ZLIB
-   ZCONST ulg near *get_crc_table     (void);
+   const ulg near *get_crc_table     (void);
 #endif
 #if (defined(USE_ZLIB) || defined(CRC_TABLE_ONLY))
 #  ifdef IZ_CRC_BE_OPTIMIZ
 #    undef IZ_CRC_BE_OPTIMIZ
 #  endif
 #else /* !(USE_ZLIB || CRC_TABLE_ONLY) */
-   ulg      crc32              (ulg crc, ZCONST uch *buf, extent len);
+   ulg      crc32              (ulg crc, const uch *buf, extent len);
 #endif /* ?(USE_ZLIB || CRC_TABLE_ONLY) */
 
 #ifndef CRC_32_TAB

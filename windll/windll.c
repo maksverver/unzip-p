@@ -66,8 +66,8 @@ int DllDisplayPrint(void *pG, uch *buf, ulg size, int flag);
 #endif /* never */
 
 /* Callback function for status report and/or user interception */
-static int UZ_EXP Wiz_StatReportCB(void *pG, int fnflag, ZCONST char *zfn,
-                                   ZCONST char *efn, ZCONST void *details);
+static int UZ_EXP Wiz_StatReportCB(void *pG, int fnflag, const char *zfn,
+                                   const char *efn, const void *details);
 
 /* Dummy sound function for those applications that don't use sound */
 static void WINAPI DummySound(void);
@@ -824,8 +824,8 @@ int UZ_EXP UzpPassword(pG, rcnt, pwbuf, size, zfn, efn)
     int *rcnt;          /* retry counter */
     char *pwbuf;        /* buffer for password */
     int size;           /* size of password buffer */
-    ZCONST char *zfn;   /* name of zip archiv */
-    ZCONST char *efn;   /* name of archiv entry being processed */
+    const char *zfn;    /* name of zip archiv */
+    const char *efn;    /* name of archiv entry being processed */
 {
 #if CRYPT
     LPCSTR m;
@@ -860,8 +860,8 @@ static void WINAPI DummySound(void)
 #ifdef __BORLANDC__
 #pragma argsused
 #endif
-static int WINAPI Wiz_StatReportCB(void *pG, int fnflag, ZCONST char *zfn,
-                    ZCONST char *efn, ZCONST void *details)
+static int WINAPI Wiz_StatReportCB(void *pG, int fnflag, const char *zfn,
+                    const char *efn, const void *details)
 {
     int rval = UZ_ST_CONTINUE;
 

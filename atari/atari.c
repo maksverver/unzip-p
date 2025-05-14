@@ -48,10 +48,10 @@ static int renamed_fullpath;   /* ditto */
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;  /* only used first time on a given dir */
 {
     static DIR *wild_dir = (DIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname, dirnamelen;
     struct dirent *file;
@@ -72,7 +72,7 @@ char *do_wild(__G__ wildspec)
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((wildname = strrchr(wildspec, '/')) == (ZCONST char *)NULL) {
+        if ((wildname = strrchr(wildspec, '/')) == (const char *)NULL) {
             dirname = ".";
             dirnamelen = 1;
             have_dirname = FALSE;
@@ -953,7 +953,7 @@ void close_outfile(__G)    /* GRR: change to return PK-style warning level */
 /***************************/
 
 int stamp_file(fname, modtime)
-    ZCONST char *fname;
+    const char *fname;
     time_t modtime;
 {
     ztimbuf tp;

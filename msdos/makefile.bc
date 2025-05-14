@@ -82,7 +82,7 @@ CC_CPUFLG = -$(CPU_TYP)
 ASFLAGS = -ml -m2 -w0 -D$(ASCPUFLAG) $(LOC)
 !if $(CC_REV) == 1
 # Bug: TC ++ 1.0 ignores "far" on "const" strings, so const is disabled!
-CCOPTIM = -O -G -Z -a -d -DZCONST
+CCOPTIM = -O -G -Z -a -d
 LDFLAGS = -lxncd		# for tcc
 !else
 CCOPTIM = -O2

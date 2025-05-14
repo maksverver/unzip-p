@@ -747,9 +747,9 @@ static BOOL IsDST(TIME_ZONE_INFORMATION *ptzi, time_t localTime) {
 #define SECSPERMIN      60
 #define MINSPERHOUR     60
 #define SECSPERHOUR     (SECSPERMIN * MINSPERHOUR)
-static void conv_to_rule(LPSYSTEMTIME lpw32tm, struct rule * ZCONST ptrule);
+static void conv_to_rule(LPSYSTEMTIME lpw32tm, struct rule * const ptrule);
 
-static void conv_to_rule(LPSYSTEMTIME lpw32tm, struct rule * ZCONST ptrule)
+static void conv_to_rule(LPSYSTEMTIME lpw32tm, struct rule * const ptrule)
 {
     if (lpw32tm->wYear != 0) {
         ptrule->r_type = JULIAN_DAY;
@@ -765,10 +765,10 @@ static void conv_to_rule(LPSYSTEMTIME lpw32tm, struct rule * ZCONST ptrule)
                      (long)lpw32tm->wSecond;
 }
 
-int GetPlatformLocalTimezone(register struct state * ZCONST sp,
-        void (*fill_tzstate_from_rules)(struct state * ZCONST sp_res,
-                                        ZCONST struct rule * ZCONST start,
-                                        ZCONST struct rule * ZCONST end))
+int GetPlatformLocalTimezone(register struct state * const sp,
+        void (*fill_tzstate_from_rules)(struct state * const sp_res,
+                                        const struct rule * const start,
+                                        const struct rule * const end))
 {
     TIME_ZONE_INFORMATION tzinfo;
     DWORD res;

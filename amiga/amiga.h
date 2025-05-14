@@ -176,7 +176,7 @@ void _abort(void);              /* ctrl-C trap */
     int created_dir, renamed_fullpath, rootlen;\
     char *rootpath, *buildpath, *build_end;\
     DIR *wild_dir;\
-    ZCONST char *wildname;\
+    const char *wildname;\
     char *dirname, matchname[FILNAMSIZ];\
     int dirnamelen, notfirstcall;
 

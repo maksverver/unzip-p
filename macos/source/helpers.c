@@ -37,7 +37,7 @@ extern int noisy;
 extern char MacPathEnd;
 extern char *zipfile;   /* filename of the Zipfile */
 extern char *tempzip;   /* Temporary zip file name */
-extern ZCONST unsigned char MacRoman_to_WinCP1252[128];
+extern const unsigned char MacRoman_to_WinCP1252[128];
 
 
 static char         argStr[1024];

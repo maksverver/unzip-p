@@ -64,8 +64,8 @@ static void maskDOSdevice(__GPRO__ char *pathcomp, char *last_dot);
    static void map2fat(char *pathcomp, char *last_dot);
 #endif
 static int isfloppy(int nDrive);
-static int z_dos_chmod(__GPRO__ ZCONST char *fname, int attributes);
-static int volumelabel(ZCONST char *newlabel);
+static int z_dos_chmod(__GPRO__ const char *fname, int attributes);
+static int volumelabel(const char *newlabel);
 #if (!defined(SFX) && !defined(WINDLL))
    static int is_running_on_windows(void);
 #endif
@@ -82,34 +82,34 @@ static unsigned nLabelDrive;   /* ditto, plus volumelabel() */
 /*****************************/
 
 #ifndef SFX
-  static ZCONST char Far CantAllocateWildcard[] =
+  static const char Far CantAllocateWildcard[] =
     "warning:  cannot allocate wildcard buffers\n";
 #endif
-static ZCONST char Far WarnDirTraversSkip[] =
+static const char Far WarnDirTraversSkip[] =
   "warning:  skipped \"../\" path component(s) in %s\n";
-static ZCONST char Far Creating[] = "   creating: %s\n";
-static ZCONST char Far ConversionFailed[] =
+static const char Far Creating[] = "   creating: %s\n";
+static const char Far ConversionFailed[] =
   "mapname:  conversion of %s failed\n";
-static ZCONST char Far Labelling[] = "labelling %c: %-22s\n";
-static ZCONST char Far ErrSetVolLabel[] =
+static const char Far Labelling[] = "labelling %c: %-22s\n";
+static const char Far ErrSetVolLabel[] =
   "mapname:  error setting volume label\n";
-static ZCONST char Far PathTooLong[] = "checkdir error:  path too long: %s\n";
-static ZCONST char Far CantCreateDir[] = "checkdir error:  cannot create %s\n\
+static const char Far PathTooLong[] = "checkdir error:  path too long: %s\n";
+static const char Far CantCreateDir[] = "checkdir error:  cannot create %s\n\
                  unable to process %s.\n";
-static ZCONST char Far DirIsntDirectory[] =
+static const char Far DirIsntDirectory[] =
   "checkdir error:  %s exists but is not directory\n\
                  unable to process %s.\n";
-static ZCONST char Far PathTooLongTrunc[] =
+static const char Far PathTooLongTrunc[] =
   "checkdir warning:  path too long; truncating\n                   %s\n\
                 -> %s\n";
 #if (!defined(SFX) || defined(SFX_EXDIR))
-   static ZCONST char Far CantCreateExtractDir[] =
+   static const char Far CantCreateExtractDir[] =
      "checkdir:  cannot create extraction directory: %s\n";
 #endif
-static ZCONST char Far AttribsMayBeWrong[] =
+static const char Far AttribsMayBeWrong[] =
   "\nwarning:  file attributes may not be correct\n";
 #if (!defined(SFX) && !defined(WINDLL))
-   static ZCONST char Far WarnUsedOnWindows[] =
+   static const char Far WarnUsedOnWindows[] =
      "\n%s warning: You are using the MSDOS version on Windows.\n"
      "Please try the native Windows version before reporting any problems.\n";
 #endif
@@ -275,10 +275,10 @@ struct zdirent *Readdir(d)
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;   /* only used first time on a given dir */
+    const char *wildspec;    /* only used first time on a given dir */
 {
     static zDIR *wild_dir = (zDIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname, dirnamelen;
     char *fnamestart;
@@ -300,8 +300,8 @@ char *do_wild(__G__ wildspec)
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((wildname = strrchr(wildspec, '/')) == (ZCONST char *)NULL &&
-            (wildname = strrchr(wildspec, ':')) == (ZCONST char *)NULL) {
+        if ((wildname = strrchr(wildspec, '/')) == (const char *)NULL &&
+            (wildname = strrchr(wildspec, ':')) == (const char *)NULL) {
             dirname = ".";
             dirnamelen = 1;
             have_dirname = FALSE;
@@ -1194,7 +1194,7 @@ static int isfloppy(nDrive)  /* more precisely, is it removable? */
 
 static int z_dos_chmod(__G__ fname, attributes)
     __GDEF
-    ZCONST char *fname;
+    const char *fname;
     int attributes;
 {
     char *name;
@@ -1258,7 +1258,7 @@ typedef struct dosfcb {
 /**************************/
 
 static int volumelabel(newlabel)
-    ZCONST char *newlabel;
+    const char *newlabel;
 {
 #ifdef DEBUG
     char *p;
@@ -1615,7 +1615,7 @@ void close_outfile(__G)
 /*************************/
 
 int stamp_file(fname, modtime)
-    ZCONST char *fname;
+    const char *fname;
     time_t modtime;
 {
     dos_fdatetime dos_dt;
@@ -1823,7 +1823,7 @@ static int is_running_on_windows(void)
 /*  Function check_for_windows()  */
 /**********************************/
 
-void check_for_windows(ZCONST char *app)
+void check_for_windows(const char *app)
 {
 #ifdef SMALL_MEM
     char msg_str[160];          /* enough space for two 79-char-lines  */
@@ -2217,7 +2217,7 @@ unsigned _dos_close(int fd)
 #endif /* !__DJGPP__ || (__DJGPP__ < 2) */
 
 
-static int volumelabel(ZCONST char *name)
+static int volumelabel(const char *name)
 {
     int fd;
 

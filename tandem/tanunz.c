@@ -50,9 +50,9 @@ static int renamed_fullpath;   /* ditto */
 /* Strings used in tanunz.c */
 /****************************/
 
-static ZCONST char Far CannotDeleteOldFile[] =
+static const char Far CannotDeleteOldFile[] =
   "error:  cannot delete old %s\n";
-static ZCONST char Far CannotCreateFile[] = "error:  cannot create %s\n";
+static const char Far CannotCreateFile[] = "error:  cannot create %s\n";
 
 
 #ifndef SFX
@@ -62,10 +62,10 @@ static ZCONST char Far CannotCreateFile[] = "error:  cannot create %s\n";
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;   /* only used first time on a given dir */
 {
     static DIR *wild_dir = (DIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname, dirnamelen;
     struct dirent *file;

@@ -128,24 +128,24 @@
 #if 0                /* GRR:  add this to unzip.h someday... */
 #if !(defined(MSDOS) && defined(DOSWILD))
 #ifdef WILD_STOP_AT_DIR
-#define match(s,p,ic,sc) (recmatch((ZCONST uch *)p,(ZCONST uch *)s,ic,sc) == 1)
+#define match(s,p,ic,sc) (recmatch((const uch *)p,(const uch *)s,ic,sc) == 1)
 #else
-#define match(s,p,ic)    (recmatch((ZCONST uch *)p,(ZCONST uch *)s,ic) == 1)
+#define match(s,p,ic)    (recmatch((const uch *)p,(const uch *)s,ic) == 1)
 #endif
-int recmatch(ZCONST uch *pattern, ZCONST uch *string,
+int recmatch(const uch *pattern, const uch *string,
                  int ignore_case __WDLPRO);
 #endif
 #endif /* 0 */
-static int recmatch(ZCONST char *, ZCONST char *,
+static int recmatch(const char *, const char *,
                         int);
-static char *isshexp(ZCONST char *p);
-static int namecmp(ZCONST char *s1, ZCONST char *s2);
+static char *isshexp(const char *p);
+static int namecmp(const char *s1, const char *s2);
 
 
 /* match() is a shell to recmatch() to return only Boolean values. */
 
 int match(string, pattern, ignore_case __WDL)
-    ZCONST char *string, *pattern;
+    const char *string, *pattern;
     int ignore_case;
     __WDLDEF
 {
@@ -191,8 +191,8 @@ char *___tmp_ptr;
 #endif
 
 static int recmatch(p, s, ci)
-ZCONST char *p;         /* sh pattern to match */
-ZCONST char *s;         /* string to match it to */
+const char *p;          /* sh pattern to match */
+const char *s;          /* string to match it to */
 int ci;                 /* flag: force case-insensitive matching */
 /* Recursively compare the sh pattern p with the string s and return 1 if
    they match, and 0 or 2 if they don't or if there is a syntax error in the
@@ -279,7 +279,7 @@ int ci;                 /* flag: force case-insensitive matching */
       /* are no other shell expression chars, i.e. a literal string */
       /* then just compare the literal string at the end */
 
-      ZCONST char *srest;
+      const char *srest;
 
       srest = s + (strlen(s) - strlen(p));
       if (srest - s < 0)
@@ -292,7 +292,7 @@ int ci;                 /* flag: force case-insensitive matching */
            of the test string to check for a match */
 #ifdef _MBCS
       {
-        ZCONST char *q = s;
+        const char *q = s;
 
         /* MBCS-aware code must not scan backwards into a string from
          * the end.
@@ -329,7 +329,7 @@ int ci;                 /* flag: force case-insensitive matching */
   if (!no_wild && allow_regex && c == '[')
   {
     int e;              /* flag true if next char to be taken literally */
-    ZCONST char *q;     /* pointer to end of [-] group */
+    const char *q;      /* pointer to end of [-] group */
     int r;              /* flag true to match anything but the range */
 
     if (*s == 0)                        /* need a character to match */
@@ -411,7 +411,7 @@ int ci;                 /* flag: force case-insensitive matching */
 
 /*************************************************************************************************/
 static char *isshexp(p)
-ZCONST char *p;
+const char *p;
 /* If p is a sh expression, a pointer to the first special character is
    returned.  Otherwise, NULL is returned. */
 {
@@ -426,7 +426,7 @@ ZCONST char *p;
 
 
 static int namecmp(s1, s2)
-    ZCONST char *s1, *s2;
+    const char *s1, *s2;
 {
     int d;
 
@@ -448,7 +448,7 @@ static int namecmp(s1, s2)
 
 
 int iswild(p)        /* originally only used for stat()-bug workaround in */
-    ZCONST char *p;  /*  VAX C, Turbo/Borland C, Watcom C, Atari MiNT libs; */
+    const char *p;   /*  VAX C, Turbo/Borland C, Watcom C, Atari MiNT libs; */
 {                    /*  now used in process_zipfiles() as well */
     for (; *p; INCSTR(p))
         if (*p == '\\' && *(p+1))

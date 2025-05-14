@@ -83,7 +83,7 @@ __686   EQU     1 ; optimize for Pentium Pro, Pentium II and compatible CPUs
     ENDIF
     ENDIF
 
-extrn   _get_crc_table:near    ; ZCONST ulg near *get_crc_table(void);
+extrn   _get_crc_table:near    ; const ulg near *get_crc_table(void);
 
 ;
     IFNDEF NO_STD_STACKFRAME
@@ -220,7 +220,7 @@ _TEXT   segment use32
         assume  CS: _TEXT
 
         public  _crc32
-_crc32          proc    near  ; ulg crc32(ulg crc, ZCONST uch *buf, extent len)
+_crc32          proc    near  ; ulg crc32(ulg crc, const uch *buf, extent len)
                 STD_ENTRY
                 push    edi
                 push    esi

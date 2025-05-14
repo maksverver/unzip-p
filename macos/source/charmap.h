@@ -39,7 +39,7 @@ In all Mac OS encodings, character codes 0x00-0x7F are identical to ASCII
 
 
 
-ZCONST unsigned char MacRoman_to_WinCP1252[128] = {
+const unsigned char MacRoman_to_WinCP1252[128] = {
 /*  Win CP1252          UniCode  UniCode Names       */
     0xC4    ,       /*  0x00C4  #LATIN CAPITAL LETTER A WITH DIAERESIS      */
     0xC5    ,       /*  0x00C5  #LATIN CAPITAL LETTER A WITH RING ABOVE     */
@@ -173,7 +173,7 @@ ZCONST unsigned char MacRoman_to_WinCP1252[128] = {
 
 
 
-ZCONST unsigned char WinCP1252_to_MacRoman[128] = {
+const unsigned char WinCP1252_to_MacRoman[128] = {
 /*  Mac Roman           UniCode  UniCode Names       */
     0xA5    ,       /*  0x2022  # ***  BULLET       */
     0xA5    ,       /*  0x2022  # ***  BULLET       */

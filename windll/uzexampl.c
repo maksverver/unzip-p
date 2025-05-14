@@ -75,7 +75,7 @@ HANDLE hZCL = (HANDLE)NULL;
 #ifdef WIN32
 DWORD dwPlatformId = 0xFFFFFFFF;
 #endif
-static ZCONST UzpVer *lpUzVersInfo = NULL;
+static const UzpVer *lpUzVersInfo = NULL;
 
 
 /* Forward References */
@@ -83,7 +83,7 @@ int WINAPI DisplayBuf(LPSTR, unsigned long);
 int WINAPI GetReplaceDlgRetVal(LPSTR, unsigned);
 int WINAPI password(LPSTR, int, LPCSTR, LPCSTR);
 
-ZCONST UzpVer * UZ_EXP UzpVersion     (void);
+const UzpVer * UZ_EXP UzpVersion     (void);
 _DLL_UZVER pUzpVersion;
 _DLL_UNZIP pWiz_SingleEntryUnzip;
 

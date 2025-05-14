@@ -66,7 +66,7 @@ const char version_id[]  = "\0$VER: UnZip " UZ_VER_STRING " ("
 #endif /* SFX */
 
 
-static int ispattern(ZCONST char *p)
+static int ispattern(const char *p)
 {
     char c;
     while (c = *p++)
@@ -95,11 +95,11 @@ static int ispattern(ZCONST char *p)
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;  /* only used first time on a given dir */
 {
 /* these statics are now declared in SYSTEM_SPECIFIC_GLOBALS in amiga.h:
     static DIR *wild_dir = NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall = FALSE, dirnamelen;
 */
@@ -124,8 +124,8 @@ char *do_wild(__G__ wildspec)
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((G.wildname = (ZCONST char *)strrchr(wildspec, '/')) == NULL &&
-            (G.wildname = (ZCONST char *)strrchr(wildspec, ':')) == NULL) {
+        if ((G.wildname = (const char *)strrchr(wildspec, '/')) == NULL &&
+            (G.wildname = (const char *)strrchr(wildspec, ':')) == NULL) {
             G.dirname = "";             /* current dir */
             G.dirnamelen = 0;
             G.wildname = wildspec;
@@ -766,7 +766,7 @@ void close_outfile(__G)
 /*************************/
 
 int stamp_file(fname, modtime)
-    ZCONST char *fname;
+    const char *fname;
     time_t modtime;
 {
     time_t m_time;
@@ -850,7 +850,7 @@ int screensize(int *ttrows, int *ttcols)
 #  include <dos/filehandler.h>
 #  include <clib/macros.h>
 
-BOOL is_floppy(ZCONST char *path)
+BOOL is_floppy(const char *path)
 {
     BOOL okay = FALSE;
     char devname[32], *debna;

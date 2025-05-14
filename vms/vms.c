@@ -118,9 +118,9 @@
  * "fine tuning" without affecting the other variant of the
  * "overwrite or ..." user query.
  */
-ZCONST char Far InvalidResponse[] =
+const char Far InvalidResponse[] =
   "error:  invalid response [%.1s]\n";
-ZCONST char Far AssumeNo[] =
+const char Far AssumeNo[] =
   "\n(EOF or read error, treating as \"[N]o extract (all)\" ...)\n";
 
 
@@ -212,16 +212,16 @@ static void free_up(void);
 #ifdef CHECK_VERSIONS
 static int  get_vms_version(char *verbuf, int len);
 #endif /* CHECK_VERSIONS */
-static unsigned find_eol(ZCONST uch *p, unsigned n, unsigned *l);
+static unsigned find_eol(const uch *p, unsigned n, unsigned *l);
 #ifdef SET_DIR_ATTRIB
-static char *vms_path_fixdown(ZCONST char *dir_spec, char *dir_file);
+static char *vms_path_fixdown(const char *dir_spec, char *dir_file);
 #endif
 #ifdef TIMESTAMP
 static time_t mkgmtime(struct tm *tm);
 static void uxtime2vmstime(time_t utimeval, long int binval[2]);
 #endif /* TIMESTAMP */
 static int vms_msg_fetch(int status);
-static void vms_msg(__GPRO__ ZCONST char *string, int status);
+static void vms_msg(__GPRO__ const char *string, int status);
 
 
 /*
@@ -599,7 +599,7 @@ static void init_buf_ring()
 /* Static data storage for time conversion: */
 
 /*   string constants for month names */
-static ZCONST char *month[] =
+static const char *month[] =
             {"JAN", "FEB", "MAR", "APR", "MAY", "JUN",
              "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
@@ -607,7 +607,7 @@ static ZCONST char *month[] =
 static char timbuf[24];         /* length = first entry in "date_str" + 1 */
 
 /*   fixed-length string descriptor for timbuf: */
-static ZCONST struct dsc$descriptor date_str =
+static const struct dsc$descriptor date_str =
             {sizeof(timbuf)-1, DSC$K_DTYPE_T, DSC$K_CLASS_S, timbuf};
 
 
@@ -2311,12 +2311,12 @@ static unsigned find_eol(p, n, l)
  *  zero if sequence end not seen, i.e. CR or LF is last char
  *  in the buffer.
  */
-    ZCONST uch *p;
+    const uch *p;
     unsigned n;
     unsigned *l;
 {
     unsigned off = n;
-    ZCONST uch *q;
+    const uch *q;
 
     *l = 0;
 
@@ -2981,7 +2981,7 @@ static int _close_qio(__GPRO)
 
 #define DIR_TYPE_VER ".DIR;1"
 
-static char *vms_path_fixdown(ZCONST char *dir_spec, char *dir_file)
+static char *vms_path_fixdown(const char *dir_spec, char *dir_file)
 {
     char dir_close;
     char dir_open;
@@ -3453,7 +3453,7 @@ cleanup_exit:
 #define nleap(y) (((y) - 1969) / 4 - ((y) - 1901) / 100 + ((y) - 1601) / 400)
 
 /* Accumulated number of days from 01-Jan up to start of current month. */
-static ZCONST short ydays[] = {
+static const short ydays[] = {
     0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
 };
 
@@ -3574,7 +3574,7 @@ static void uxtime2vmstime(  /* convert time_t value into 64 bit VMS bintime */
 /***************************/
 
 int stamp_file(fname, modtime)
-    ZCONST char *fname;
+    const char *fname;
     time_t modtime;
 {
     int status;
@@ -3847,7 +3847,7 @@ static int vms_msg_fetch(int status)
 }
 
 
-static void vms_msg(__GPRO__ ZCONST char *string, int status)
+static void vms_msg(__GPRO__ const char *string, int status)
 {
     if (ERR(vms_msg_fetch(status)))
         Info(slide, 1, ((char *)slide,
@@ -3886,7 +3886,7 @@ static void vms_msg(__GPRO__ ZCONST char *string, int status)
  */
 char *do_wild( __G__ wld )
     __GDEF
-    ZCONST char *wld;
+    const char *wld;
 {
     int status;
 
@@ -3896,7 +3896,7 @@ char *do_wild( __G__ wld )
     static struct FAB fab;
     static struct NAM_STRUCT nam;
     static int first_call = 1;
-    static ZCONST char deflt[] = "[]*.ZIP";
+    static const char deflt[] = "[]*.ZIP";
 
     if ( first_call || strcmp(wld, last_wild) )
     {   /* (Re)Initialize everything */
@@ -5345,7 +5345,7 @@ static int getscreeninfo(int *tt_rows, int *tt_cols, int *tt_wrap)
 #define OUTDEVICE_NAME  "SYS$OUTPUT"
 #endif
 
-    static ZCONST struct dsc$descriptor_s OutDevDesc =
+    static const struct dsc$descriptor_s OutDevDesc =
         {(sizeof(OUTDEVICE_NAME) - 1), DSC$K_DTYPE_T, DSC$K_CLASS_S,
          OUTDEVICE_NAME};
      /* {dsc$w_length, dsc$b_dtype, dsc$b_class, dsc$a_pointer}; */

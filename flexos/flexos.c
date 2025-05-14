@@ -46,25 +46,25 @@ static int renamed_fullpath;   /* ditto */
 /*****************************/
 
 #ifndef SFX
-  static ZCONST char Far CantAllocateWildcard[] =
+  static const char Far CantAllocateWildcard[] =
     "warning:  cannot allocate wildcard buffers\n";
 #endif
-static ZCONST char Far WarnDirTraversSkip[] =
+static const char Far WarnDirTraversSkip[] =
   "warning:  skipped \"../\" path component(s) in %s\n";
-static ZCONST char Far Creating[] = "   creating: %s\n";
-static ZCONST char Far ConversionFailed[] =
+static const char Far Creating[] = "   creating: %s\n";
+static const char Far ConversionFailed[] =
   "mapname:  conversion of %s failed\n";
-static ZCONST char Far PathTooLong[] = "checkdir error:  path too long: %s\n";
-static ZCONST char Far CantCreateDir[] = "checkdir error:  cannot create %s\n\
+static const char Far PathTooLong[] = "checkdir error:  path too long: %s\n";
+static const char Far CantCreateDir[] = "checkdir error:  cannot create %s\n\
                  unable to process %s.\n";
-static ZCONST char Far DirIsntDirectory[] =
+static const char Far DirIsntDirectory[] =
   "checkdir error:  %s exists but is not directory\n\
                  unable to process %s.\n";
-static ZCONST char Far PathTooLongTrunc[] =
+static const char Far PathTooLongTrunc[] =
   "checkdir warning:  path too long; truncating\n                   %s\n\
                 -> %s\n";
 #if (!defined(SFX) || defined(SFX_EXDIR))
-   static ZCONST char Far CantCreateExtractDir[] =
+   static const char Far CantCreateExtractDir[] =
      "checkdir:  cannot create extraction directory: %s\n";
 #endif
 
@@ -78,10 +78,10 @@ static ZCONST char Far PathTooLongTrunc[] =
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;   /* only used first time on a given dir */
+    const char *wildspec;    /* only used first time on a given dir */
 {
     static DIR *wild_dir = (DIR *)NULL;
-    static ZCONST char *wildname;
+    static const char *wildname;
     static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall=FALSE, have_dirname, dirnamelen;
     char *fnamestart;
@@ -103,8 +103,8 @@ char *do_wild(__G__ wildspec)
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((wildname = strrchr(wildspec, '/')) == (ZCONST char *)NULL &&
-            (wildname = strrchr(wildspec, ':')) == (ZCONST char *)NULL) {
+        if ((wildname = strrchr(wildspec, '/')) == (const char *)NULL &&
+            (wildname = strrchr(wildspec, ':')) == (const char *)NULL) {
             dirname = ".";
             dirnamelen = 1;
             have_dirname = FALSE;

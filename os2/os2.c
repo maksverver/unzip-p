@@ -69,12 +69,12 @@
 
 #include "os2acl.h"
 
-extern ZCONST char Far TruncEAs[];
+extern const char Far TruncEAs[];
 
 /* local prototypes */
 
 #ifdef TIMESTAMP
-  static int SetFileTime(ZCONST char *name, ulg stamp);
+  static int SetFileTime(const char *name, ulg stamp);
 #endif
 #if defined(USE_EF_UT_TIME) || defined(TIMESTAMP)
   static ulg Utime2DosDateTime     (time_t uxtime);
@@ -114,28 +114,28 @@ typedef struct {
 /*****************************/
 
 #ifndef SFX
-  static ZCONST char Far CantAllocateWildcard[] =
+  static const char Far CantAllocateWildcard[] =
     "warning:  cannot allocate wildcard buffers\n";
 #endif
-static ZCONST char Far WarnDirTraversSkip[] =
+static const char Far WarnDirTraversSkip[] =
   "warning:  skipped \"../\" path component(s) in %s\n";
-static ZCONST char Far Creating[] = "   creating: %-22s ";
-static ZCONST char Far ConversionFailed[] =
+static const char Far Creating[] = "   creating: %-22s ";
+static const char Far ConversionFailed[] =
   "mapname:  conversion of %s failed\n";
-static ZCONST char Far Labelling[] = "labelling %c: %-22s\n";
-static ZCONST char Far ErrSetVolLabel[] =
+static const char Far Labelling[] = "labelling %c: %-22s\n";
+static const char Far ErrSetVolLabel[] =
   "mapname:  error setting volume label\n";
-static ZCONST char Far PathTooLong[] = "checkdir error:  path too long: %s\n";
-static ZCONST char Far CantCreateDir[] = "checkdir error:  cannot create %s\n\
+static const char Far PathTooLong[] = "checkdir error:  path too long: %s\n";
+static const char Far CantCreateDir[] = "checkdir error:  cannot create %s\n\
                  unable to process %s.\n";
-static ZCONST char Far DirIsntDirectory[] =
+static const char Far DirIsntDirectory[] =
   "checkdir error:  %s exists but is not directory\n\
                  unable to process %s.\n";
-static ZCONST char Far PathTooLongTrunc[] =
+static const char Far PathTooLongTrunc[] =
   "checkdir warning:  path too long; truncating\n                   %s\n\
                 -> %s\n";
 #if (!defined(SFX) || defined(SFX_EXDIR))
-   static ZCONST char Far CantCreateExtractDir[] =
+   static const char Far CantCreateExtractDir[] =
      "checkdir:  cannot create extraction directory: %s\n";
 #endif
 
@@ -240,14 +240,14 @@ FEA2LIST, *PFEA2LIST;
 const int attributes = A_DIR | A_HIDDEN | A_SYSTEM;
 
 
-extern DIR *opendir(__GPRO__ ZCONST char *);
+extern DIR *opendir(__GPRO__ const char *);
 extern struct direct *readdir(__GPRO__ DIR *);
 extern void seekdir(DIR *, long);
 extern long telldir(DIR *);
 extern void closedir(DIR *);
 #define rewinddir(dirp) seekdir(dirp, 0L)
 
-int IsFileSystemFAT(__GPRO__ ZCONST char *dir);
+int IsFileSystemFAT(__GPRO__ const char *dir);
 char *StringLower(char *szArg);
 
 
@@ -264,7 +264,7 @@ char *StringLower(char *szArg);
 
 
 #ifndef SFX
-   static char *getdirent(__GPRO__ ZCONST char *);
+   static char *getdirent(__GPRO__ const char *);
    static void free_dircontents(struct _dircontents *);
 #endif /* !SFX */
 
@@ -300,7 +300,7 @@ int SetFileSize(FILE *file, ulg filesize)
 }
 
 
-long GetFileTime(ZCONST char *name)
+long GetFileTime(const char *name)
 {
 #ifdef __32BIT__
   FILESTATUS3 fs;
@@ -321,7 +321,7 @@ long GetFileTime(ZCONST char *name)
 
 #ifdef TIMESTAMP
 
-static int SetFileTime(ZCONST char *name, ulg stamp)   /* swiped from Zip */
+static int SetFileTime(const char *name, ulg stamp)    /* swiped from Zip */
 {
   FILESTATUS fs;
   USHORT fd, ft;
@@ -341,7 +341,7 @@ static int SetFileTime(ZCONST char *name, ulg stamp)   /* swiped from Zip */
 }
 
 
-int stamp_file(ZCONST char *fname, time_t modtime)
+int stamp_file(const char *fname, time_t modtime)
 {
     return SetFileTime(fname, Utime2DosDateTime(modtime));
 }
@@ -853,7 +853,7 @@ static void free_dircontents(struct _dircontents * dp)
 }
 
 
-static char *getdirent(__GPRO__ ZCONST char *dir)
+static char *getdirent(__GPRO__ const char *dir)
 {
   int done;
   /* moved to os2data.h so it can be global */
@@ -886,7 +886,7 @@ static char *getdirent(__GPRO__ ZCONST char *dir)
 
 
 
-int IsFileSystemFAT(__GPRO__ ZCONST char *dir)  /* FAT / HPFS detection */
+int IsFileSystemFAT(__GPRO__ const char *dir)   /* FAT / HPFS detection */
 {
   /* moved to os2data.h so they can be global */
   /* static USHORT nLastDrive=(USHORT)(-1), nResult; */
@@ -940,12 +940,12 @@ int IsFileSystemFAT(__GPRO__ ZCONST char *dir)  /* FAT / HPFS detection */
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    ZCONST char *wildspec;  /* only used first time on a given dir */
+    const char *wildspec;   /* only used first time on a given dir */
 {
   /* moved to os2data.h so they can be global */
 #if 0
   static DIR *wild_dir = NULL;
-  static ZCONST char *wildname;
+  static const char *wildname;
   static char *dirname, matchname[FILNAMSIZ];
   static int notfirstcall=FALSE, have_dirname, dirnamelen;
 #endif
@@ -968,8 +968,8 @@ char *do_wild(__G__ wildspec)
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((G.os2.wildname = (ZCONST char *)strrchr(wildspec, '/')) == NULL &&
-            (G.os2.wildname = (ZCONST char *)strrchr(wildspec, ':')) == NULL) {
+        if ((G.os2.wildname = (const char *)strrchr(wildspec, '/')) == NULL &&
+            (G.os2.wildname = (const char *)strrchr(wildspec, ':')) == NULL) {
             G.os2.dirname = ".";
             G.os2.dirnamelen = 1;
             G.os2.have_dirname = FALSE;
