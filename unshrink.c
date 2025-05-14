@@ -74,23 +74,23 @@
 
 static void  partial_clear     (__GPRO__ int lastcodeused);
 
-#ifdef DEBUG
-#  define OUTDBG(c) \
+#  ifdef DEBUG
+#    define OUTDBG(c) \
    if ((c)<32 || (c)>=127) fprintf(stderr,"\\x%02x",(c)); else putc((c),stderr);
-#else
-#  define OUTDBG(c)
-#endif
+#  else
+#    define OUTDBG(c)
+#  endif
 
 /* HSIZE is defined as 2^13 (8192) in unzip.h (resp. unzpriv.h */
-#define BOGUSCODE  256
-#define FLAG_BITS  parent        /* upper bits of parent[] used as flag bits */
-#define CODE_MASK  (HSIZE - 1)   /* 0x1fff (lower bits are parent's index) */
-#define FREE_CODE  HSIZE         /* 0x2000 (code is unused or was cleared) */
-#define HAS_CHILD  (HSIZE << 1)  /* 0x4000 (code has a child--do not clear) */
+#  define BOGUSCODE  256
+#  define FLAG_BITS  parent        /* upper bits of parent[] used as flag bits */
+#  define CODE_MASK  (HSIZE - 1)   /* 0x1fff (lower bits are parent's index) */
+#  define FREE_CODE  HSIZE         /* 0x2000 (code is unused or was cleared) */
+#  define HAS_CHILD  (HSIZE << 1)  /* 0x4000 (code has a child--do not clear) */
 
-#define parent G.area.shrink.Parent
-#define Value  G.area.shrink.value /* "value" conflicts with Pyramid ioctl.h */
-#define stack  G.area.shrink.Stack
+#  define parent G.area.shrink.Parent
+#  define Value  G.area.shrink.value /* "value" conflicts with Pyramid ioctl.h */
+#  define stack  G.area.shrink.Stack
 
 
 /***********************/
@@ -107,15 +107,7 @@ int unshrink(__G)
     shrint code, oldcode, curcode;
     shrint lastfreecode;
     unsigned int outbufsiz;
-#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
-    /* Normally realbuf and outbuf will be the same.  However, if the data
-     * are redirected to a large memory buffer, realbuf will point to the
-     * new location while outbuf will remain pointing to the malloc'd
-     * memory buffer. */
-    uch *realbuf = G.outbuf;
-#else
-#   define realbuf G.outbuf
-#endif
+#  define realbuf G.outbuf
 
 
 /*---------------------------------------------------------------------------
@@ -124,15 +116,11 @@ int unshrink(__G)
 
     lastfreecode = BOGUSCODE;
 
-#ifndef VMS     /* VMS uses its own buffer scheme for textmode flush(). */
-#ifndef SMALL_MEM
     /* non-memory-limited machines:  allocate second (large) buffer for
      * textmode conversion in flush(), but only if needed */
     if (G.pInfo->textmode && !G.outbuf2 &&
         (G.outbuf2 = (uch *)malloc(TRANSBUFSIZ)) == (uch *)NULL)
         return PK_MEM3;
-#endif
-#endif /* !VMS */
 
     for (code = 0;  code < BOGUSCODE;  ++code) {
         Value[code] = (uch)code;
@@ -141,17 +129,7 @@ int unshrink(__G)
     for (code = BOGUSCODE+1;  code < HSIZE;  ++code)
         parent[code] = FREE_CODE;
 
-#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
-    if (G.redirect_slide) { /* use normal outbuf unless we're a DLL routine */
-        realbuf = G.redirect_buffer;
-        outbufsiz = (unsigned)G.redirect_size;
-    } else
-#endif
-#ifdef DLL
-    if (G.pInfo->textmode && !G.redirect_data)
-#else
     if (G.pInfo->textmode)
-#endif
         outbufsiz = RAWBUFSIZ;
     else
         outbufsiz = OUTBUFSIZ;

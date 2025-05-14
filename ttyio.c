@@ -35,93 +35,72 @@
  * (The corresponding #endif is found at the end of this module.)
  */
 
-#include "ttyio.h"
+#  include "ttyio.h"
 
-#ifndef PUTC
-#  define PUTC putc
-#endif
-
-#ifdef ZIP
-#  ifdef GLOBAL          /* used in Amiga system headers, maybe others too */
-#    undef GLOBAL
+#  ifndef PUTC
+#    define PUTC putc
 #  endif
-#  define GLOBAL(g) g
-#else
-#  define GLOBAL(g) G.g
-#endif
 
-
-#ifdef _POSIX_VERSION
-#  ifndef USE_POSIX_TERMIOS
-#    define USE_POSIX_TERMIOS  /* use POSIX style termio (termios) */
+#  ifdef ZIP
+#    ifdef GLOBAL          /* used in Amiga system headers, maybe others too */
+#      undef GLOBAL
+#    endif
+#    define GLOBAL(g) g
+#  else
+#    define GLOBAL(g) G.g
 #  endif
-#  ifndef HAVE_TERMIOS_H
-#    define HAVE_TERMIOS_H     /* POSIX termios.h */
-#  endif
-#endif /* _POSIX_VERSION */
 
-#ifdef UNZIP            /* Zip handles this with the unix/configure script */
-#  ifndef _POSIX_VERSION
-#    if (defined(SYSV) || defined(CRAY)) &&  !defined(__MINT__)
-#      ifndef USE_SYSV_TERMIO
-#        define USE_SYSV_TERMIO
-#      endif
-#      ifdef COHERENT
-#        ifndef HAVE_TERMIO_H
-#          define HAVE_TERMIO_H
+
+#  ifdef _POSIX_VERSION
+#    ifndef USE_POSIX_TERMIOS
+#      define USE_POSIX_TERMIOS  /* use POSIX style termio (termios) */
+#    endif
+#    ifndef HAVE_TERMIOS_H
+#      define HAVE_TERMIOS_H     /* POSIX termios.h */
+#    endif
+#  endif /* _POSIX_VERSION */
+
+#  ifdef UNZIP            /* Zip handles this with the unix/configure script */
+#    ifndef _POSIX_VERSION
+#      if (defined(SYSV))
+#        ifndef USE_SYSV_TERMIO
+#          define USE_SYSV_TERMIO
 #        endif
-#        ifdef HAVE_SYS_TERMIO_H
-#          undef HAVE_SYS_TERMIO_H
-#        endif
-#      else /* !COHERENT */
 #        ifdef HAVE_TERMIO_H
 #          undef HAVE_TERMIO_H
 #        endif
 #        ifndef HAVE_SYS_TERMIO_H
-#           define HAVE_SYS_TERMIO_H
+#          define HAVE_SYS_TERMIO_H
 #        endif
-#      endif /* ?COHERENT */
-#    endif /* (SYSV || CRAY) && !__MINT__ */
-#  endif /* !_POSIX_VERSION */
-#  if !(defined(BSD4_4) || defined(SYSV) || defined(__convexc__))
-#    ifndef NO_FCNTL_H
-#      define NO_FCNTL_H
+#      endif /* (SYSV) */
+#    endif /* !_POSIX_VERSION */
+#    if !(defined(BSD4_4) || defined(SYSV))
+#      ifndef NO_FCNTL_H
+#        define NO_FCNTL_H
+#      endif
+#    endif /* !(BSD4_4 || SYSV) */
+#  endif /* UNZIP */
+
+#  ifdef HAVE_TERMIOS_H
+#    ifndef USE_POSIX_TERMIOS
+#      define USE_POSIX_TERMIOS
 #    endif
-#  endif /* !(BSD4_4 || SYSV || __convexc__) */
-#endif /* UNZIP */
-
-#ifdef HAVE_TERMIOS_H
-#  ifndef USE_POSIX_TERMIOS
-#    define USE_POSIX_TERMIOS
 #  endif
-#endif
 
-#if (defined(HAVE_TERMIO_H) || defined(HAVE_SYS_TERMIO_H))
-#  ifndef USE_SYSV_TERMIO
-#    define USE_SYSV_TERMIO
+#  if (defined(HAVE_TERMIO_H) || defined(HAVE_SYS_TERMIO_H))
+#    ifndef USE_SYSV_TERMIO
+#      define USE_SYSV_TERMIO
+#    endif
 #  endif
-#endif
 
-#if (defined(UNZIP) && !defined(FUNZIP) && defined(UNIX) && defined(MORE))
-#  include <sys/ioctl.h>
-#  define GOT_IOCTL_H
+#  if (defined(UNZIP) && !defined(FUNZIP) && defined(UNIX) && defined(MORE))
+#    include <sys/ioctl.h>
+#    define GOT_IOCTL_H
    /* int ioctl(int, int, void *);   GRR: may need for some systems */
-#endif
+#  endif
 
-#ifndef HAVE_WORKING_GETCH
+#  ifndef HAVE_WORKING_GETCH
    /* include system support for switching of console echo */
-#  ifdef VMS
-#    include <descrip.h>
-#    include <iodef.h>
-#    include <ttdef.h>
-     /* Workaround for broken header files of older DECC distributions
-      * that are incompatible with the /NAMES=AS_IS qualifier. */
-#    define sys$assign SYS$ASSIGN
-#    define sys$dassgn SYS$DASSGN
-#    define sys$qiow SYS$QIOW
-#    include <starlet.h>
-#    include <ssdef.h>
-#  else /* !VMS */
 #    ifdef HAVE_TERMIOS_H
 #      include <termios.h>
 #      define sgttyb termios
@@ -145,14 +124,13 @@
 #        define GTTY(f,s) ioctl(f,TCGETA,(void *)s)
 #        define STTY(f,s) ioctl(f,TCSETAW,(void *)s)
 #      else /* !USE_SYSV_TERMIO */
-#        ifndef CMS_MVS
-#          if (!defined(MINIX) && !defined(GOT_IOCTL_H))
-#            include <sys/ioctl.h>
-#          endif
-#          include <sgtty.h>
-#          define GTTY gtty
-#          define STTY stty
-#          ifdef UNZIP
+#        if (!defined(GOT_IOCTL_H))
+#          include <sys/ioctl.h>
+#        endif
+#        include <sgtty.h>
+#        define GTTY gtty
+#        define STTY stty
+#        ifdef UNZIP
              /*
               * XXX : Are these declarations needed at all ????
               */
@@ -161,8 +139,7 @@
              int gtty(int, struct sgttyb *);
              int stty(int, struct sgttyb *);
               */
-#          endif
-#        endif /* !CMS_MVS */
+#        endif
 #      endif /* ?USE_SYSV_TERMIO */
 #    endif /* ?HAVE_TERMIOS_H */
 #    ifndef NO_FCNTL_H
@@ -172,130 +149,16 @@
 #    else
        char *ttyname(int);
 #    endif
-#  endif /* ?VMS */
-#endif /* !HAVE_WORKING_GETCH */
+#  endif /* !HAVE_WORKING_GETCH */
 
 
-
-#ifndef HAVE_WORKING_GETCH
-#ifdef VMS
-
-static struct dsc$descriptor_s DevDesc =
-        {11, DSC$K_DTYPE_T, DSC$K_CLASS_S, "SYS$COMMAND"};
-     /* {dsc$w_length, dsc$b_dtype, dsc$b_class, dsc$a_pointer}; */
-
-/*
- * Turn keyboard echoing on or off (VMS).  Loosely based on VMSmunch.c
- * and hence on Joe Meadows' file.c code.
- */
-int echo(opt)
-    int opt;
-{
-    /*
-     * For VMS v5.x:
-     *   IO$_SENSEMODE/SETMODE info:  Programming, Vol. 7A, System Programming,
-     *     I/O User's: Part I, sec. 8.4.1.1, 8.4.3, 8.4.5, 8.6
-     *   sys$assign(), sys$qio() info:  Programming, Vol. 4B, System Services,
-     *     System Services Reference Manual, pp. sys-23, sys-379
-     *   fixed-length descriptor info:  Programming, Vol. 3, System Services,
-     *     Intro to System Routines, sec. 2.9.2
-     * Greg Roelofs, 15 Aug 91
-     */
-
-    short           DevChan, iosb[4];
-    long            status;
-    unsigned long   ttmode[2];  /* space for 8 bytes */
-
-
-    /* assign a channel to standard input */
-    status = sys$assign(&DevDesc, &DevChan, 0, 0);
-    if (!(status & 1))
-        return status;
-
-    /* use sys$qio and the IO$_SENSEMODE function to determine the current
-     * tty status (for password reading, could use IO$_READVBLK function
-     * instead, but echo on/off will be more general)
-     */
-    status = sys$qiow(0, DevChan, IO$_SENSEMODE, &iosb, 0, 0,
-                     ttmode, 8, 0, 0, 0, 0);
-    if (!(status & 1))
-        return status;
-    status = iosb[0];
-    if (!(status & 1))
-        return status;
-
-    /* modify mode buffer to be either NOECHO or ECHO
-     * (depending on function argument opt)
-     */
-    if (opt == 0)   /* off */
-        ttmode[1] |= TT$M_NOECHO;                       /* set NOECHO bit */
-    else
-        ttmode[1] &= ~((unsigned long) TT$M_NOECHO);    /* clear NOECHO bit */
-
-    /* use the IO$_SETMODE function to change the tty status */
-    status = sys$qiow(0, DevChan, IO$_SETMODE, &iosb, 0, 0,
-                     ttmode, 8, 0, 0, 0, 0);
-    if (!(status & 1))
-        return status;
-    status = iosb[0];
-    if (!(status & 1))
-        return status;
-
-    /* deassign the sys$input channel by way of clean-up */
-    status = sys$dassgn(DevChan);
-    if (!(status & 1))
-        return status;
-
-    return SS$_NORMAL;   /* we be happy */
-
-} /* end function echo() */
-
-
-/*
- * Read a single character from keyboard in non-echoing mode (VMS).
- * (returns EOF in case of errors)
- */
-int tt_getch()
-{
-    short           DevChan, iosb[4];
-    long            status;
-    char            kbbuf[16];  /* input buffer with - some - excess length */
-
-    /* assign a channel to standard input */
-    status = sys$assign(&DevDesc, &DevChan, 0, 0);
-    if (!(status & 1))
-        return EOF;
-
-    /* read a single character from SYS$COMMAND (no-echo) and
-     * wait for completion
-     */
-    status = sys$qiow(0,DevChan,
-                      IO$_READVBLK|IO$M_NOECHO|IO$M_NOFILTR,
-                      &iosb, 0, 0,
-                      &kbbuf, 1, 0, 0, 0, 0);
-    if ((status&1) == 1)
-        status = iosb[0];
-
-    /* deassign the sys$input channel by way of clean-up
-     * (for this step, we do not need to check the completion status)
-     */
-    sys$dassgn(DevChan);
-
-    /* return the first char read, or EOF in case the read request failed */
-    return (int)(((status&1) == 1) ? (uch)kbbuf[0] : EOF);
-
-} /* end function tt_getch() */
-
-
-#else /* !VMS:  basically Unix */
-
+#  ifndef HAVE_WORKING_GETCH
 
 /* For VM/CMS and MVS, non-echo terminal input is not (yet?) supported. */
-#ifndef CMS_MVS
 
-#ifdef ZIP                      /* moved to globals.h for UnZip */
+#    ifdef ZIP                      /* moved to globals.h for UnZip */
    static int echofd=(-1);      /* file descriptor whose echo is off */
-#endif
+#    endif
 
 /*
  * Turn echo off for file descriptor f.  Assumes that f is a tty device.
@@ -328,14 +191,12 @@ void Echon(__G)
     }
 }
 
-#endif /* !CMS_MVS */
-#endif /* ?VMS */
 
 
-#if (defined(UNZIP) && !defined(FUNZIP))
+#    if (defined(UNZIP) && !defined(FUNZIP))
 
-#ifdef UNIX
-#ifdef MORE
+#      ifdef UNIX
+#        ifdef MORE
 
 /*
  * Get the number of lines on the output terminal.  SCO Unix apparently
@@ -345,20 +206,20 @@ void Echon(__G)
  *       line-wrapping.
  */
 
-#if (defined(TIOCGWINSZ) && !defined(M_UNIX))
+#          if (defined(TIOCGWINSZ))
 
 int screensize(tt_rows, tt_cols)
     int *tt_rows;
     int *tt_cols;
 {
     struct winsize wsz;
-#ifdef DEBUG_WINSZ
+#            ifdef DEBUG_WINSZ
     static int firsttime = TRUE;
-#endif
+#            endif
 
     /* see termio(4) under, e.g., SunOS */
     if (ioctl(1, TIOCGWINSZ, &wsz) == 0) {
-#ifdef DEBUG_WINSZ
+#            ifdef DEBUG_WINSZ
         if (firsttime) {
             firsttime = FALSE;
             fprintf(stderr, "ttyio.c screensize():  ws_row = %d\n",
@@ -366,7 +227,7 @@ int screensize(tt_rows, tt_cols)
             fprintf(stderr, "ttyio.c screensize():  ws_col = %d\n",
               wsz.ws_col);
         }
-#endif
+#            endif
         /* number of rows */
         if (tt_rows != NULL)
             *tt_rows = (int)((wsz.ws_row > 0) ? wsz.ws_row : 24);
@@ -375,13 +236,13 @@ int screensize(tt_rows, tt_cols)
             *tt_cols = (int)((wsz.ws_col > 0) ? wsz.ws_col : 80);
         return 0;    /* signal success */
     } else {         /* this happens when piping to more(1), for example */
-#ifdef DEBUG_WINSZ
+#            ifdef DEBUG_WINSZ
         if (firsttime) {
             firsttime = FALSE;
             fprintf(stderr,
               "ttyio.c screensize():  ioctl(TIOCGWINSZ) failed\n"));
         }
-#endif
+#            endif
         /* VT-100 assumed to be minimal hardware */
         if (tt_rows != NULL)
             *tt_rows = 24;
@@ -391,7 +252,7 @@ int screensize(tt_rows, tt_cols)
     }
 }
 
-#else /* !TIOCGWINSZ: service not available, fall back to semi-bogus method */
+#          else /* !TIOCGWINSZ: service not available, fall back to semi-bogus method */
 
 int screensize(tt_rows, tt_cols)
     int *tt_rows;
@@ -426,8 +287,8 @@ int screensize(tt_rows, tt_cols)
     return errstat;
 }
 
-#endif /* ?(TIOCGWINSZ && !M_UNIX) */
-#endif /* MORE */
+#          endif /* ?(TIOCGWINSZ) */
+#        endif /* MORE */
 
 
 /*
@@ -437,35 +298,35 @@ int zgetch(__G__ f)
     __GDEF
     int f;                      /* file descriptor from which to read */
 {
-#if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
+#        if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
     char oldmin, oldtim;
-#endif
+#        endif
     char c;
     struct sgttyb sg;           /* tty device structure */
 
     GTTY(f, &sg);               /* get settings */
-#if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
+#        if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
     oldmin = sg.c_cc[VMIN];     /* save old values */
     oldtim = sg.c_cc[VTIME];
     sg.c_cc[VMIN] = 1;          /* need only one char to return read() */
     sg.c_cc[VTIME] = 0;         /* no timeout */
     sg.sg_flags &= ~ICANON;     /* canonical mode off */
-#else
+#        else
     sg.sg_flags |= CBREAK;      /* cbreak mode on */
-#endif
+#        endif
     sg.sg_flags &= ~ECHO;       /* turn echo off, too */
     STTY(f, &sg);               /* set cbreak mode */
     GLOBAL(echofd) = f;         /* in case ^C hit (not perfect: still CBREAK) */
 
     read(f, &c, 1);             /* read our character */
 
-#if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
+#        if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
     sg.c_cc[VMIN] = oldmin;     /* restore old values */
     sg.c_cc[VTIME] = oldtim;
     sg.sg_flags |= ICANON;      /* canonical mode on */
-#else
+#        else
     sg.sg_flags &= ~CBREAK;     /* cbreak mode off */
-#endif
+#        endif
     sg.sg_flags |= ECHO;        /* turn echo on */
     STTY(f, &sg);               /* restore canonical mode */
     GLOBAL(echofd) = -1;
@@ -474,8 +335,7 @@ int zgetch(__G__ f)
 }
 
 
-#else /* !UNIX */
-#ifndef VMS     /* VMS supplies its own variant of getch() */
+#      else /* !UNIX */
 
 
 int zgetch(__G__ f)
@@ -500,29 +360,28 @@ int zgetch(__G__ f)
     return (int)c;
 }
 
-#endif /* !VMS */
-#endif /* ?UNIX */
+#      endif /* ?UNIX */
 
-#endif /* UNZIP && !FUNZIP */
-#endif /* !HAVE_WORKING_GETCH */
+#    endif /* UNZIP && !FUNZIP */
+#  endif /* !HAVE_WORKING_GETCH */
 
 
-#if CRYPT                       /* getp() is only used with full encryption */
+#  if CRYPT                       /* getp() is only used with full encryption */
 
 /*
  * Simple compile-time check for source compatibility between
  * zcrypt and ttyio:
  */
-#if (!defined(CR_MAJORVER) || (CR_MAJORVER < 2) || (CR_MINORVER < 7))
+#    if (!defined(CR_MAJORVER) || (CR_MAJORVER < 2) || (CR_MINORVER < 7))
    error:  This Info-ZIP tool requires zcrypt 2.7 or later.
-#endif
+#    endif
 
 /*
  * Get a password of length n-1 or less into *p using the prompt *m.
  * The entered password is not echoed.
  */
 
-#ifdef HAVE_WORKING_GETCH
+#    ifdef HAVE_WORKING_GETCH
 /*
  * For the AMIGA, getch() is defined as Agetch(), which is in
  * amiga/filedate.c; SAS/C 6.x provides a getch(), but since Agetch()
@@ -538,8 +397,6 @@ int zgetch(__G__ f)
  * is defined as an alias for a similar system specific RTL function.
  */
 
-#ifndef WINDLL   /* WINDLL does not support a console interface */
-#ifndef QDOS     /* QDOS supplies a variant of this function */
 
 /* This is the getp() function for all systems (with TTY type user interface)
  * that supply a working `non-echo' getch() function for "raw" console input.
@@ -579,22 +436,16 @@ char *getp(__G__ m, p, n)
 
 } /* end function getp() */
 
-#endif /* !QDOS */
-#endif /* !WINDLL */
 
 
-#else /* !HAVE_WORKING_GETCH */
+#    else /* !HAVE_WORKING_GETCH */
 
 
-#if (defined(UNIX) || defined(__MINT__))
+#      if (defined(UNIX))
 
-#ifndef _PATH_TTY
-#  ifdef __MINT__
-#    define _PATH_TTY ttyname(2)
-#  else
-#    define _PATH_TTY "/dev/tty"
-#  endif
-#endif
+#        ifndef _PATH_TTY
+#          define _PATH_TTY "/dev/tty"
+#        endif
 
 char *getp(__G__ m, p, n)
     __GDEF
@@ -607,15 +458,15 @@ char *getp(__G__ m, p, n)
     char *w;                    /* warning on retry */
     int f;                      /* file descriptor for tty device */
 
-#ifdef PASSWD_FROM_STDIN
+#        ifdef PASSWD_FROM_STDIN
     /* Read from stdin. This is unsafe if the password is stored on disk. */
     f = 0;
-#else
+#        else
     /* turn off echo on tty */
 
     if ((f = open(_PATH_TTY, 0)) == -1)
         return NULL;
-#endif
+#        endif
     /* get password */
     w = "";
     do {
@@ -635,68 +486,15 @@ char *getp(__G__ m, p, n)
     } while (p[i-1] != '\n');
     p[i-1] = 0;                 /* terminate at newline */
 
-#ifndef PASSWD_FROM_STDIN
+#        ifndef PASSWD_FROM_STDIN
     close(f);
-#endif
+#        endif
 
     return p;                   /* return pointer to password */
 
 } /* end function getp() */
 
-#endif /* UNIX || __MINT__ */
-
-
-
-#if (defined(VMS) || defined(CMS_MVS))
-
-char *getp(__G__ m, p, n)
-    __GDEF
-    const char *m;              /* prompt for password */
-    char *p;                    /* return value: line input */
-    int n;                      /* bytes available in p[] */
-{
-    char c;                     /* one-byte buffer for read() to use */
-    int i;                      /* number of characters input */
-    char *w;                    /* warning on retry */
-    FILE *f;                    /* file structure for SYS$COMMAND device */
-
-#ifdef PASSWD_FROM_STDIN
-    f = stdin;
-#else
-    if ((f = fopen(ctermid(NULL), "r")) == NULL)
-        return NULL;
-#endif
-
-    /* get password */
-    fflush(stdout);
-    w = "";
-    do {
-        if (*w)                 /* bug: VMS apparently adds \n to NULL fputs */
-            fputs(w, stderr);   /* warning if back again */
-        fputs(m, stderr);       /* prompt */
-        fflush(stderr);
-        i = 0;
-        echoff(f);
-        do {                    /* read line, keeping n */
-            if ((c = (char)getc(f)) == '\r')
-                c = '\n';
-            if (i < n)
-                p[i++] = c;
-        } while (c != '\n');
-        echon();
-        PUTC('\n', stderr);  fflush(stderr);
-        w = "(line too long--try again)\n";
-    } while (p[i-1] != '\n');
-    p[i-1] = 0;                 /* terminate at newline */
-#ifndef PASSWD_FROM_STDIN
-    fclose(f);
-#endif
-
-    return p;                   /* return pointer to password */
-
-} /* end function getp() */
-
-#endif /* VMS || CMS_MVS */
-#endif /* ?HAVE_WORKING_GETCH */
-#endif /* CRYPT */
+#      endif /* UNIX */
+#    endif /* ?HAVE_WORKING_GETCH */
+#  endif /* CRYPT */
 #endif /* CRYPT || (UNZIP && !FUNZIP) */

@@ -11,49 +11,44 @@
  */
 
 #ifndef __unzvers_h     /* don't include more than once */
-#define __unzvers_h
+#  define __unzvers_h
 
-#ifdef BETA
-#  undef BETA           /* undefine BETA for public releases */
-#endif
+#  ifdef BETA
+#    undef BETA           /* undefine BETA for public releases */
+#  endif
 
-#ifdef BETA
-#  define UZ_BETALEVEL      "h03 BETA"
-#  define UZ_VERSION_DATE   "17 Apr 09"         /* internal beta version */
-#else
-#  define UZ_BETALEVEL      ""
-#  define UZ_VERSION_DATE   "20 April 2009"     /* official release version */
-#  define RELEASE
-#endif
+#  ifdef BETA
+#    define UZ_BETALEVEL      "h03 BETA"
+#    define UZ_VERSION_DATE   "17 Apr 09"         /* internal beta version */
+#  else
+#    define UZ_BETALEVEL      ""
+#    define UZ_VERSION_DATE   "20 April 2009"     /* official release version */
+#    define RELEASE
+#  endif
 
-#define UZ_MAJORVER    6   /* UnZip */
-#define UZ_MINORVER    0
+#  define UZ_MAJORVER    6   /* UnZip */
+#  define UZ_MINORVER    0
 
-#define ZI_MAJORVER    3   /* ZipInfo */
-#define ZI_MINORVER    0
+#  define ZI_MAJORVER    3   /* ZipInfo */
+#  define ZI_MINORVER    0
 
-#define UZ_PATCHLEVEL  0
+#  define UZ_PATCHLEVEL  0
 
-#define UZ_VER_STRING  "6.0"          /* keep in sync with Version numbers! */
+#  define UZ_VER_STRING  "6.0"          /* keep in sync with Version numbers! */
 
-#ifndef IZ_COMPANY_NAME               /* might be already defined... */
-#  define IZ_COMPANY_NAME "Info-ZIP"
-#endif
+#  ifndef IZ_COMPANY_NAME               /* might be already defined... */
+#    define IZ_COMPANY_NAME "Info-ZIP"
+#  endif
 
 /* these are obsolete but remain for backward compatibility: */
-#if (defined(OS2) || defined(__OS2__))
-#  define D2_MAJORVER    UZ_MAJORVER    /* DLL for OS/2 */
-#  define D2_MINORVER    UZ_MINORVER
-#  define D2_PATCHLEVEL  UZ_PATCHLEVEL
-#endif
 
-#define DW_MAJORVER    UZ_MAJORVER    /* DLL for MS Windows */
-#define DW_MINORVER    UZ_MINORVER
-#define DW_PATCHLEVEL  UZ_PATCHLEVEL
+#  define DW_MAJORVER    UZ_MAJORVER    /* DLL for MS Windows */
+#  define DW_MINORVER    UZ_MINORVER
+#  define DW_PATCHLEVEL  UZ_PATCHLEVEL
 
-#define WIN_VERSION_DATE  UZ_VERSION_DATE
+#  define WIN_VERSION_DATE  UZ_VERSION_DATE
 
-#define UNZ_DLL_VERSION   UZ_VER_STRING
+#  define UNZ_DLL_VERSION   UZ_VER_STRING
 
 /* The following version constants specify the UnZip version that introduced
  * the most recent incompatible change (means: change that breaks backward
@@ -74,16 +69,16 @@
  * be synchronized with the current UnZip version numbers.
  */
 /* generic DLL API minimum compatible version*/
-#define UZ_GENAPI_COMP_MAJOR  6
-#define UZ_GENAPI_COMP_MINOR  0
-#define UZ_GENAPI_COMP_REVIS  0
+#  define UZ_GENAPI_COMP_MAJOR  6
+#  define UZ_GENAPI_COMP_MINOR  0
+#  define UZ_GENAPI_COMP_REVIS  0
 /* os2dll API minimum compatible version*/
-#define UZ_OS2API_COMP_MAJOR  6
-#define UZ_OS2API_COMP_MINOR  0
-#define UZ_OS2API_COMP_REVIS  0
+#  define UZ_OS2API_COMP_MAJOR  6
+#  define UZ_OS2API_COMP_MINOR  0
+#  define UZ_OS2API_COMP_REVIS  0
 /* windll API minimum compatible version*/
-#define UZ_WINAPI_COMP_MAJOR  6
-#define UZ_WINAPI_COMP_MINOR  0
-#define UZ_WINAPI_COMP_REVIS  0
+#  define UZ_WINAPI_COMP_MAJOR  6
+#  define UZ_WINAPI_COMP_MINOR  0
+#  define UZ_WINAPI_COMP_REVIS  0
 
 #endif /* !__unzvers_h */

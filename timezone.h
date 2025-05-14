@@ -7,27 +7,23 @@
   also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
 */
 #ifndef __timezone_h
-#define __timezone_h
+#  define __timezone_h
 
-#ifndef IZ_MKTIME_ONLY
+#  ifndef IZ_MKTIME_ONLY
 
 /* limits for our timezone info data:
  * we support only basic standard and daylight time, with max 2 transitions
  * per year, but for the maximum range of years a 32-bit second counter
  * can cover (these are 136 years plus a bit more than one month)
  */
-#define TZ_MAX_TIMES    272 /* (=2*(LastGoodYr + 1 - FirstGoodYr) */
-#define TZ_MAX_TYPES    2   /* We only support basic standard and daylight */
-#ifdef WIN32    /* Win32 tzinfo supplies at max (2 * 32) chars of tz names */
-#define TZ_MAX_CHARS    64  /* Maximum number of abbreviation characters */
-#else
-#define TZ_MAX_CHARS    50  /* Maximum number of abbreviation characters */
-#endif
+#    define TZ_MAX_TIMES    272 /* (=2*(LastGoodYr + 1 - FirstGoodYr) */
+#    define TZ_MAX_TYPES    2   /* We only support basic standard and daylight */
+#    define TZ_MAX_CHARS    50  /* Maximum number of abbreviation characters */
 
 /* supported types of transition rules */
-#define JULIAN_DAY              0   /* Jn - Julian day */
-#define DAY_OF_YEAR             1   /* n - day of year */
-#define MONTH_NTH_DAY_OF_WEEK   2   /* Mm.n.d - month, week, day of week */
+#    define JULIAN_DAY              0   /* Jn - Julian day */
+#    define DAY_OF_YEAR             1   /* n - day of year */
+#    define MONTH_NTH_DAY_OF_WEEK   2   /* Mm.n.d - month, week, day of week */
 
 
 struct ttinfo {
@@ -61,20 +57,20 @@ extern int real_timezone_is_set;        /* set by tzset() */
 
 void __tzset(void);
 
-#ifdef NEED__ISINDST
+#    ifdef NEED__ISINDST
 int _isindst(struct tm *tb);
-#endif
+#    endif
 
 /* callback function to be supplied by the program that uses this library */
 int GetPlatformLocalTimezone(register struct state * const sp,
         void (*fill_tzstate_from_rules)(struct state * const sp_res,
                                         const struct rule * const start,
                                         const struct rule * const end));
-#ifdef IZTZ_SETLOCALTZINFO
+#    ifdef IZTZ_SETLOCALTZINFO
 void set_TZ(long time_zone, int day_light);
-#endif
+#    endif
 
-#endif /* !IZ_MKTIME_ONLY */
+#  endif /* !IZ_MKTIME_ONLY */
 
 time_t mkgmtime(struct tm *tm);
 

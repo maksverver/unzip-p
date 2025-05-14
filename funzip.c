@@ -159,21 +159,12 @@
 #define GZPCOS 7                /* offset of operating system compressed on */
 #define GZPHDR 8                /* length of minimal gzip header */
 
-#ifdef THEOS
-/* Macros cause stack overflow in compiler */
-ush SH(uch* p) { return ((ush)(uch)((p)[0]) | ((ush)(uch)((p)[1]) << 8)); }
-ulg LG(uch* p) { return ((ulg)(SH(p)) | ((ulg)(SH((p)+2)) << 16)); }
-#else /* !THEOS */
 /* Macros for getting two-byte and four-byte header values */
 #define SH(p) ((ush)(uch)((p)[0]) | ((ush)(uch)((p)[1]) << 8))
 #define LG(p) ((ulg)(SH(p)) | ((ulg)(SH((p)+2)) << 16))
-#endif /* ?THEOS */
 
 /* Function prototypes */
 static void err(int, char *);
-#if (defined(USE_DEFLATE64) && defined(__16BIT__))
-static int partflush(uch *rawbuf, unsigned w);
-#endif
 int main(int, char **);
 
 /* Globals */
@@ -201,7 +192,7 @@ __GDEF
     return 0;
   G.inptr = G.inbuf;
 
-#if CRYPT
+#  if CRYPT
   if (encrypted) {
     uch *p;
     int n;
@@ -209,7 +200,7 @@ __GDEF
     for (n = G.incnt, p = G.inptr;  n--;  p++)
       zdecode(*p);
   }
-#endif /* CRYPT */
+#  endif /* CRYPT */
 
   return G.incnt;
 
@@ -229,42 +220,6 @@ char *m;
 }
 
 
-#if (defined(USE_DEFLATE64) && defined(__16BIT__))
-
-static int partflush(rawbuf, w)
-uch *rawbuf;     /* start of buffer area to flush */
-extent w;       /* number of bytes to flush */
-{
-  G.crc32val = crc32(G.crc32val, rawbuf, (extent)w);
-  if (fwrite((char *)rawbuf,1,(extent)w,out) != (extent)w && !PIPE_ERROR)
-    err(9, "out of space on stdout");
-  outsiz += w;
-  return 0;
-}
-
-
-int flush(w)    /* used by inflate.c (FLUSH macro) */
-ulg w;          /* number of bytes to flush */
-{
-    uch *rawbuf;
-    int ret;
-
-    /* On 16-bit systems (MSDOS, OS/2 1.x), the standard C library functions
-     * cannot handle writes of 64k blocks at once.  For these systems, the
-     * blocks to flush are split into pieces of 32k or less.
-     */
-    rawbuf = slide;
-    while (w > 0x8000L) {
-        ret = partflush(rawbuf, 0x8000);
-        if (ret != PK_OK)
-            return ret;
-        w -= 0x8000L;
-        rawbuf += (unsigned)0x8000;
-    }
-    return partflush(rawbuf, (extent)w);
-} /* end function flush() */
-
-#else /* !(USE_DEFLATE64 && __16BIT__) */
 
 int flush(w)    /* used by inflate.c (FLUSH macro) */
 ulg w;          /* number of bytes to flush */
@@ -276,7 +231,6 @@ ulg w;          /* number of bytes to flush */
   return 0;
 }
 
-#endif /* ?(USE_DEFLATE64 && __16BIT__) */
 
 
 int main(argc, argv)
@@ -319,11 +273,11 @@ char **argv;
      is needed for the allocation, to support the 64kByte buffer on
      16-bit systems.
    */
-# define UZ_SLIDE_CHUNK (sizeof(shrint)+sizeof(uch)+sizeof(uch))
-# define UZ_NUMOF_CHUNKS (unsigned)( (WSIZE+UZ_SLIDE_CHUNK-1)/UZ_SLIDE_CHUNK )
+#  define UZ_SLIDE_CHUNK (sizeof(shrint)+sizeof(uch)+sizeof(uch))
+#  define UZ_NUMOF_CHUNKS (unsigned)( (WSIZE+UZ_SLIDE_CHUNK-1)/UZ_SLIDE_CHUNK )
   G.area.Slide = (uch *)zcalloc(UZ_NUMOF_CHUNKS, UZ_SLIDE_CHUNK);
-# undef UZ_SLIDE_CHUNK
-# undef UZ_NUMOF_CHUNKS
+#  undef UZ_SLIDE_CHUNK
+#  undef UZ_NUMOF_CHUNKS
 #endif
 
   /* if no file argument and stdin not redirected, give the user help */
@@ -349,36 +303,12 @@ char **argv;
   }
   else
   {
-#ifdef DOS_FLX_NLM_OS2_W32
-#if (defined(__HIGHC__) && !defined(FLEXOS))
-    setmode(stdin, _BINARY);
-#else
-    setmode(0, O_BINARY);  /* some buggy C libraries require BOTH setmode() */
-#endif                     /*  call AND the fdopen() in binary mode :-( */
-#endif /* DOS_FLX_NLM_OS2_W32 */
-
-#ifdef RISCOS
-    G.in = stdin;
-#else
     if ((G.in = fdopen(0, FOPR)) == (FILE *)NULL)
       err(2, "cannot find stdin");
-#endif
   }
 
-#ifdef DOS_FLX_H68_NLM_OS2_W32
-#if (defined(__HIGHC__) && !defined(FLEXOS))
-  setmode(stdout, _BINARY);
-#else
-  setmode(1, O_BINARY);
-#endif
-#endif /* DOS_FLX_H68_NLM_OS2_W32 */
-
-#ifdef RISCOS
-  out = stdout;
-#else
   if ((out = fdopen(1, FOPW)) == (FILE *)NULL)
     err(2, "cannot write to stdout");
-#endif
 
   /* read local header, check validity, and skip name and extra fields */
   n = getc(G.in);  n |= getc(G.in) << 8;
@@ -494,11 +424,7 @@ char **argv;
         zdecode(c);
 #endif
       *G.outptr++ = (uch)c;
-#if (defined(USE_DEFLATE64) && defined(__16BIT__))
-      if (++G.outcnt == (WSIZE>>1))     /* do FlushOutput() */
-#else
       if (++G.outcnt == WSIZE)    /* do FlushOutput() */
-#endif
       {
         G.crc32val = crc32(G.crc32val, slide, (extent)G.outcnt);
         if (fwrite((char *)slide, 1,(extent)G.outcnt,out) != (extent)G.outcnt

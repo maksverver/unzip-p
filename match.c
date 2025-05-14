@@ -73,13 +73,6 @@
 #define UNZIP_INTERNAL
 #include "unzip.h"
 
-#ifndef THEOS   /* the Theos port defines its own variant of match() */
-
-#if 0  /* this is not useful until it matches Amiga names insensitively */
-#ifdef AMIGA        /* some other platforms might also want to use this */
-#  define ANSI_CHARSET       /* MOVE INTO UNZIP.H EVENTUALLY */
-#endif
-#endif /* 0 */
 
 #ifdef ANSI_CHARSET
 #  ifdef ToLower
@@ -91,18 +84,12 @@
 #endif
 #define Case(x)  (ic? ToLower(x) : (x))
 
-#ifdef VMSWILD
-#  define WILDCHAR   '%'
-#  define BEG_RANGE  '('
-#  define END_RANGE  ')'
-#else
-#  define WILDCHAR   '?'
-#  define BEG_RANGE  '['
-#  define END_RANGE  ']'
-#  define WILDCHR_SINGLE '?'
-#  define DIRSEP_CHR '/'
-#  define WILDCHR_MULTI '*'
-#endif
+#define WILDCHAR   '?'
+#define BEG_RANGE  '['
+#define END_RANGE  ']'
+#define WILDCHR_SINGLE '?'
+#define DIRSEP_CHR '/'
+#define WILDCHR_MULTI '*'
 
 #ifdef WILD_STOP_AT_DIR
    int wild_stop_at_dir = 1; /* default wildcards do not include / in matches */
@@ -126,15 +113,13 @@
 
 
 #if 0                /* GRR:  add this to unzip.h someday... */
-#if !(defined(MSDOS) && defined(DOSWILD))
-#ifdef WILD_STOP_AT_DIR
-#define match(s,p,ic,sc) (recmatch((const uch *)p,(const uch *)s,ic,sc) == 1)
-#else
-#define match(s,p,ic)    (recmatch((const uch *)p,(const uch *)s,ic) == 1)
-#endif
+#  ifdef WILD_STOP_AT_DIR
+#    define match(s,p,ic,sc) (recmatch((const uch *)p,(const uch *)s,ic,sc) == 1)
+#  else
+#    define match(s,p,ic)    (recmatch((const uch *)p,(const uch *)s,ic) == 1)
+#  endif
 int recmatch(const uch *pattern, const uch *string,
                  int ignore_case __WDLPRO);
-#endif
 #endif /* 0 */
 static int recmatch(const char *, const char *,
                         int);
@@ -149,38 +134,6 @@ int match(string, pattern, ignore_case __WDL)
     int ignore_case;
     __WDLDEF
 {
-#if (defined(MSDOS) && defined(DOSWILD))
-    char *dospattern;
-    int j = strlen(pattern);
-
-/*---------------------------------------------------------------------------
-    Optional MS-DOS preprocessing section:  compare last three chars of the
-    wildcard to "*.*" and translate to "*" if found; else compare the last
-    two characters to "*." and, if found, scan the non-wild string for dots.
-    If in the latter case a dot is found, return failure; else translate the
-    "*." to "*".  In either case, continue with the normal (Unix-like) match
-    procedure after translation.  (If not enough memory, default to normal
-    match.)  This causes "a*.*" and "a*." to behave as MS-DOS users expect.
-  ---------------------------------------------------------------------------*/
-
-    if ((dospattern = (char *)malloc(j+1)) != NULL) {
-        strcpy(dospattern, pattern);
-        if (!strcmp(dospattern+j-3, "*.*")) {
-            dospattern[j-2] = '\0';                    /* nuke the ".*" */
-        } else if (!strcmp(dospattern+j-2, "*.")) {
-            char *p = MBSCHR(string, '.');
-
-            if (p) {   /* found a dot:  match fails */
-                free(dospattern);
-                return 0;
-            }
-            dospattern[j-1] = '\0';                    /* nuke the end "." */
-        }
-        j = recmatch(dospattern, string, ignore_case);
-        free(dospattern);
-        return j == 1;
-    } else
-#endif /* MSDOS && DOSWILD */
     return recmatch(pattern, string, ignore_case) == 1;
 }
 
@@ -236,21 +189,11 @@ int ci;                 /* flag: force case-insensitive matching */
   }
 
   /* WILDCHR_MULTI ('*') matches any number of characters, including zero */
-#ifdef AMIGA
-  if (!no_wild && c == '#' && *p == '?')            /* "#?" is Amiga-ese for "*" */
-    c = WILDCHR_MULTI, p++;
-#endif /* AMIGA */
   if (!no_wild && c == WILDCHR_MULTI)
   {
     if (wild_stop_at_dir) {
       /* Check for an immediately following WILDCHR_MULTI */
-# ifdef AMIGA
-      if ((c = p[0]) == '#' && p[1] == '?') /* "#?" is Amiga-ese for "*" */
-        c = WILDCHR_MULTI, p++;
-      if (c != WILDCHR_MULTI) {
-# else /* !AMIGA */
       if (*p != WILDCHR_MULTI) {
-# endif /* ?AMIGA */
         /* Single WILDCHR_MULTI ('*'): this doesn't match slashes */
         for (; *s && *s != DIRSEP_CHR; INCSTR(s))
           if ((c = recmatch(p, s, ci)) != 0)
@@ -324,7 +267,6 @@ int ci;                 /* flag: force case-insensitive matching */
     }
   }
 
-#ifndef VMS             /* No bracket matching in VMS */
   /* Parse and process the list of characters and ranges in brackets */
   if (!no_wild && allow_regex && c == '[')
   {
@@ -366,40 +308,12 @@ int ci;                 /* flag: force case-insensitive matching */
     return r ? recmatch(q + CLEN(q), s + CLEN(s), ci) : 0;
                                         /* bracket match failed */
   }
-#endif /* !VMS */
 
   /* If escape ('\'), just compare next character */
   if (!no_wild && c == '\\')
     if ((c = *p++) == '\0')             /* if \ at end, then syntax error */
       return 0;
 
-#ifdef VMS
-  /* 2005-11-06 SMS.
-     Handle "..." wildcard in p with "." or "]" in s.
-  */
-  if ((c == '.') && (*p == '.') && (*(p+ CLEN( p)) == '.') &&
-   ((*s == '.') || (*s == ']')))
-  {
-    /* Match "...]" with "]".  Continue after "]" in both. */
-    if ((*(p+ 2* CLEN( p)) == ']') && (*s == ']'))
-      return recmatch( (p+ 3* CLEN( p)), (s+ CLEN( s)), ci);
-
-    /* Else, look for a reduced match in s, until "]" in or end of s. */
-    for (; *s && (*s != ']'); INCSTR(s))
-      if (*s == '.')
-        /* If reduced match, then continue after "..." in p, "." in s. */
-        if ((c = recmatch( (p+ CLEN( p)), s, ci)) != 0)
-          return (int)c;
-
-    /* Match "...]" with "]".  Continue after "]" in both. */
-    if ((*(p+ 2* CLEN( p)) == ']') && (*s == ']'))
-      return recmatch( (p+ 3* CLEN( p)), (s+ CLEN( s)), ci);
-
-    /* No reduced match.  Quit. */
-    return 2;
-  }
-
-#endif /* def VMS */
 
   /* Just a character--compare it */
   return (!ci ? c == *s : to_up((uch)c) == to_up((uch)*s)) ?
@@ -442,7 +356,6 @@ static int namecmp(s1, s2)
     }
 } /* end function namecmp() */
 
-#endif /* !THEOS */
 
 
 
@@ -453,24 +366,8 @@ int iswild(p)        /* originally only used for stat()-bug workaround in */
     for (; *p; INCSTR(p))
         if (*p == '\\' && *(p+1))
             ++p;
-#ifdef THEOS
-        else if (*p == '?' || *p == '*' || *p=='#'|| *p == '@')
-#else /* !THEOS */
-#ifdef VMS
-        else if (*p == '%' || *p == '*')
-#else /* !VMS */
-#ifdef AMIGA
-        else if (*p == '?' || *p == '*' || (*p=='#' && p[1]=='?') || *p == '[')
-#else /* !AMIGA */
         else if (*p == '?' || *p == '*' || *p == '[')
-#endif /* ?AMIGA */
-#endif /* ?VMS */
-#endif /* ?THEOS */
-#ifdef QDOS
-            return (int)p;
-#else
             return TRUE;
-#endif
 
     return FALSE;
 
@@ -482,10 +379,10 @@ int iswild(p)        /* originally only used for stat()-bug workaround in */
 
 #ifdef TEST_MATCH
 
-#define put(s) {fputs(s,stdout); fflush(stdout);}
-#ifdef main
-#  undef main
-#endif
+#  define put(s) {fputs(s,stdout); fflush(stdout);}
+#  ifdef main
+#    undef main
+#  endif
 
 int main(int argc, char **argv)
 {

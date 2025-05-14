@@ -32,74 +32,74 @@
  */
 
 #ifndef __timezone_c
-#define __timezone_c
+#  define __timezone_c
 
 
-#include "zip.h"
-#include "timezone.h"
-#include <ctype.h>
-#include <errno.h>
+#  include "zip.h"
+#  include "timezone.h"
+#  include <ctype.h>
+#  include <errno.h>
 
-#ifdef IZTZ_DEFINESTDGLOBALS
+#  ifdef IZTZ_DEFINESTDGLOBALS
 long timezone = 0;
 int daylight = 0;
 char *tzname[2];
-#endif
+#  endif
 
-#ifndef IZTZ_GETLOCALETZINFO
-#  define IZTZ_GETLOCALETZINFO(ptzstruct, pgenrulefunct) (FALSE)
-#endif
+#  ifndef IZTZ_GETLOCALETZINFO
+#    define IZTZ_GETLOCALETZINFO(ptzstruct, pgenrulefunct) (FALSE)
+#  endif
 
 int real_timezone_is_set = FALSE;       /* set by tzset() */
 
 
-#define TZDEFRULESTRING ",M4.1.0,M10.5.0"
-#define TZDEFAULT       "EST5EDT"
+#  define TZDEFRULESTRING ",M4.1.0,M10.5.0"
+#  define TZDEFAULT       "EST5EDT"
 
-#define SECSPERMIN      60
-#define MINSPERHOUR     60
-#define HOURSPERDAY     24
-#define DAYSPERWEEK     7
-#define DAYSPERNYEAR    365
-#define DAYSPERLYEAR    366
-#define SECSPERHOUR     (SECSPERMIN * MINSPERHOUR)
-#define SECSPERDAY      ((long) SECSPERHOUR * HOURSPERDAY)
-#define MONSPERYEAR 12
+#  define SECSPERMIN      60
+#  define MINSPERHOUR     60
+#  define HOURSPERDAY     24
+#  define DAYSPERWEEK     7
+#  define DAYSPERNYEAR    365
+#  define DAYSPERLYEAR    366
+#  define SECSPERHOUR     (SECSPERMIN * MINSPERHOUR)
+#  define SECSPERDAY      ((long) SECSPERHOUR * HOURSPERDAY)
+#  define MONSPERYEAR 12
 
-#define EPOCH_WDAY      4     /* Jan 1, 1970 was thursday */
-#define EPOCH_YEAR      1970
-#define TM_YEAR_BASE    1900
-#define FIRST_GOOD_YEAR ((time_t) -1 < (time_t) 1 ? EPOCH_YEAR-68 : EPOCH_YEAR)
-#define LAST_GOOD_YEAR  (EPOCH_YEAR + ((time_t) -1 < (time_t) 1 ? 67 : 135))
+#  define EPOCH_WDAY      4     /* Jan 1, 1970 was thursday */
+#  define EPOCH_YEAR      1970
+#  define TM_YEAR_BASE    1900
+#  define FIRST_GOOD_YEAR ((time_t) -1 < (time_t) 1 ? EPOCH_YEAR-68 : EPOCH_YEAR)
+#  define LAST_GOOD_YEAR  (EPOCH_YEAR + ((time_t) -1 < (time_t) 1 ? 67 : 135))
 
-#define YDAYS(month, year) yr_days[leap(year)][month]
+#  define YDAYS(month, year) yr_days[leap(year)][month]
 
 /* Nonzero if `y' is a leap year, else zero. */
-#define leap(y)  (((y) % 4 == 0 && (y) % 100 != 0) || (y) % 400 == 0)
+#  define leap(y)  (((y) % 4 == 0 && (y) % 100 != 0) || (y) % 400 == 0)
 
 /* Number of leap years from EPOCH_YEAR  to `y' (not including `y' itself). */
-#define _P4      ((EPOCH_YEAR / 4) * 4 + 1)
-#define _P100    ((EPOCH_YEAR / 100) * 100 + 1)
-#define _P400    ((EPOCH_YEAR / 400) * 400 + 1)
-#define nleap(y) (((y) - _P4) / 4 - ((y) - _P100) / 100 + ((y) - _P400) / 400)
+#  define _P4      ((EPOCH_YEAR / 4) * 4 + 1)
+#  define _P100    ((EPOCH_YEAR / 100) * 100 + 1)
+#  define _P400    ((EPOCH_YEAR / 400) * 400 + 1)
+#  define nleap(y) (((y) - _P4) / 4 - ((y) - _P100) / 100 + ((y) - _P400) / 400)
 
 /* Length of month `m' (0 .. 11) */
-#define monthlen(m, y) (yr_days[0][(m)+1] - yr_days[0][m] + \
+#  define monthlen(m, y) (yr_days[0][(m)+1] - yr_days[0][m] + \
                         ((m) == 1 && leap(y)))
 
 /* internal module-level constants */
-#ifndef IZ_MKTIME_ONLY
+#  ifndef IZ_MKTIME_ONLY
 static const char  gmt[] = "GMT";
 static const int    mon_lengths[2][MONSPERYEAR] = {
     { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
     { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
 };
-#endif /* !IZ_MKTIME_ONLY */
+#  endif /* !IZ_MKTIME_ONLY */
 static const int    yr_days[2][MONSPERYEAR+1] = {
     { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },
     { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 }
 };
-#ifndef IZ_MKTIME_ONLY
+#  ifndef IZ_MKTIME_ONLY
 static const int   year_lengths[2] = {
     DAYSPERNYEAR, DAYSPERLYEAR
 };
@@ -509,12 +509,12 @@ void tzset()
             old_TZstring = NULL;
         }
     }
-#ifdef IZTZ_SETLOCALTZINFO
+#    ifdef IZTZ_SETLOCALTZINFO
     /* Some SAS/C library functions, e.g. stat(), call library       */
     /* __tzset() themselves. So envvar TZ *must* exist in order to   */
     /* to get the right offset from GMT.  XXX  TRY HARD to fix this! */
     set_TZ(timezone, daylight);
-#endif /* IZTZ_SETLOCALTZINFO */
+#    endif /* IZTZ_SETLOCALTZINFO */
 }
 
 /* XXX  Does this also help SAS/C library work? */
@@ -576,7 +576,7 @@ struct tm *localtime(when)
     return ret;
 }
 
-#ifdef NEED__ISINDST
+#    ifdef NEED__ISINDST
 int _isindst(tb)
     struct tm *tb;
 {
@@ -617,8 +617,8 @@ int _isindst(tb)
     /* return TRUE when DST is active at given time */
     return (statism.ttis[timetype].tt_isdst);
 }
-#endif /* NEED__ISINDST */
-#endif /* !IZ_MKTIME_ONLY */
+#    endif /* NEED__ISINDST */
+#  endif /* !IZ_MKTIME_ONLY */
 
 /* Return the equivalent in seconds past 12:00:00 a.m. Jan 1, 1970 GMT
    of the local time and date in the exploded time structure `tm',
@@ -694,33 +694,33 @@ time_t mktime(tm)
 }
 
 
-#ifndef NO_TIME_T_MAX
+#  ifndef NO_TIME_T_MAX
    /* Provide default values for the upper limit of the time_t range.
       These are the result of the decomposition into a `struct tm' for
       the time value 0xFFFFFFFEL ( = (time_t)-2 ).
       Note: `(time_t)-1' is reserved for "invalid time"!  */
-#  ifndef TM_YEAR_MAX
-#    define TM_YEAR_MAX         2106
-#  endif
-#  ifndef TM_MON_MAX
-#    define TM_MON_MAX          1       /* February */
-#  endif
-#  ifndef TM_MDAY_MAX
-#    define TM_MDAY_MAX         7
-#  endif
-#  ifndef TM_HOUR_MAX
-#    define TM_HOUR_MAX         6
-#  endif
-#  ifndef TM_MIN_MAX
-#    define TM_MIN_MAX          28
-#  endif
-#  ifndef TM_SEC_MAX
-#    define TM_SEC_MAX          14
-#  endif
-#endif /* NO_TIME_T_MAX */
+#    ifndef TM_YEAR_MAX
+#      define TM_YEAR_MAX         2106
+#    endif
+#    ifndef TM_MON_MAX
+#      define TM_MON_MAX          1       /* February */
+#    endif
+#    ifndef TM_MDAY_MAX
+#      define TM_MDAY_MAX         7
+#    endif
+#    ifndef TM_HOUR_MAX
+#      define TM_HOUR_MAX         6
+#    endif
+#    ifndef TM_MIN_MAX
+#      define TM_MIN_MAX          28
+#    endif
+#    ifndef TM_SEC_MAX
+#      define TM_SEC_MAX          14
+#    endif
+#  endif /* NO_TIME_T_MAX */
 
 /* Adjusts out-of-range values for `tm' field `tm_member'. */
-#define ADJUST_TM(tm_member, tm_carry, modulus) \
+#  define ADJUST_TM(tm_member, tm_carry, modulus) \
   if ((tm_member) < 0) { \
     tm_carry -= (1 - ((tm_member)+1) / (modulus)); \
     tm_member = (modulus-1) + (((tm_member)+1) % (modulus)); \
@@ -791,8 +791,8 @@ time_t mkgmtime(tm)
   if (years < EPOCH_YEAR)
     return (time_t)-1;
 
-#if (defined(TM_YEAR_MAX) && defined(TM_MON_MAX) && defined(TM_MDAY_MAX))
-#if (defined(TM_HOUR_MAX) && defined(TM_MIN_MAX) && defined(TM_SEC_MAX))
+#  if (defined(TM_YEAR_MAX) && defined(TM_MON_MAX) && defined(TM_MDAY_MAX))
+#    if (defined(TM_HOUR_MAX) && defined(TM_MIN_MAX) && defined(TM_SEC_MAX))
   if (years > TM_YEAR_MAX ||
       (years == TM_YEAR_MAX &&
        (tm->tm_yday > (YDAYS(TM_MON_MAX, TM_YEAR_MAX) + (TM_MDAY_MAX - 1)) ||
@@ -802,8 +802,8 @@ time_t mkgmtime(tm)
            (minutes > TM_MIN_MAX ||
             (minutes == TM_MIN_MAX && seconds > TM_SEC_MAX) )))))))
     return (time_t)-1;
-#endif
-#endif
+#    endif
+#  endif
 
   return (time_t)(SECSPERDAY * (unsigned long)(unsigned)days +
                   SECSPERHOUR * (unsigned long)hours +

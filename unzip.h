@@ -76,238 +76,67 @@ freely, subject to the above disclaimer and the following restrictions:
   ---------------------------------------------------------------------------*/
 
 #ifndef __unzip_h   /* prevent multiple inclusions */
-#define __unzip_h
+#  define __unzip_h
 
 /*---------------------------------------------------------------------------
     Predefined, machine-specific macros.
   ---------------------------------------------------------------------------*/
 
-#ifdef __GO32__                 /* MS-DOS extender:  NOT Unix */
-#  ifdef unix
-#    undef unix
+#  if (defined(unix) || defined(_unix) || defined(__unix) || defined(__unix__))
+#    ifndef UNIX
+#      define UNIX
+#    endif
+#  endif /* unix || _unix || __unix || __unix__ */
+#  if (defined(__NetBSD__) || defined(__FreeBSD__))
+#    ifndef UNIX
+#      define UNIX
+#    endif
+#  endif /* __NetBSD__ || __FreeBSD__ */
+
+#  ifdef __COMPILER_KCC__
+#    include <c-env.h>
+#  endif /* __COMPILER_KCC__ */
+
+#  if (defined(linux) && !defined(LINUX))
+#    define LINUX
 #  endif
-#  ifdef _unix
-#    undef _unix
-#  endif
-#  ifdef __unix
-#    undef __unix
-#  endif
-#  ifdef __unix__
-#    undef __unix__
-#  endif
-#endif
-
-#if ((defined(__convex__) || defined(__convexc__)) && !defined(CONVEX))
-#  define CONVEX
-#endif
-
-#if (defined(unix) || defined(_unix) || defined(__unix) || defined(__unix__))
-#  ifndef UNIX
-#    define UNIX
-#  endif
-#endif /* unix || _unix || __unix || __unix__ */
-#if (defined(M_XENIX) || defined(COHERENT) || defined(__hpux))
-#  ifndef UNIX
-#    define UNIX
-#  endif
-#endif /* M_XENIX || COHERENT || __hpux */
-#if (defined(__NetBSD__) || defined(__FreeBSD__))
-#  ifndef UNIX
-#    define UNIX
-#  endif
-#endif /* __NetBSD__ || __FreeBSD__ */
-#if (defined(CONVEX) || defined(MINIX) || defined(_AIX) || defined(__QNX__))
-#  ifndef UNIX
-#    define UNIX
-#  endif
-#endif /* CONVEX || MINIX || _AIX || __QNX__ */
-
-#if (defined(VM_CMS) || defined(MVS))
-#  define CMS_MVS
-#endif
-
-#if (defined(__OS2__) && !defined(OS2))
-#  define OS2
-#endif
-
-#if (defined(__TANDEM) && !defined(TANDEM))
-#  define TANDEM
-#endif
-
-#if (defined(__VMS) && !defined(VMS))
-#  define VMS
-#endif
-
-#if ((defined(__WIN32__) || defined(_WIN32)) && !defined(WIN32))
-#  define WIN32
-#endif
-#if ((defined(__WINNT__) || defined(__WINNT)) && !defined(WIN32))
-#  define WIN32
-#endif
-
-#if defined(_WIN32_WCE)
-#  ifndef WIN32         /* WinCE is treated as a variant of the Win32 API */
-#    define WIN32
-#  endif
-#  ifndef UNICODE       /* WinCE requires UNICODE wide character support */
-#    define UNICODE
-#  endif
-#endif
-
-#ifdef __COMPILER_KCC__
-#  include <c-env.h>
-#  ifdef SYS_T20
-#    define TOPS20
-#  endif
-#endif /* __COMPILER_KCC__ */
-
-/* Borland C does not define __TURBOC__ if compiling for a 32-bit platform */
-#ifdef __BORLANDC__
-#  ifndef __TURBOC__
-#    define __TURBOC__
-#  endif
-#  if (!defined(__MSDOS__) && !defined(OS2) && !defined(WIN32))
-#    define __MSDOS__
-#  endif
-#endif
-
-/* define MSDOS for Turbo C (unless OS/2) and Power C as well as Microsoft C */
-#ifdef __POWERC
-#  define __TURBOC__
-#  define MSDOS
-#endif /* __POWERC */
-
-#if (defined(__MSDOS__) && !defined(MSDOS))   /* just to make sure */
-#  define MSDOS
-#endif
-
-/* RSXNTDJ (at least up to v1.3) compiles for WIN32 (RSXNT) using a derivate
-   of the EMX environment, but defines MSDOS and __GO32__. ARG !!! */
-#if (defined(MSDOS) && defined(WIN32))
-#  undef MSDOS                  /* WIN32 is >>>not<<< MSDOS */
-#endif
-#if (defined(__GO32__) && defined(__EMX__) && defined(__RSXNT__))
-#  undef __GO32__
-#endif
-
-#if (defined(linux) && !defined(LINUX))
-#  define LINUX
-#endif
-
-#ifdef __riscos
-#  define RISCOS
-#endif
-
-#if (defined(THINK_C) || defined(MPW))
-#  define MACOS
-#endif
-#if (defined(__MWERKS__) && defined(macintosh))
-#  define MACOS
-#endif
-
-/* Tell Microsoft Visual C++ 2005 (and newer) to leave us alone
- * and let us use standard C functions the way we're supposed to.
- * (These preprocessor symbols must appear before the first system
- *  header include. They are located here, because for WINDLL the
- *  first system header includes follow just below.)
- */
-#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-#  ifndef _CRT_SECURE_NO_WARNINGS
-#    define _CRT_SECURE_NO_WARNINGS
-#  endif
-#  ifndef _CRT_NONSTDC_NO_WARNINGS
-#    define _CRT_NONSTDC_NO_WARNINGS
-#  endif
-#  if defined(POCKET_UNZIP) && !defined(_CRT_NON_CONFORMING_SWPRINTFS)
-#    define _CRT_NON_CONFORMING_SWPRINTFS
-#  endif
-#endif
 
 /* NO_UNIXBACKUP overrides UNIXBACKUP */
-#if defined(NO_UNIXBACKUP) && defined(UNIXBACKUP)
-#  undef UNIXBACKUP
-#endif
-
-/*---------------------------------------------------------------------------
-    Grab system-specific public include headers.
-  ---------------------------------------------------------------------------*/
-
-#ifdef POCKET_UNZIP             /* WinCE port */
-#  include "wince/punzip.h"     /* must appear before windows.h */
-#endif
-
-#ifdef WINDLL
-   /* for UnZip, the "basic" part of the win32 api is sufficient */
-#  ifndef WIN32_LEAN_AND_MEAN
-#    define WIN32_LEAN_AND_MEAN
-#    define IZ_HASDEFINED_WIN32LEAN
+#  if defined(NO_UNIXBACKUP) && defined(UNIXBACKUP)
+#    undef UNIXBACKUP
 #  endif
-#  include <windows.h>
-#  include "windll/structs.h"
-#  ifdef IZ_HASDEFINED_WIN32LEAN
-#    undef WIN32_LEAN_AND_MEAN
-#    undef IZ_HASDEFINED_WIN32LEAN
-#  endif
-#endif
+
 
 /*---------------------------------------------------------------------------
     Grab system-dependent definition of EXPENTRY for prototypes below.
   ---------------------------------------------------------------------------*/
 
-#if 0
-#if (defined(OS2) && !defined(FUNZIP))
-#  ifdef UNZIP_INTERNAL
-#    define INCL_NOPM
-#    define INCL_DOSNLS
-#    define INCL_DOSPROCESS
-#    define INCL_DOSDEVICES
-#    define INCL_DOSDEVIOCTL
-#    define INCL_DOSERRORS
-#    define INCL_DOSMISC
-#    ifdef OS2DLL
-#      define INCL_REXXSAA
-#      include <rexxsaa.h>
+#  if (defined(USE_UNZIP_LIB))
+#    ifndef EXPENTRY
+#      define UZ_EXP WINAPI
+#    else
+#      define UZ_EXP EXPENTRY
 #    endif
-#  endif /* UNZIP_INTERNAL */
-#  include <os2.h>
-#  define UZ_EXP EXPENTRY
-#endif /* OS2 && !FUNZIP */
-#endif /* 0 */
+#  endif
 
-#if (defined(OS2) && !defined(FUNZIP))
-#  if (defined(__IBMC__) || defined(__WATCOMC__))
-#    define UZ_EXP  _System    /* compiler keyword */
-#  else
+#  ifndef UZ_EXP
 #    define UZ_EXP
 #  endif
-#endif /* OS2 && !FUNZIP */
 
-#if (defined(WINDLL) || defined(USE_UNZIP_LIB))
-#  ifndef EXPENTRY
-#    define UZ_EXP WINAPI
-#  else
-#    define UZ_EXP EXPENTRY
-#  endif
-#endif
-
-#ifndef UZ_EXP
-#  define UZ_EXP
-#endif
-
-#ifdef __cplusplus
+#  ifdef __cplusplus
 extern "C" {
-#endif
+#  endif
 
 /*---------------------------------------------------------------------------
     Public typedefs.
   ---------------------------------------------------------------------------*/
 
-#ifndef _IZ_TYPES_DEFINED
+#  ifndef _IZ_TYPES_DEFINED
 typedef unsigned char   uch;    /* code assumes unsigned bytes; these type-  */
 typedef unsigned short  ush;    /*  defs replace byte/UWORD/ULONG (which are */
 typedef unsigned long   ulg;    /*  predefined on some systems) & match zip  */
-#define _IZ_TYPES_DEFINED
-#endif /* !_IZ_TYPES_DEFINED */
+#    define _IZ_TYPES_DEFINED
+#  endif /* !_IZ_TYPES_DEFINED */
 
 /* InputFn is not yet used and is likely to change: */
 typedef int   (UZ_EXP MsgFn)     (void *pG, uch *buf, ulg size, int flag);
@@ -355,108 +184,57 @@ typedef struct _UzpCB {
 
 /* the collection of general UnZip option flags and option arguments */
 typedef struct _UzpOpts {
-#ifndef FUNZIP
+#  ifndef FUNZIP
     char *exdir;        /* pointer to extraction root directory (-d option) */
     char *pwdarg;       /* pointer to command-line password (-P option) */
     int zipinfo_mode;   /* behave like ZipInfo or like normal UnZip? */
     int aflag;          /* -a: do ASCII-EBCDIC and/or end-of-line translation */
-#ifdef VMS
-    int bflag;          /* -b: force fixed record format for binary files */
-#endif
-#ifdef TANDEM
-    int bflag;          /* -b: create text files in 'C' format (180)*/
-#endif
-#if defined(UNIX) || defined(OS2) || defined(WIN32)
+#    if defined(UNIX)
     int B_flag;         /* -B: back up existing files by renaming to *~##### */
-#else
-#ifdef UNIXBACKUP
+#    else
+#      ifdef UNIXBACKUP
     int B_flag;         /* -B: back up existing files by renaming to *~##### */
-#endif
-#endif
+#      endif
+#    endif
     int cflag;          /* -c: output to stdout */
     int C_flag;         /* -C: match filenames case-insensitively */
     int D_flag;         /* -D: don't restore directory (-DD: any) timestamps */
-#ifdef MACOS
-    int E_flag;         /* -E: [MacOS] show Mac extra field during restoring */
-#endif
     int fflag;          /* -f: "freshen" (extract only newer files) */
-#if (defined(RISCOS) || defined(ACORN_FTYPE_NFS))
+#    if (defined(ACORN_FTYPE_NFS))
     int acorn_nfs_ext;  /* -F: RISC OS types & NFS filetype extensions */
-#endif
+#    endif
     int hflag;          /* -h: header line (zipinfo) */
-#ifdef MACOS
-    int i_flag;         /* -i: [MacOS] ignore filenames stored in Mac e.f. */
-#endif
-#ifdef RISCOS
-    int scanimage;      /* -I: scan image files */
-#endif
     int jflag;          /* -j: junk pathnames (unzip) */
-#if defined(MACOS)
-    int J_flag;         /* -J: ignore MacOS e. f. info (unzip) */
-#endif
-#if defined(UNIX)
+#    if defined(UNIX)
     int K_flag;         /* -K: keep setuid/setgid/tacky permissions */
-#endif
+#    endif
     int lflag;          /* -12slmv: listing format (zipinfo) */
     int L_flag;         /* -L: convert filenames from some OSes to lowercase */
     int overwrite_none; /* -n: never overwrite files (no prompting) */
-#ifdef AMIGA
-    int N_flag;         /* -N: restore comments as AmigaDOS filenotes */
-#endif
     int overwrite_all;  /* -o: OK to overwrite files without prompting */
-#endif /* !FUNZIP */
+#  endif /* !FUNZIP */
     int qflag;          /* -q: produce a lot less output */
-#ifdef TANDEM
-    int rflag;          /* -r: remove file extensions */
-#endif
-#ifndef FUNZIP
-#if (defined(MSDOS) || defined(FLEXOS) || defined(OS2) || defined(WIN32))
-    int sflag;          /* -s: convert spaces in filenames to underscores */
-#endif
-#if (defined(NLM))
-    int sflag;          /* -s: convert spaces in filenames to underscores */
-#endif
-#ifdef VMS
-    int S_flag;         /* -S: use Stream_LF for text files (-a[a]) */
-#endif
-#if (defined(MSDOS) || defined(__human68k__) || defined(OS2) || defined(WIN32))
-    int volflag;        /* -$: extract volume labels */
-#endif
+#  ifndef FUNZIP
     int tflag;          /* -t: test (unzip) or totals line (zipinfo) */
     int T_flag;         /* -T: timestamps (unzip) or dec. time fmt (zipinfo) */
     int uflag;          /* -u: "update" (extract only newer/brand-new files) */
-#if defined(UNIX) || defined(VMS) || defined(WIN32)
+#    if defined(UNIX)
     int U_flag;         /* -U: escape non-ASCII, -UU No Unicode paths */
-#endif
+#    endif
     int vflag;          /* -v: (verbosely) list directory */
     int V_flag;         /* -V: don't strip VMS version numbers */
     int W_flag;         /* -W: wildcard '*' won't match '/' dir separator */
-#if defined(UNIX)
+#    if defined(UNIX)
     int X_flag;         /* -X: restore owner/protection or UID/GID or ACLs */
-#else
-#if (defined(TANDEM) || defined(THEOS))
-    int X_flag;         /* -X: restore owner/protection or UID/GID or ACLs */
-#else
-#if (defined(OS2) || defined(VMS) || defined(WIN32))
-    int X_flag;         /* -X: restore owner/protection or UID/GID or ACLs */
-#endif
-#endif
-#endif
-#ifdef VMS
-    int Y_flag;         /* -Y: treat ".nnn" as ";nnn" version */
-#endif
+#    else
+#    endif
     int zflag;          /* -z: display the zipfile comment (only, for unzip) */
-#ifdef VMS
-    int ods2_flag;      /* -2: force names to conform to ODS2 */
-#endif
-#if (!defined(RISCOS) && !defined(CMS_MVS) && !defined(TANDEM))
     int ddotflag;       /* -:: don't skip over "../" path elements */
-#endif
-#ifdef UNIX
+#    ifdef UNIX
     int cflxflag;       /* -^: allow control chars in extracted filenames */
-#endif
+#    endif
     int zipbomb;
-#endif /* !FUNZIP */
+#  endif /* !FUNZIP */
 } UzpOpts;
 
 /* intended to be a private struct: */
@@ -519,9 +297,9 @@ typedef struct _Uzp_cdir_Rec {
 } Uzp_cdir_Rec;
 
 
-#define UZPINIT_LEN   sizeof(UzpInit)
-#define UZPVER_LEN    sizeof(UzpVer)
-#define cbList(func)  int (* UZ_EXP func)(char *filename, Uzp_cdir_Rec *crec)
+#  define UZPINIT_LEN   sizeof(UzpInit)
+#  define UZPVER_LEN    sizeof(UzpVer)
+#  define cbList(func)  int (* UZ_EXP func)(char *filename, Uzp_cdir_Rec *crec)
 
 
 /*---------------------------------------------------------------------------
@@ -529,66 +307,59 @@ typedef struct _Uzp_cdir_Rec {
   ---------------------------------------------------------------------------*/
 
 /* external return codes */
-#define PK_OK              0   /* no error */
-#define PK_COOL            0   /* no error */
-#define PK_WARN            1   /* warning error */
-#define PK_ERR             2   /* error in zipfile */
-#define PK_BADERR          3   /* severe error in zipfile */
-#define PK_MEM             4   /* insufficient memory (during initialization) */
-#define PK_MEM2            5   /* insufficient memory (password failure) */
-#define PK_MEM3            6   /* insufficient memory (file decompression) */
-#define PK_MEM4            7   /* insufficient memory (memory decompression) */
-#define PK_MEM5            8   /* insufficient memory (not yet used) */
-#define PK_NOZIP           9   /* zipfile not found */
-#define PK_PARAM          10   /* bad or illegal parameters specified */
-#define PK_FIND           11   /* no files found */
-#define PK_BOMB           12   /* likely zip bomb */
-#define PK_DISK           50   /* disk full */
-#define PK_EOF            51   /* unexpected EOF */
+#  define PK_OK              0   /* no error */
+#  define PK_COOL            0   /* no error */
+#  define PK_WARN            1   /* warning error */
+#  define PK_ERR             2   /* error in zipfile */
+#  define PK_BADERR          3   /* severe error in zipfile */
+#  define PK_MEM             4   /* insufficient memory (during initialization) */
+#  define PK_MEM2            5   /* insufficient memory (password failure) */
+#  define PK_MEM3            6   /* insufficient memory (file decompression) */
+#  define PK_MEM4            7   /* insufficient memory (memory decompression) */
+#  define PK_MEM5            8   /* insufficient memory (not yet used) */
+#  define PK_NOZIP           9   /* zipfile not found */
+#  define PK_PARAM          10   /* bad or illegal parameters specified */
+#  define PK_FIND           11   /* no files found */
+#  define PK_BOMB           12   /* likely zip bomb */
+#  define PK_DISK           50   /* disk full */
+#  define PK_EOF            51   /* unexpected EOF */
 
-#define IZ_CTRLC          80   /* user hit ^C to terminate */
-#define IZ_UNSUP          81   /* no files found: all unsup. compr/encrypt. */
-#define IZ_BADPWD         82   /* no files found: all had bad password */
-#define IZ_ERRBF          83   /* big-file archive, small-file program */
+#  define IZ_CTRLC          80   /* user hit ^C to terminate */
+#  define IZ_UNSUP          81   /* no files found: all unsup. compr/encrypt. */
+#  define IZ_BADPWD         82   /* no files found: all had bad password */
+#  define IZ_ERRBF          83   /* big-file archive, small-file program */
 
 /* return codes of password fetches (negative = user abort; positive = error) */
-#define IZ_PW_ENTERED      0   /* got some password string; use/try it */
-#define IZ_PW_CANCEL      -1   /* no password available (for this entry) */
-#define IZ_PW_CANCELALL   -2   /* no password, skip any further pwd. request */
-#define IZ_PW_ERROR        5   /* = PK_MEM2 : failure (no mem, no tty, ...) */
+#  define IZ_PW_ENTERED      0   /* got some password string; use/try it */
+#  define IZ_PW_CANCEL      -1   /* no password available (for this entry) */
+#  define IZ_PW_CANCELALL   -2   /* no password, skip any further pwd. request */
+#  define IZ_PW_ERROR        5   /* = PK_MEM2 : failure (no mem, no tty, ...) */
 
 /* flag values for status callback function */
-#define UZ_ST_START_EXTRACT     1       /* no details */
-#define UZ_ST_IN_PROGRESS       2       /* no details */
-#define UZ_ST_FINISH_MEMBER     3       /* 'details': extracted size */
+#  define UZ_ST_START_EXTRACT     1       /* no details */
+#  define UZ_ST_IN_PROGRESS       2       /* no details */
+#  define UZ_ST_FINISH_MEMBER     3       /* 'details': extracted size */
 
 /* return values of status callback function */
-#define UZ_ST_CONTINUE          0
-#define UZ_ST_BREAK             1
+#  define UZ_ST_CONTINUE          0
+#  define UZ_ST_BREAK             1
 
 
 /*---------------------------------------------------------------------------
     Prototypes for public UnZip API (DLL) functions.
   ---------------------------------------------------------------------------*/
 
-#define  UzpMatch match
+#  define  UzpMatch match
 
 int      UZ_EXP UzpMain               (int argc, char **argv);
 int      UZ_EXP UzpAltMain            (int argc, char **argv, UzpInit *init);
-const UzpVer * UZ_EXP UzpVersion     (void);
+const UzpVer * UZ_EXP UzpVersion      (void);
 void     UZ_EXP UzpFreeMemBuffer      (UzpBuffer *retstr);
-#ifndef WINDLL
 int      UZ_EXP UzpUnzipToMemory      (char *zip, char *file, UzpOpts *optflgs,
                                        UzpCB *UsrFunc, UzpBuffer *retstr);
 int      UZ_EXP UzpGrep               (char *archive, char *file,
                                        char *pattern, int cmd, int SkipBin,
                                        UzpCB *UsrFunc);
-#endif
-#ifdef OS2
-int      UZ_EXP UzpFileTree           (char *name, cbList(callBack),
-                                       char *cpInclude[], char *cpExclude[]);
-#endif
-
 unsigned UZ_EXP UzpVersion2           (UzpVer2 *version);
 int      UZ_EXP UzpValidate           (char *archive, int AllCodes);
 
@@ -603,18 +374,18 @@ int      UZ_EXP UzpPassword         (void *pG, int *rcnt, char *pwbuf,
                                      int size, const char *zfn,
                                      const char *efn);
 
-#ifdef __cplusplus
+#  ifdef __cplusplus
 }
-#endif
+#  endif
 
 
 /*---------------------------------------------------------------------------
     Remaining private stuff for UnZip compilation.
   ---------------------------------------------------------------------------*/
 
-#ifdef UNZIP_INTERNAL
-#  include "unzpriv.h"
-#endif
+#  ifdef UNZIP_INTERNAL
+#    include "unzpriv.h"
+#  endif
 
 
 #endif /* !__unzip_h */

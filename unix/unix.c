@@ -33,20 +33,8 @@
 #include <iconv.h>
 #include <langinfo.h>
 
-#ifdef SCO_XENIX
-#  define SYSNDIR
-#else  /* SCO Unix, AIX, DNIX, TI SysV, Coherent 4.x, ... */
-#  if defined(__convexc__) || defined(SYSV) || defined(CRAY) || defined(BSD4_4)
-#    define DIRENT
-#  endif
-#endif
-#if defined(_AIX) || defined(__mpexl)
+#if defined(SYSV) || defined(BSD4_4)
 #  define DIRENT
-#endif
-#ifdef COHERENT
-#  if defined(_I386) || (defined(__COHERENT__) && (__COHERENT__ >= 0x420))
-#    define DIRENT
-#  endif
 #endif
 
 #ifdef _POSIX_VERSION
@@ -87,7 +75,7 @@ typedef struct uxdirattr {      /* struct for holding unix style directory */
     ulg uidgid[2];
     char fnbuf[1];              /* buffer stub for directory name */
 } uxdirattr;
-#define UxAtt(d)  ((uxdirattr *)d)    /* typecast shortcut */
+#  define UxAtt(d)  ((uxdirattr *)d)    /* typecast shortcut */
 #endif /* SET_DIR_ATTRIB */
 
 #ifdef ACORN_FTYPE_NFS
@@ -114,7 +102,6 @@ static unsigned filtattr(__GPRO__ unsigned perms);
 /* times in unix.c           */
 /*****************************/
 
-#ifndef MTS
 /* messages of code for setting file/directory attributes */
 static const char CannotSetItemUidGid[] =
   "warning:  cannot set UID %lu and/or GID %lu for %s\n          %s\n";
@@ -124,7 +111,6 @@ static const char CannotSetItemTimestamps[] =
   "warning:  cannot set modif./access times for %s\n          %s\n";
 static const char CannotSetTimestamps[] =
   " (warning) cannot set modif./access times\n          %s";
-#endif /* !MTS */
 
 
 #ifndef SFX
@@ -257,13 +243,13 @@ char *do_wild(__G__ wildspec)
 
 
 #ifndef S_ISUID
-# define S_ISUID        0004000 /* set user id on execution */
+#  define S_ISUID        0004000 /* set user id on execution */
 #endif
 #ifndef S_ISGID
-# define S_ISGID        0002000 /* set group id on execution */
+#  define S_ISGID        0002000 /* set group id on execution */
 #endif
 #ifndef S_ISVTX
-# define S_ISVTX        0001000 /* save swapped text even after use */
+#  define S_ISVTX        0001000 /* save swapped text even after use */
 #endif
 
 /************************/
@@ -546,12 +532,6 @@ int mapname(__G__ renamed)
                 break;            /*  later, if requested */
 #endif
 
-#ifdef MTS
-            case ' ':             /* change spaces to underscore under */
-                *pp++ = '_';      /*  MTS; leave as spaces under Unix */
-                break;
-#endif
-
             default:
                 /* disable control character filter when requested,
                  * else allow 8-bit characters (e.g. UTF-8) in filenames:
@@ -715,8 +695,8 @@ int checkdir(__G__ pathcomp, flag)
  /* static char *buildpath; */  /* full path (so far) to extracted file */
  /* static char *end;       */  /* pointer to end of buildpath ('\0') */
 
-#   define FN_MASK   7
-#   define FUNCTION  (flag & FN_MASK)
+#define FN_MASK   7
+#define FUNCTION  (flag & FN_MASK)
 
 
 
@@ -728,17 +708,10 @@ int checkdir(__G__ pathcomp, flag)
 
     if (FUNCTION == APPEND_DIR) {
         int too_long = FALSE;
-#ifdef SHORT_NAMES
-        char *old_end = end;
-#endif
 
         Trace((stderr, "appending dir segment [%s]\n", FnFilter1(pathcomp)));
         while ((*G.end = *pathcomp++) != '\0')
             ++G.end;
-#ifdef SHORT_NAMES   /* path components restricted to 14 chars, typically */
-        if ((G.end-old_end) > FILENAME_MAX)  /* GRR:  proper constant? */
-            *(G.end = old_end + FILENAME_MAX) = '\0';
-#endif
 
         /* GRR:  could do better check, see if overrunning buffer as we go:
          * check end-buildpath after each append, set warning variable if
@@ -817,17 +790,9 @@ int checkdir(__G__ pathcomp, flag)
   ---------------------------------------------------------------------------*/
 
     if (FUNCTION == APPEND_NAME) {
-#ifdef SHORT_NAMES
-        char *old_end = end;
-#endif
-
         Trace((stderr, "appending filename [%s]\n", FnFilter1(pathcomp)));
         while ((*G.end = *pathcomp++) != '\0') {
             ++G.end;
-#ifdef SHORT_NAMES  /* truncate name at 14 characters, typically */
-            if ((G.end-old_end) > FILENAME_MAX)    /* GRR:  proper constant? */
-                *(G.end = old_end + FILENAME_MAX) = '\0';
-#endif
             if ((G.end-G.buildpath) >= FILNAMSIZ) {
                 *--G.end = '\0';
                 Info(slide, 0x201, ((char *)slide,
@@ -983,9 +948,6 @@ int mkdir(path, mode)
 #endif /* NO_MKDIR */
 
 
-
-
-#if (!defined(MTS) || defined(SET_DIR_ATTRIB))
 static int get_extattribs(__GPRO__ iztimes *pzt, ulg z_uidgid[2]);
 
 static int get_extattribs(__G__ pzt, z_uidgid)
@@ -1036,11 +998,7 @@ static int get_extattribs(__G__ pzt, z_uidgid)
 #endif
     return have_uidgid_flg;
 }
-#endif /* !MTS || SET_DIR_ATTRIB */
 
-
-
-#ifndef MTS
 
 /****************************/
 /* Function CloseError()    */
@@ -1103,12 +1061,12 @@ int close_outfile(__G)
 #ifdef SYMLINKS
     if (G.symlnk) {
         extent ucsize = (extent)G.lrec.ucsize;
-# ifdef SET_SYMLINK_ATTRIBS
+#  ifdef SET_SYMLINK_ATTRIBS
         extent attribsize = sizeof(unsigned) +
                             (have_uidgid_flg ? sizeof(z_uidgid) : 0);
-# else
+#  else
         extent attribsize = 0;
-# endif
+#  endif
         /* size of the symlink entry is the sum of
          *  (struct size (includes 1st '\0') + 1 additional trailing '\0'),
          *  system specific attribute data size (might be 0),
@@ -1136,12 +1094,12 @@ int close_outfile(__G)
         slnk_entry->next = NULL;
         slnk_entry->targetlen = ucsize;
         slnk_entry->attriblen = attribsize;
-# ifdef SET_SYMLINK_ATTRIBS
+#  ifdef SET_SYMLINK_ATTRIBS
         memcpy(slnk_entry->buf, &(G.pInfo->file_attr),
                sizeof(unsigned));
         if (have_uidgid_flg)
             memcpy(slnk_entry->buf + 4, z_uidgid, sizeof(z_uidgid));
-# endif
+#  endif
         slnk_entry->target = slnk_entry->buf + slnk_entry->attriblen;
         slnk_entry->fname = slnk_entry->target + ucsize + 1;
         strcpy(slnk_entry->fname, G.filename);
@@ -1172,14 +1130,6 @@ int close_outfile(__G)
         return errval;
     }
 #endif /* SYMLINKS */
-
-#ifdef QLZIP
-    if (G.extra_field) {
-        static void qlfix(__GPRO__ uch *ef_ptr, unsigned ef_len);
-
-        qlfix(__G__ G.extra_field, G.lrec.extra_field_length);
-    }
-#endif
 
 #if (defined(NO_FCHOWN))
     errval = CloseError(G.outfile, G.filename);
@@ -1242,16 +1192,14 @@ int close_outfile(__G)
     zipfile.
   ---------------------------------------------------------------------------*/
 
-#ifndef NO_CHMOD
+#  ifndef NO_CHMOD
     if (chmod(G.filename, filtattr(__G__ G.pInfo->file_attr)))
         perror("chmod (file attributes) error");
-#endif
+#  endif
 #endif /* NO_FCHOWN || NO_FCHMOD */
 
     return errval;
 } /* end function close_outfile() */
-
-#endif /* !MTS */
 
 
 #if (defined(SYMLINKS) && defined(SET_SYMLINK_ATTRIBS))
@@ -1260,7 +1208,7 @@ int set_symlnk_attribs(__G__ slnk_entry)
     slinkentry *slnk_entry;
 {
     if (slnk_entry->attriblen > 0) {
-# if (!defined(NO_LCHOWN))
+#  if (!defined(NO_LCHOWN))
       if (slnk_entry->attriblen > sizeof(unsigned)) {
         ulg *z_uidgid_p = (void *)(slnk_entry->buf + sizeof(unsigned));
         /* check that both uid and gid values fit into their data sizes */
@@ -1279,15 +1227,15 @@ int set_symlnk_attribs(__G__ slnk_entry)
           }
         }
       }
-# endif /* !NO_LCHOWN */
-# if (!defined(NO_LCHMOD))
+#  endif /* !NO_LCHOWN */
+#  if (!defined(NO_LCHMOD))
       TTrace((stderr,
         "set_symlnk_attribs:  restoring Unix attributes for\n        %s\n",
         FnFilter1(slnk_entry->fname)));
       if (lchmod(slnk_entry->fname,
                  filtattr(__G__ *(unsigned *)(void *)slnk_entry->buf)))
           perror("lchmod (file attributes) error");
-# endif /* !NO_LCHMOD */
+#  endif /* !NO_LCHMOD */
     }
     /* currently, no error propagation... */
     return PK_OK;
@@ -1354,14 +1302,14 @@ int set_direc_attribs(__G__ d)
                 errval = PK_WARN;
         }
     }
-#ifndef NO_CHMOD
+#  ifndef NO_CHMOD
     if (chmod(d->fn, UxAtt(d)->perms)) {
         Info(slide, 0x201, ((char *)slide, DirlistChmodFailed,
           FnFilter1(d->fn), strerror(errno)));
         if (!errval)
             errval = PK_WARN;
     }
-#endif /* !NO_CHMOD */
+#  endif /* !NO_CHMOD */
     return errval;
 } /* end function set_direc_attribs() */
 
@@ -1401,63 +1349,23 @@ int stamp_file(fname, modtime)
 void version(__G)
     __GDEF
 {
-#if (defined(__GNUC__) && defined(NX_CURRENT_COMPILER_RELEASE))
-    char cc_namebuf[40];
-    char cc_versbuf[40];
-#else
-#if (defined(__SUNPRO_C))
-    char cc_versbuf[17];
-#else
-#if (defined(__HP_cc) || defined(__IBMC__))
-    char cc_versbuf[25];
-#else
-#if (defined(__DECC_VER))
+#  if (defined(__DECC_VER))
     char cc_versbuf[17];
     int cc_verstyp;
-#else
-#if (defined(CRAY) && defined(_RELEASE))
-    char cc_versbuf[40];
-#endif /* (CRAY && _RELEASE) */
-#endif /* __DECC_VER */
-#endif /* __HP_cc || __IBMC__ */
-#endif /* __SUNPRO_C */
-#endif /* (__GNUC__ && NX_CURRENT_COMPILER_RELEASE) */
+#  else
+#  endif /* __DECC_VER */
 
-#if ((defined(CRAY) || defined(cray)) && defined(_UNICOS))
+#  if defined(__NetBSD__)
     char os_namebuf[40];
-#else
-#if defined(__NetBSD__)
-    char os_namebuf[40];
-#endif
-#endif
+#  endif
 
     /* Pyramid, NeXT have problems with huge macro expansion, too:  no Info() */
     sprintf((char *)slide, LoadFarString(CompiledWith),
 
-#ifdef __GNUC__
-#  ifdef NX_CURRENT_COMPILER_RELEASE
-      (sprintf(cc_namebuf, "NeXT DevKit %d.%02d ",
-        NX_CURRENT_COMPILER_RELEASE/100, NX_CURRENT_COMPILER_RELEASE%100),
-       cc_namebuf),
-      (strlen(__VERSION__) > 8)? "(gcc)" :
-        (sprintf(cc_versbuf, "(gcc %s)", __VERSION__), cc_versbuf),
-#  else
+#  ifdef __GNUC__
       "gcc ", __VERSION__,
-#  endif
-#else
-#if defined(__SUNPRO_C)
-      "Sun C ", (sprintf(cc_versbuf, "version %x", __SUNPRO_C), cc_versbuf),
-#else
-#if (defined(__HP_cc))
-      "HP C ",
-      (((__HP_cc% 100) == 0) ?
-      (sprintf(cc_versbuf, "version A.%02d.%02d",
-      (__HP_cc/ 10000), ((__HP_cc% 10000)/ 100))) :
-      (sprintf(cc_versbuf, "version A.%02d.%02d.%02d",
-      (__HP_cc/ 10000), ((__HP_cc% 10000)/ 100), (__HP_cc% 100))),
-      cc_versbuf),
-#else
-#if (defined(__DECC_VER))
+#  else
+#    if (defined(__DECC_VER))
       "DEC C ",
       (sprintf(cc_versbuf, "%c%d.%d-%03d",
                ((cc_verstyp = (__DECC_VER / 10000) % 10) == 6 ? 'T' :
@@ -1465,233 +1373,76 @@ void version(__G)
                __DECC_VER / 10000000,
                (__DECC_VER % 10000000) / 100000, __DECC_VER % 1000),
                cc_versbuf),
-#else
-#if defined(CRAY) && defined(_RELEASE)
-      "cc ", (sprintf(cc_versbuf, "version %d", _RELEASE), cc_versbuf),
-#else
-#ifdef __IBMC__
-      "IBM C ",
-      (sprintf(cc_versbuf, "version %d.%d.%d",
-               (__IBMC__ / 100), ((__IBMC__ / 10) % 10), (__IBMC__ % 10)),
-               cc_versbuf),
-#else
-#ifdef __VERSION__
-#   ifndef IZ_CC_NAME
-#    define IZ_CC_NAME "cc "
-#   endif
+#    else
+#      ifdef __VERSION__
+#        ifndef IZ_CC_NAME
+#          define IZ_CC_NAME "cc "
+#        endif
       IZ_CC_NAME, __VERSION__
-#else
-#   ifndef IZ_CC_NAME
-#    define IZ_CC_NAME "cc"
-#   endif
+#      else
+#        ifndef IZ_CC_NAME
+#          define IZ_CC_NAME "cc"
+#        endif
       IZ_CC_NAME, "",
-#endif /* ?__VERSION__ */
-#endif /* ?__IBMC__ */
-#endif /* ?(CRAY && _RELEASE) */
-#endif /* ?__DECC_VER */
-#endif /* ?__HP_cc */
-#endif /* ?__SUNPRO_C */
-#endif /* ?__GNUC__ */
+#      endif /* ?__VERSION__ */
+#    endif /* ?__DECC_VER */
+#  endif /* ?__GNUC__ */
 
-#ifndef IZ_OS_NAME
-#  define IZ_OS_NAME "Unix"
-#endif
+#  ifndef IZ_OS_NAME
+#    define IZ_OS_NAME "Unix"
+#  endif
       IZ_OS_NAME,
 
-#if defined(sgi) || defined(__sgi)
-      " (Silicon Graphics IRIX)",
-#else
-#ifdef sun
-#  ifdef sparc
-#    ifdef __SVR4
-      " (Sun SPARC/Solaris)",
-#    else /* may or may not be SunOS */
-      " (Sun SPARC)",
-#    endif
-#  else
-#  if defined(sun386) || defined(i386)
-      " (Sun 386i)",
-#  else
-#  if defined(mc68020) || defined(__mc68020__)
-      " (Sun 3)",
-#  else /* mc68010 or mc68000:  Sun 2 or earlier */
-      " (Sun 2)",
-#  endif
-#  endif
-#  endif
-#else
-#ifdef __hpux
-      " (HP-UX)",
-#else
-#ifdef __osf__
-      " (DEC OSF/1)",
-#else
-#ifdef _AIX
-      " (IBM AIX)",
-#else
-#ifdef aiws
+#  ifdef aiws
       " (IBM RT/AIX)",
-#else
-#if defined(CRAY) || defined(cray)
-#  ifdef _UNICOS
-      (sprintf(os_namebuf, " (Cray UNICOS release %d)", _UNICOS), os_namebuf),
 #  else
-      " (Cray UNICOS)",
-#  endif
-#else
-#if defined(uts) || defined(UTS)
-      " (Amdahl UTS)",
-#else
-#ifdef NeXT
-#  ifdef mc68000
-      " (NeXTStep/black)",
-#  else
-      " (NeXTStep for Intel)",
-#  endif
-#else              /* the next dozen or so are somewhat order-dependent */
-#ifdef LINUX
-#  ifdef __ELF__
+#    ifdef LINUX
+#      ifdef __ELF__
       " (Linux ELF)",
-#  else
+#      else
       " (Linux a.out)",
-#  endif
-#else
-#ifdef MINIX
-      " (Minix)",
-#else
-#ifdef M_UNIX
-      " (SCO Unix)",
-#else
-#ifdef M_XENIX
-      " (SCO Xenix)",
-#else
-#ifdef __NetBSD__
-#  ifdef NetBSD0_8
+#      endif
+#    else
+#      ifdef __NetBSD__
+#        ifdef NetBSD0_8
       (sprintf(os_namebuf, " (NetBSD 0.8%c)", (char)(NetBSD0_8 - 1 + 'A')),
        os_namebuf),
-#  else
-#  ifdef NetBSD0_9
+#        else
+#          ifdef NetBSD0_9
       (sprintf(os_namebuf, " (NetBSD 0.9%c)", (char)(NetBSD0_9 - 1 + 'A')),
        os_namebuf),
-#  else
-#  ifdef NetBSD1_0
+#          else
+#            ifdef NetBSD1_0
       (sprintf(os_namebuf, " (NetBSD 1.0%c)", (char)(NetBSD1_0 - 1 + 'A')),
        os_namebuf),
-#  else
+#            else
       (BSD4_4 == 0.5)? " (NetBSD before 0.9)" : " (NetBSD 1.1 or later)",
-#  endif
-#  endif
-#  endif
-#else
-#ifdef __FreeBSD__
+#            endif
+#          endif
+#        endif
+#      else
+#        ifdef __FreeBSD__
       (BSD4_4 == 0.5)? " (FreeBSD 1.x)" : " (FreeBSD 2.0 or later)",
-#else
-#ifdef __bsdi__
+#        else
+#          ifdef __bsdi__
       (BSD4_4 == 0.5)? " (BSD/386 1.0)" : " (BSD/386 1.1 or later)",
-#else
-#ifdef __386BSD__
-      (BSD4_4 == 1)? " (386BSD, post-4.4 release)" : " (386BSD)",
-#else
-#ifdef __CYGWIN__
+#          else
+#            ifdef __CYGWIN__
       " (Cygwin)",
-#else
-#if defined(i686) || defined(__i686) || defined(__i686__)
-      " (Intel 686)",
-#else
-#if defined(i586) || defined(__i586) || defined(__i586__)
-      " (Intel 586)",
-#else
-#if defined(i486) || defined(__i486) || defined(__i486__)
-      " (Intel 486)",
-#else
-#if defined(i386) || defined(__i386) || defined(__i386__)
-      " (Intel 386)",
-#else
-#ifdef pyr
-      " (Pyramid)",
-#else
-#ifdef ultrix
-#  ifdef mips
-      " (DEC/MIPS)",
-#  else
-#  ifdef vax
-      " (DEC/VAX)",
-#  else /* __alpha? */
-      " (DEC/Alpha)",
-#  endif
-#  endif
-#else
-#ifdef gould
-      " (Gould)",
-#else
-#ifdef MTS
-      " (MTS)",
-#else
-#ifdef __convexc__
-      " (Convex)",
-#else
-#ifdef __QNX__
-      " (QNX 4)",
-#else
-#ifdef __QNXNTO__
-      " (QNX Neutrino)",
-#else
-#ifdef Lynx
-      " (LynxOS)",
-#else
-#ifdef __APPLE__
-#  ifdef __i386__
-      " Mac OS X Intel i32",
-#  else
-#  ifdef __ppc__
-      " Mac OS X PowerPC",
-#  else
-#  ifdef __ppc64__
-      " Mac OS X PowerPC64",
-#  else
-      " Mac OS X",
-#  endif /* __ppc64__ */
-#  endif /* __ppc__ */
-#  endif /* __i386__ */
-#else
+#            else
       "",
-#endif /* Apple */
-#endif /* Lynx */
-#endif /* QNX Neutrino */
-#endif /* QNX 4 */
-#endif /* Convex */
-#endif /* MTS */
-#endif /* Gould */
-#endif /* DEC */
-#endif /* Pyramid */
-#endif /* 386 */
-#endif /* 486 */
-#endif /* 586 */
-#endif /* 686 */
-#endif /* Cygwin */
-#endif /* 386BSD */
-#endif /* BSDI BSD/386 */
-#endif /* NetBSD */
-#endif /* FreeBSD */
-#endif /* SCO Xenix */
-#endif /* SCO Unix */
-#endif /* Minix */
-#endif /* Linux */
-#endif /* NeXT */
-#endif /* Amdahl */
-#endif /* Cray */
-#endif /* RT/AIX */
-#endif /* AIX */
-#endif /* OSF/1 */
-#endif /* HP-UX */
-#endif /* Sun */
-#endif /* SGI */
+#            endif /* Cygwin */
+#          endif /* BSDI BSD/386 */
+#        endif /* NetBSD */
+#      endif /* FreeBSD */
+#    endif /* Linux */
+#  endif /* RT/AIX */
 
-#if 0
+#  if 0
       " on ", __DATE__
-#else
+#  else
       "", ""
-#endif
+#  endif
     );
 
     (*G.message)((void *)&G, slide, (ulg)strlen((char *)slide), 0);
@@ -1699,163 +1450,6 @@ void version(__G)
 } /* end function version() */
 
 #endif /* !SFX */
-
-
-
-
-#ifdef QLZIP
-
-struct qdirect  {
-    long            d_length __attribute__ ((packed));  /* file length */
-    unsigned char   d_access __attribute__ ((packed));  /* file access type */
-    unsigned char   d_type __attribute__ ((packed));    /* file type */
-    long            d_datalen __attribute__ ((packed)); /* data length */
-    long            d_reserved __attribute__ ((packed));/* Unused */
-    short           d_szname __attribute__ ((packed));  /* size of name */
-    char            d_name[36] __attribute__ ((packed));/* name area */
-    long            d_update __attribute__ ((packed));  /* last update */
-    long            d_refdate __attribute__ ((packed));
-    long            d_backup __attribute__ ((packed));   /* EOD */
-};
-
-#define LONGID  "QDOS02"
-#define EXTRALEN (sizeof(struct qdirect) + 8)
-#define JBLONGID    "QZHD"
-#define JBEXTRALEN  (sizeof(jbextra)  - 4 * sizeof(char))
-
-typedef struct {
-    char        eb_header[4] __attribute__ ((packed));  /* place_holder */
-    char        longid[8] __attribute__ ((packed));
-    struct      qdirect     header __attribute__ ((packed));
-} qdosextra;
-
-typedef struct {
-    char        eb_header[4];                           /* place_holder */
-    char        longid[4];
-    struct      qdirect     header;
-} jbextra;
-
-
-
-/*  The following two functions SH() and LG() convert big-endian short
- *  and long numbers into native byte order.  They are some kind of
- *  counterpart to the generic UnZip's makeword() and makelong() functions.
- */
-static ush SH(ush val)
-{
-    uch swapbuf[2];
-
-    swapbuf[1] = (uch)(val & 0xff);
-    swapbuf[0] = (uch)(val >> 8);
-    return (*(ush *)swapbuf);
-}
-
-
-
-static ulg LG(ulg val)
-{
-    /*  convert the big-endian unsigned long number `val' to the machine
-     *  dependent representation
-     */
-    ush swapbuf[2];
-
-    swapbuf[1] = SH((ush)(val & 0xffff));
-    swapbuf[0] = SH((ush)(val >> 16));
-    return (*(ulg *)swapbuf);
-}
-
-
-
-static void qlfix(__G__ ef_ptr, ef_len)
-    __GDEF
-    uch *ef_ptr;
-    unsigned ef_len;
-{
-    while (ef_len >= EB_HEADSIZE)
-    {
-        unsigned    eb_id  = makeword(EB_ID + ef_ptr);
-        unsigned    eb_len = makeword(EB_LEN + ef_ptr);
-
-        if (eb_len > (ef_len - EB_HEADSIZE)) {
-            /* discovered some extra field inconsistency! */
-            Trace((stderr,
-              "qlfix: block length %u > rest ef_size %u\n", eb_len,
-              ef_len - EB_HEADSIZE));
-            break;
-        }
-
-        switch (eb_id) {
-          case EF_QDOS:
-          {
-            struct _ntc_
-            {
-                long id;
-                long dlen;
-            } ntc;
-            long dlen = 0;
-
-            qdosextra   *extra = (qdosextra *)ef_ptr;
-            jbextra     *jbp   = (jbextra   *)ef_ptr;
-
-            if (!strncmp(extra->longid, LONGID, strlen(LONGID)))
-            {
-                if (eb_len != EXTRALEN)
-                    if (uO.qflag)
-                        Info(slide, 0x201, ((char *)slide,
-                          "warning:  invalid length in Qdos field for %s\n",
-                          FnFilter1(G.filename)));
-                    else
-                        Info(slide, 0x201, ((char *)slide,
-                          "warning:  invalid length in Qdos field"));
-
-                if (extra->header.d_type)
-                {
-                    dlen = extra->header.d_datalen;
-                }
-            }
-
-            if (!strncmp(jbp->longid, JBLONGID, strlen(JBLONGID)))
-            {
-                if (eb_len != JBEXTRALEN)
-                    if (uO.qflag)
-                        Info(slide, 0x201, ((char *)slide,
-                          "warning:  invalid length in QZ field for %s\n",
-                          FnFilter1(G.filename)));
-                    else
-                        Info(slide, 0x201, ((char *)slide,
-                          "warning:  invalid length in QZ field"));
-                if (jbp->header.d_type)
-                {
-                    dlen = jbp->header.d_datalen;
-                }
-            }
-
-            if ((long)LG(dlen) > 0)
-            {
-                zfseeko(G.outfile, -8, SEEK_END);
-                fread(&ntc, 8, 1, G.outfile);
-                if (ntc.id != *(long *)"XTcc")
-                {
-                    ntc.id = *(long *)"XTcc";
-                    ntc.dlen = dlen;
-                    fwrite (&ntc, 8, 1, G.outfile);
-                }
-                Info(slide, 0x201, ((char *)slide, "QData = %d", LG(dlen)));
-            }
-            return;     /* finished, cancel further extra field scanning */
-          }
-
-          default:
-            Trace((stderr,"qlfix: unknown extra field block, ID=%d\n",
-               eb_id));
-        }
-
-        /* Skip this extra field block */
-        ef_ptr += (eb_len + EB_HEADSIZE);
-        ef_len -= (eb_len + EB_HEADSIZE);
-    }
-}
-#endif /* QLZIP */
 
 
 typedef struct {

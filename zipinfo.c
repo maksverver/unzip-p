@@ -32,93 +32,90 @@
  * versions of these are defined differently (or not defined) by different
  * compilers and operating systems. */
 
-#define UNX_IFMT       0170000     /* Unix file type mask */
-#define UNX_IFREG      0100000     /* Unix regular file */
-#define UNX_IFSOCK     0140000     /* Unix socket (BSD, not SysV or Amiga) */
-#define UNX_IFLNK      0120000     /* Unix symbolic link (not SysV, Amiga) */
-#define UNX_IFBLK      0060000     /* Unix block special       (not Amiga) */
-#define UNX_IFDIR      0040000     /* Unix directory */
-#define UNX_IFCHR      0020000     /* Unix character special   (not Amiga) */
-#define UNX_IFIFO      0010000     /* Unix fifo    (BCC, not MSC or Amiga) */
-#define UNX_ISUID      04000       /* Unix set user id on execution */
-#define UNX_ISGID      02000       /* Unix set group id on execution */
-#define UNX_ISVTX      01000       /* Unix directory permissions control */
-#define UNX_ENFMT      UNX_ISGID   /* Unix record locking enforcement flag */
-#define UNX_IRWXU      00700       /* Unix read, write, execute: owner */
-#define UNX_IRUSR      00400       /* Unix read permission: owner */
-#define UNX_IWUSR      00200       /* Unix write permission: owner */
-#define UNX_IXUSR      00100       /* Unix execute permission: owner */
-#define UNX_IRWXG      00070       /* Unix read, write, execute: group */
-#define UNX_IRGRP      00040       /* Unix read permission: group */
-#define UNX_IWGRP      00020       /* Unix write permission: group */
-#define UNX_IXGRP      00010       /* Unix execute permission: group */
-#define UNX_IRWXO      00007       /* Unix read, write, execute: other */
-#define UNX_IROTH      00004       /* Unix read permission: other */
-#define UNX_IWOTH      00002       /* Unix write permission: other */
-#define UNX_IXOTH      00001       /* Unix execute permission: other */
+#  define UNX_IFMT       0170000     /* Unix file type mask */
+#  define UNX_IFREG      0100000     /* Unix regular file */
+#  define UNX_IFSOCK     0140000     /* Unix socket (BSD, not SysV or Amiga) */
+#  define UNX_IFLNK      0120000     /* Unix symbolic link (not SysV, Amiga) */
+#  define UNX_IFBLK      0060000     /* Unix block special       (not Amiga) */
+#  define UNX_IFDIR      0040000     /* Unix directory */
+#  define UNX_IFCHR      0020000     /* Unix character special   (not Amiga) */
+#  define UNX_IFIFO      0010000     /* Unix fifo    (BCC, not MSC or Amiga) */
+#  define UNX_ISUID      04000       /* Unix set user id on execution */
+#  define UNX_ISGID      02000       /* Unix set group id on execution */
+#  define UNX_ISVTX      01000       /* Unix directory permissions control */
+#  define UNX_ENFMT      UNX_ISGID   /* Unix record locking enforcement flag */
+#  define UNX_IRWXU      00700       /* Unix read, write, execute: owner */
+#  define UNX_IRUSR      00400       /* Unix read permission: owner */
+#  define UNX_IWUSR      00200       /* Unix write permission: owner */
+#  define UNX_IXUSR      00100       /* Unix execute permission: owner */
+#  define UNX_IRWXG      00070       /* Unix read, write, execute: group */
+#  define UNX_IRGRP      00040       /* Unix read permission: group */
+#  define UNX_IWGRP      00020       /* Unix write permission: group */
+#  define UNX_IXGRP      00010       /* Unix execute permission: group */
+#  define UNX_IRWXO      00007       /* Unix read, write, execute: other */
+#  define UNX_IROTH      00004       /* Unix read permission: other */
+#  define UNX_IWOTH      00002       /* Unix write permission: other */
+#  define UNX_IXOTH      00001       /* Unix execute permission: other */
 
-#define VMS_IRUSR      UNX_IRUSR   /* VMS read/owner */
-#define VMS_IWUSR      UNX_IWUSR   /* VMS write/owner */
-#define VMS_IXUSR      UNX_IXUSR   /* VMS execute/owner */
-#define VMS_IRGRP      UNX_IRGRP   /* VMS read/group */
-#define VMS_IWGRP      UNX_IWGRP   /* VMS write/group */
-#define VMS_IXGRP      UNX_IXGRP   /* VMS execute/group */
-#define VMS_IROTH      UNX_IROTH   /* VMS read/other */
-#define VMS_IWOTH      UNX_IWOTH   /* VMS write/other */
-#define VMS_IXOTH      UNX_IXOTH   /* VMS execute/other */
+#  define VMS_IRUSR      UNX_IRUSR   /* VMS read/owner */
+#  define VMS_IWUSR      UNX_IWUSR   /* VMS write/owner */
+#  define VMS_IXUSR      UNX_IXUSR   /* VMS execute/owner */
+#  define VMS_IRGRP      UNX_IRGRP   /* VMS read/group */
+#  define VMS_IWGRP      UNX_IWGRP   /* VMS write/group */
+#  define VMS_IXGRP      UNX_IXGRP   /* VMS execute/group */
+#  define VMS_IROTH      UNX_IROTH   /* VMS read/other */
+#  define VMS_IWOTH      UNX_IWOTH   /* VMS write/other */
+#  define VMS_IXOTH      UNX_IXOTH   /* VMS execute/other */
 
-#define AMI_IFMT       06000       /* Amiga file type mask */
-#define AMI_IFDIR      04000       /* Amiga directory */
-#define AMI_IFREG      02000       /* Amiga regular file */
-#define AMI_IHIDDEN    00200       /* to be supported in AmigaDOS 3.x */
-#define AMI_ISCRIPT    00100       /* executable script (text command file) */
-#define AMI_IPURE      00040       /* allow loading into resident memory */
-#define AMI_IARCHIVE   00020       /* not modified since bit was last set */
-#define AMI_IREAD      00010       /* can be opened for reading */
-#define AMI_IWRITE     00004       /* can be opened for writing */
-#define AMI_IEXECUTE   00002       /* executable image, a loadable runfile */
-#define AMI_IDELETE    00001       /* can be deleted */
+#  define AMI_IFMT       06000       /* Amiga file type mask */
+#  define AMI_IFDIR      04000       /* Amiga directory */
+#  define AMI_IFREG      02000       /* Amiga regular file */
+#  define AMI_IHIDDEN    00200       /* to be supported in AmigaDOS 3.x */
+#  define AMI_ISCRIPT    00100       /* executable script (text command file) */
+#  define AMI_IPURE      00040       /* allow loading into resident memory */
+#  define AMI_IARCHIVE   00020       /* not modified since bit was last set */
+#  define AMI_IREAD      00010       /* can be opened for reading */
+#  define AMI_IWRITE     00004       /* can be opened for writing */
+#  define AMI_IEXECUTE   00002       /* executable image, a loadable runfile */
+#  define AMI_IDELETE    00001       /* can be deleted */
 
-#define THS_IFMT    0xF000         /* Theos file type mask */
-#define THS_IFIFO   0x1000         /* pipe */
-#define THS_IFCHR   0x2000         /* char device */
-#define THS_IFSOCK  0x3000         /* socket */
-#define THS_IFDIR   0x4000         /* directory */
-#define THS_IFLIB   0x5000         /* library */
-#define THS_IFBLK   0x6000         /* block device */
-#define THS_IFREG   0x8000         /* regular file */
-#define THS_IFREL   0x9000         /* relative (direct) */
-#define THS_IFKEY   0xA000         /* keyed */
-#define THS_IFIND   0xB000         /* indexed */
-#define THS_IFRND   0xC000         /* ???? */
-#define THS_IFR16   0xD000         /* 16 bit real mode program */
-#define THS_IFP16   0xE000         /* 16 bit protected mode prog */
-#define THS_IFP32   0xF000         /* 32 bit protected mode prog */
-#define THS_IMODF   0x0800         /* modified */
-#define THS_INHID   0x0400         /* not hidden */
-#define THS_IEUSR   0x0200         /* erase permission: owner */
-#define THS_IRUSR   0x0100         /* read permission: owner */
-#define THS_IWUSR   0x0080         /* write permission: owner */
-#define THS_IXUSR   0x0040         /* execute permission: owner */
-#define THS_IROTH   0x0004         /* read permission: other */
-#define THS_IWOTH   0x0002         /* write permission: other */
-#define THS_IXOTH   0x0001         /* execute permission: other */
+#  define THS_IFMT    0xF000         /* Theos file type mask */
+#  define THS_IFIFO   0x1000         /* pipe */
+#  define THS_IFCHR   0x2000         /* char device */
+#  define THS_IFSOCK  0x3000         /* socket */
+#  define THS_IFDIR   0x4000         /* directory */
+#  define THS_IFLIB   0x5000         /* library */
+#  define THS_IFBLK   0x6000         /* block device */
+#  define THS_IFREG   0x8000         /* regular file */
+#  define THS_IFREL   0x9000         /* relative (direct) */
+#  define THS_IFKEY   0xA000         /* keyed */
+#  define THS_IFIND   0xB000         /* indexed */
+#  define THS_IFRND   0xC000         /* ???? */
+#  define THS_IFR16   0xD000         /* 16 bit real mode program */
+#  define THS_IFP16   0xE000         /* 16 bit protected mode prog */
+#  define THS_IFP32   0xF000         /* 32 bit protected mode prog */
+#  define THS_IMODF   0x0800         /* modified */
+#  define THS_INHID   0x0400         /* not hidden */
+#  define THS_IEUSR   0x0200         /* erase permission: owner */
+#  define THS_IRUSR   0x0100         /* read permission: owner */
+#  define THS_IWUSR   0x0080         /* write permission: owner */
+#  define THS_IXUSR   0x0040         /* execute permission: owner */
+#  define THS_IROTH   0x0004         /* read permission: other */
+#  define THS_IWOTH   0x0002         /* write permission: other */
+#  define THS_IXOTH   0x0001         /* execute permission: other */
 
-#ifdef OLD_THEOS_EXTRA
-#  include "theos/oldstat.h"
-#endif
 
-#ifndef NSK_UNSTRUCTURED
-# define NSK_UNSTRUCTURED   0
-#endif
-#ifndef NSK_OBJECTFILECODE
-# define NSK_OBJECTFILECODE 100
-#endif
-#ifndef NSK_EDITFILECODE
-# define NSK_EDITFILECODE   101
-#endif
+#  ifndef NSK_UNSTRUCTURED
+#    define NSK_UNSTRUCTURED   0
+#  endif
+#  ifndef NSK_OBJECTFILECODE
+#    define NSK_OBJECTFILECODE 100
+#  endif
+#  ifndef NSK_EDITFILECODE
+#    define NSK_EDITFILECODE   101
+#  endif
 
-#define LFLAG  3   /* short "ls -l" type listing */
+#  define LFLAG  3   /* short "ls -l" type listing */
 
 static int   zi_long      (__GPRO__ zusz_t *pEndprev, int error_in_archive);
 static int   zi_short     (__GPRO);
@@ -189,9 +186,6 @@ static const char Far OS_BeOS[] = "BeOS";
 static const char Far OS_Tandem[] = "Tandem NSK";
 static const char Far OS_Theos[] = "Theos";
 static const char Far OS_MacDarwin[] = "Mac OS/X (Darwin)";
-#ifdef OLD_THEOS_EXTRA
-  static const char Far OS_TheosOld[] = "Theos (Old)";
-#endif /* OLD_THEOS_EXTRA */
 
 static const char Far MthdNone[] = "none (stored)";
 static const char Far MthdShrunk[] = "shrunk";
@@ -221,14 +215,14 @@ static const char Far ExtraBytesPreceding[] =
 
 static const char Far UnknownNo[] = "unknown (%d)";
 
-#ifdef ZIP64_SUPPORT
+#  ifdef ZIP64_SUPPORT
   static const char Far LocalHeaderOffset[] =
     "\n  offset of local header from start of archive:   %s\n\
                                                   (%sh) bytes\n";
-#else
+#  else
   static const char Far LocalHeaderOffset[] =
     "\n  offset of local header from start of archive:   %s (%sh) bytes\n";
-#endif
+#  endif
 static const char Far HostOS[] =
   "  file system or operating system of origin:      %s\n";
 static const char Far EncodeSWVer[] =
@@ -251,14 +245,14 @@ static const char Far ExtendedLocalHdr[] =
   "  extended local header:                          %s\n";
 static const char Far FileModDate[] =
   "  file last modified on (DOS date/time):          %s\n";
-#ifdef USE_EF_UT_TIME
+#  ifdef USE_EF_UT_TIME
   static const char Far UT_FileModDate[] =
     "  file last modified on (UT extra field modtime): %s %s\n";
   static const char Far LocalTime[] = "local";
-#ifndef NO_GMTIME
+#    ifndef NO_GMTIME
   static const char Far GMTime[] = "UTC";
-#endif
-#endif /* USE_EF_UT_TIME */
+#    endif
+#  endif /* USE_EF_UT_TIME */
 static const char Far CRC32Value[] =
   "  32-bit CRC value (hex):                         %.8lx\n";
 static const char Far CompressedFileSize[] =
@@ -403,11 +397,6 @@ static const char Far Tandemdata[] = ".\n\
     The file was originally a Tandem %s file, with file code %u";
 static const char Far MD5data[] = ".\n\
     The 128-bit MD5 signature is %s";
-#ifdef CMS_MVS
-   static const char Far VmMvsExtraField[] = ".\n\
-    The stored file open mode (FLDATA TYPE) is \"%s\"";
-   static const char Far VmMvsInvalid[] = "[invalid]";
-#endif /* CMS_MVS */
 
 static const char Far First20[] = ".  The first\n    20 are:  ";
 static const char Far ColonIndent[] = ":\n   ";
@@ -432,15 +421,13 @@ static const char Far BogusFmt[] = "%03d";
 static const char Far shtYMDHMTime[] = "%02u-%s-%02u %02u:%02u";
 static const char Far lngYMDHMSTime[] = "%u %s %u %02u:%02u:%02u";
 static const char Far DecimalTime[] = "%04u%02u%02u.%02u%02u%02u";
-#ifdef USE_EF_UT_TIME
+#  ifdef USE_EF_UT_TIME
   static const char Far lngYMDHMSTimeError[] = "???? ??? ?? ??:??:??";
-#endif
+#  endif
 
 
 
 
-
-#ifndef WINDLL
 
 /************************/
 /*  Function zi_opts()  */
@@ -457,14 +444,11 @@ int zi_opts(__G__ pargc, pargv)
     int    tflag_slm=TRUE, tflag_2v=FALSE;
     int    explicit_h=FALSE, explicit_t=FALSE;
 
-#ifdef UNIX
+#  ifdef UNIX
     extern char OEM_CP[MAX_CP_NAME];
     extern char ISO_CP[MAX_CP_NAME];
-#endif
+#  endif
 
-#ifdef MACOS
-    uO.lflag = LFLAG;         /* reset default on each call */
-#endif
     G.extract_flag = FALSE;   /* zipinfo does not extract to disk */
     argc = *pargc;
     argv = *pargv;
@@ -488,14 +472,12 @@ int zi_opts(__G__ pargc, pargv)
                     else
                         uO.lflag = 2;
                     break;
-#ifndef CMS_MVS
                 case ('C'):    /* -C:  match filenames case-insensitively */
                     if (negative)
                         uO.C_flag = FALSE, negative = 0;
                     else
                         uO.C_flag = TRUE;
                     break;
-#endif /* !CMS_MVS */
                 case 'h':      /* header line */
                     if (negative)
                         hflag_2 = hflag_slmv = FALSE, negative = 0;
@@ -505,7 +487,7 @@ int zi_opts(__G__ pargc, pargv)
                             uO.lflag = 0;
                     }
                     break;
-#ifdef UNIX
+#  ifdef UNIX
                 case ('I'):
                     if (negative) {
                         Info(slide, 0x401, ((char *)slide,
@@ -535,7 +517,7 @@ int zi_opts(__G__ pargc, pargv)
                         while(*(++s)); /* No params straight after charset name */
                     }
                     break;
-#endif /* ?UNIX */
+#  endif /* ?UNIX */
                 case 'l':      /* longer form of "ls -l" type listing */
                     if (negative)
                         uO.lflag = -2, negative = 0;
@@ -548,15 +530,15 @@ int zi_opts(__G__ pargc, pargv)
                     else
                         uO.lflag = 4;
                     break;
-#ifdef MORE
+#  ifdef MORE
                 case 'M':      /* send output through built-in "more" */
                     if (negative)
                         G.M_flag = FALSE, negative = 0;
                     else
                         G.M_flag = TRUE;
                     break;
-#endif
-#ifdef UNIX
+#  endif
+#  ifdef UNIX
                 case ('O'):
                     if (negative) {
                         Info(slide, 0x401, ((char *)slide,
@@ -586,7 +568,7 @@ int zi_opts(__G__ pargc, pargv)
                         while(*(++s)); /* No params straight after charset name */
                     }
                     break;
-#endif /* ?UNIX */
+#  endif /* ?UNIX */
                 case 's':      /* default:  shorter "ls -l" type listing */
                     if (negative)
                         uO.lflag = -2, negative = 0;
@@ -608,7 +590,7 @@ int zi_opts(__G__ pargc, pargv)
                     else
                         uO.T_flag = TRUE;
                     break;
-#ifdef UNICODE_SUPPORT
+#  ifdef UNICODE_SUPPORT
                 case ('U'):    /* escape UTF-8, or disable UTF-8 support */
                     if (negative) {
                         uO.U_flag = MAX(uO.U_flag-negative,0);
@@ -616,21 +598,21 @@ int zi_opts(__G__ pargc, pargv)
                     } else
                         uO.U_flag++;
                     break;
-#endif /* UNICODE_SUPPORT */
+#  endif /* UNICODE_SUPPORT */
                 case 'v':      /* turbo-verbose listing */
                     if (negative)
                         uO.lflag = -2, negative = 0;
                     else
                         uO.lflag = 10;
                     break;
-#ifdef WILD_STOP_AT_DIR
+#  ifdef WILD_STOP_AT_DIR
                 case ('W'):    /* Wildcard interpretation (stop at '/'?) */
                     if (negative)
                         uO.W_flag = FALSE, negative = 0;
                     else
                         uO.W_flag = TRUE;
                     break;
-#endif /* WILD_STOP_AT_DIR */
+#  endif /* WILD_STOP_AT_DIR */
                 case 'z':      /* print zipfile comment */
                     if (negative)
                         uO.zflag = negative = 0;
@@ -651,10 +633,10 @@ int zi_opts(__G__ pargc, pargv)
         return USAGE(error);
     }
 
-#ifdef MORE
+#  ifdef MORE
     if (G.M_flag && !isatty(1))  /* stdout redirected: "more" func useless */
         G.M_flag = 0;
-#endif
+#  endif
 
     /* if no listing options given (or all negated), or if only -h/-t given
      * with individual files specified, use default listing format */
@@ -690,8 +672,6 @@ int zi_opts(__G__ pargc, pargv)
     return 0;
 
 } /* end function zi_opts() */
-
-#endif /* !WINDLL */
 
 
 
@@ -947,20 +927,6 @@ int zipinfo(__G)   /* return PK-type error code */
             if (G.crec.general_purpose_bit_flag & 1)
                 tot_csize -= 12;   /* don't count encryption header */
             ++members;
-
-#ifdef DLL
-            if ((G.statreportcb != NULL) &&
-                (*G.statreportcb)(__G__ UZ_ST_FINISH_MEMBER, G.zipfn,
-                                  G.filename, (void *)&G.crec.ucsize)) {
-                /* cancel operation by user request */
-                error_in_archive = IZ_CTRLC;
-                break;
-            }
-#endif
-#ifdef MACOS  /* MacOS is no preemptive OS, thus call event-handling by hand */
-            UserStop();
-#endif
-
         } else {        /* not listing this file */
             SKIP_(G.crec.extra_field_length)
             SKIP_(G.crec.file_comment_length)
@@ -1057,9 +1023,9 @@ static int zi_long(__G__ pEndprev, error_in_archive)
     zusz_t *pEndprev;                /* for zi_long() check of extra bytes */
     int error_in_archive;            /* may signal premature return */
 {
-#ifdef USE_EF_UT_TIME
+#  ifdef USE_EF_UT_TIME
     iztimes z_utime;
-#endif
+#  endif
     int  error;
     unsigned  hostnum, hostver, extnum, extver, methid, methnum, xattr;
     char workspace[12], attribs[22];
@@ -1127,12 +1093,6 @@ static int zi_long(__G__ pEndprev, error_in_archive)
         varmsg_str = unkn;
     } else {
         varmsg_str = LoadFarStringSmall(os[hostnum]);
-#ifdef OLD_THEOS_EXTRA
-        if (hostnum == FS_VFAT_ && hostver == 20) {
-            /* entry made by old non-official THEOS port zip archive */
-            varmsg_str = LoadFarStringSmall(OS_TheosOld);
-        }
-#endif /* OLD_THEOS_EXTRA */
     }
     Info(slide, 0, ((char *)slide, LoadFarString(HostOS), varmsg_str));
     Info(slide, 0, ((char *)slide, LoadFarString(EncodeSWVer), hostver/10,
@@ -1178,15 +1138,15 @@ static int zi_long(__G__ pEndprev, error_in_archive)
      * To save stack space, we reuse the "char attribs[22]" buffer which
      * is not used yet.
      */
-#   define d_t_buf attribs
+#  define d_t_buf attribs
 
     zi_time(__G__ &G.crec.last_mod_dos_datetime, NULL, d_t_buf);
     Info(slide, 0, ((char *)slide, LoadFarString(FileModDate), d_t_buf));
-#ifdef USE_EF_UT_TIME
+#  ifdef USE_EF_UT_TIME
     if (G.extra_field &&
-#ifdef IZ_CHECK_TZ
+#    ifdef IZ_CHECK_TZ
         G.tz_is_valid &&
-#endif
+#    endif
         (ef_scan_for_izux(G.extra_field, G.crec.extra_field_length, 1,
                           G.crec.last_mod_dos_datetime, &z_utime, NULL)
          & EB_UT_FL_MTIME))
@@ -1196,14 +1156,14 @@ static int zi_long(__G__ pEndprev, error_in_archive)
         zi_time(__G__ &G.crec.last_mod_dos_datetime, &(z_utime.mtime), d_t_buf);
         Info(slide, 0, ((char *)slide, LoadFarString(UT_FileModDate),
           d_t_buf, LoadFarStringSmall(LocalTime)));
-#ifndef NO_GMTIME
+#    ifndef NO_GMTIME
         d_t_buf[0] = (char)1;           /* signal "show UTC (GMT) time" */
         zi_time(__G__ &G.crec.last_mod_dos_datetime, &(z_utime.mtime), d_t_buf);
         Info(slide, 0, ((char *)slide, LoadFarString(UT_FileModDate),
           d_t_buf, LoadFarStringSmall(GMTime)));
-#endif /* !NO_GMTIME */
+#    endif /* !NO_GMTIME */
     }
-#endif /* USE_EF_UT_TIME */
+#  endif /* USE_EF_UT_TIME */
 
     Info(slide, 0, ((char *)slide, LoadFarString(CRC32Value), G.crec.crc32));
     Info(slide, 0, ((char *)slide, LoadFarString(CompressedFileSize),
@@ -1222,10 +1182,6 @@ static int zi_long(__G__ pEndprev, error_in_archive)
       (G.crec.internal_file_attributes & 1)? "text"
          : (G.crec.internal_file_attributes & 2)? "ebcdic"
               : "binary"));             /* changed to accept EBCDIC */
-#ifdef ATARI
-    printf("  external file attributes (hex):                   %.8lx\n",
-      G.crec.external_file_attributes);
-#endif
     xattr = (unsigned)((G.crec.external_file_attributes >> 16) & 0xFFFF);
     if (hostnum == VMS_) {
         char   *p=attribs, *q=attribs+1;
@@ -1318,38 +1274,6 @@ static int zi_long(__G__ pEndprev, error_in_archive)
         attribs[20] = 0;
         Info(slide, 0, ((char *)slide, LoadFarString(TheosFileAttributes),
           xattr, attribs));
-
-#ifdef OLD_THEOS_EXTRA
-    } else if (hostnum == FS_VFAT_ && hostver == 20) {
-        /* process old non-official THEOS port zip archive */
-        const char Far *fpFtyp;
-
-        switch (xattr & _THS_IFMT) {
-            case _THS_IFLIB:  fpFtyp = TheosFTypLib;  break;
-            case _THS_IFDIR:  fpFtyp = TheosFTypDir;  break;
-            case _THS_IFREG:  fpFtyp = TheosFTypReg;  break;
-            case _THS_IODRC:  fpFtyp = TheosFTypRel;  break;
-            case _THS_IOKEY:  fpFtyp = TheosFTypKey;  break;
-            case _THS_IOIND:  fpFtyp = TheosFTypInd;  break;
-            case _THS_IOPRG:  fpFtyp = TheosFTypR16;  break;
-            case _THS_IO286:  fpFtyp = TheosFTypP16;  break;
-            case _THS_IO386:  fpFtyp = TheosFTypP32;  break;
-            default:         fpFtyp = TheosFTypUkn;  break;
-        }
-        strcpy(attribs, LoadFarStringSmall(fpFtyp));
-        attribs[12] = (xattr & _THS_HIDDN) ? 'H' : '.';
-        attribs[13] = (xattr & _THS_IXOTH) ? '.' : 'X';
-        attribs[14] = (xattr & _THS_IWOTH) ? '.' : 'W';
-        attribs[15] = (xattr & _THS_IROTH) ? '.' : 'R';
-        attribs[16] = (xattr & _THS_IEUSR) ? '.' : 'E';
-        attribs[17] = (xattr & _THS_IXUSR) ? '.' : 'X';
-        attribs[18] = (xattr & _THS_IWUSR) ? '.' : 'W';
-        attribs[19] = (xattr & _THS_IRUSR) ? '.' : 'R';
-        attribs[20] = 0;
-        Info(slide, 0, ((char *)slide, LoadFarString(TheosFileAttributes),
-          xattr, attribs));
-#endif /* OLD_THEOS_EXTRA */
-
     } else if ((hostnum != FS_FAT_) && (hostnum != FS_HPFS_) &&
                (hostnum != FS_NTFS_) && (hostnum != FS_VFAT_) &&
                (hostnum != ACORN_) &&
@@ -1493,10 +1417,10 @@ static int zi_long(__G__ pEndprev, error_in_archive)
                     break;
                 case EF_IZUNIX3:
                     ef_fieldname = efIZUnix3;
-#if 0
+#  if 0
                     if (*pEndprev > 0L)
                         *pEndprev += 4L;  /* 4 byte UID/GID in local copy */
-#endif
+#  endif
                     break;
                 case EF_TIME:
                     ef_fieldname = efTime;
@@ -1553,9 +1477,6 @@ static int zi_long(__G__ pEndprev, error_in_archive)
                     ef_fieldname = efSmartZip;
                     break;
                 case EF_THEOS:
-#ifdef OLD_THEOS_EXTRA
-                case EF_THEOSO:
-#endif
                     ef_fieldname = efTheos;
                     break;
                 default:
@@ -1779,20 +1700,6 @@ static int zi_long(__G__ pEndprev, error_in_archive)
                         goto ef_default_display;
                     }
                     break;
-#ifdef CMS_MVS
-                case EF_VMCMS:
-                case EF_MVS:
-                    {
-                        char type[100];
-
-                        Info(slide, 0, ((char *)slide,
-                             LoadFarString(VmMvsExtraField),
-                             (getVMMVSexfield(type, ef_ptr-EB_HEADSIZE,
-                             (unsigned)eb_datalen) > 0)?
-                             type : LoadFarStringSmall(VmMvsInvalid)));
-                    }
-                    break;
-#endif /* CMS_MVS */
                 case EF_ATHEOS:
                 case EF_BEOS:
                     if (eb_datalen >= EB_BEOS_HLEN) {
@@ -1942,10 +1849,10 @@ ef_default_display:
 static int zi_short(__G)   /* return PK-type error code */
     __GDEF
 {
-#ifdef USE_EF_UT_TIME
+#  ifdef USE_EF_UT_TIME
     iztimes     z_utime;
     time_t      *z_modtim;
-#endif
+#  endif
     int         k, error, error_in_archive=PK_COOL;
     unsigned    hostnum, hostver, methid, methnum, xattr;
     char        *p, workspace[12], attribs[17];
@@ -1957,9 +1864,6 @@ static int zi_short(__G)   /* return PK-type error code */
         "ths", "osx", "???", "???", "???", "???", "???", "???", "???",
         "???", "???", "???", "ath", "???"
     };
-#ifdef OLD_THEOS_EXTRA
-    static const char Far os_TheosOld[] = "tho";
-#endif
     static const char Far method[NUM_METHODS+1][5] = {
         "stor", "shrk", "re:1", "re:2", "re:3", "re:4", "i#:#", "tokn",
         "def#", "d64#", "dcli", "bzp2", "lzma", "ters", "lz77", "wavp",
@@ -2094,33 +1998,6 @@ static int zi_short(__G)   /* return PK-type error code */
             break;
 
         case FS_VFAT_:
-#ifdef OLD_THEOS_EXTRA
-            if (hostver == 20) {
-                switch (xattr & _THS_IFMT) {
-                    case _THS_IFLIB: *attribs = 'L'; break;
-                    case _THS_IFDIR: *attribs = 'd'; break;
-                    case _THS_IFCHR: *attribs = 'c'; break;
-                    case _THS_IFREG: *attribs = 'S'; break;
-                    case _THS_IODRC: *attribs = 'D'; break;
-                    case _THS_IOKEY: *attribs = 'K'; break;
-                    case _THS_IOIND: *attribs = 'I'; break;
-                    case _THS_IOPRG: *attribs = 'P'; break;
-                    case _THS_IO286: *attribs = '2'; break;
-                    case _THS_IO386: *attribs = '3'; break;
-                    default:         *attribs = '?'; break;
-                }
-                attribs[1] = (xattr & _THS_HIDDN) ? 'H' : '.';
-                attribs[2] = (xattr & _THS_IXOTH) ? '.' : 'X';
-                attribs[3] = (xattr & _THS_IWOTH) ? '.' : 'W';
-                attribs[4] = (xattr & _THS_IROTH) ? '.' : 'R';
-                attribs[5] = (xattr & _THS_IEUSR) ? '.' : 'E';
-                attribs[6] = (xattr & _THS_IXUSR) ? '.' : 'X';
-                attribs[7] = (xattr & _THS_IWUSR) ? '.' : 'W';
-                attribs[8] = (xattr & _THS_IRUSR) ? '.' : 'R';
-                sprintf(&attribs[12], "%u.%u", hostver/10, hostver%10);
-                break;
-            } /* else: fall through! */
-#endif /* OLD_THEOS_EXTRA */
 
         case FS_FAT_:
         case FS_HPFS_:
@@ -2197,17 +2074,9 @@ static int zi_short(__G)   /* return PK-type error code */
 
     } /* end switch (hostnum: external attributes format) */
 
-#ifdef OLD_THEOS_EXTRA
-    Info(slide, 0, ((char *)slide, "%s %s %s ", attribs,
-      LoadFarStringSmall(((hostnum == FS_VFAT_ && hostver == 20) ?
-                          os_TheosOld :
-                          os[hostnum])),
-      FmZofft(G.crec.ucsize, "8", "u")));
-#else
     Info(slide, 0, ((char *)slide, "%s %s %s ", attribs,
       LoadFarStringSmall(os[hostnum]),
       FmZofft(G.crec.ucsize, "8", "u")));
-#endif
     Info(slide, 0, ((char *)slide, "%c",
       (G.crec.general_purpose_bit_flag & 1)?
       ((G.crec.internal_file_attributes & 1)? 'T' : 'B') :  /* encrypted */
@@ -2236,21 +2105,21 @@ static int zi_short(__G)   /* return PK-type error code */
      * To save stack space, we reuse the "char attribs[16]" buffer whose
      * content is no longer needed.
      */
-#   define d_t_buf attribs
-#ifdef USE_EF_UT_TIME
+#  define d_t_buf attribs
+#  ifdef USE_EF_UT_TIME
     z_modtim = G.extra_field &&
-#ifdef IZ_CHECK_TZ
+#    ifdef IZ_CHECK_TZ
                G.tz_is_valid &&
-#endif
+#    endif
                (ef_scan_for_izux(G.extra_field, G.crec.extra_field_length, 1,
                                  G.crec.last_mod_dos_datetime, &z_utime, NULL)
                 & EB_UT_FL_MTIME)
               ? &z_utime.mtime : NULL;
     TIMET_TO_NATIVE(z_utime.mtime)     /* NOP unless MSC 7.0 or Macintosh */
     d_t_buf[0] = (char)0;              /* signal "show local time" */
-#else
-#   define z_modtim NULL
-#endif
+#  else
+#    define z_modtim NULL
+#  endif
     Info(slide, 0, ((char *)slide, " %s %s ", methbuf,
       zi_time(__G__ &G.crec.last_mod_dos_datetime, z_modtim, d_t_buf)));
     fnprint(__G);
@@ -2322,9 +2191,9 @@ static char *zi_time(__G__ datetimez, modtimez, d_t_str)
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     };
-#ifdef USE_EF_UT_TIME
+#  ifdef USE_EF_UT_TIME
     struct tm *t;
-#endif
+#  endif
 
 
 
@@ -2335,14 +2204,14 @@ static char *zi_time(__G__ datetimez, modtimez, d_t_str)
     to local time or not, depending on value of first character in d_t_str[].
   ---------------------------------------------------------------------------*/
 
-#ifdef USE_EF_UT_TIME
+#  ifdef USE_EF_UT_TIME
     if (modtimez != NULL) {
-#ifndef NO_GMTIME
+#    ifndef NO_GMTIME
         /* check for our secret message from above... */
         t = (d_t_str[0] == (char)1)? gmtime(modtimez) : localtime(modtimez);
-#else
+#    else
         t = localtime(modtimez);
-#endif
+#    endif
         if (uO.lflag > 9 && t == (struct tm *)NULL)
             /* time conversion error in verbose listing format,
              * return string with '?' instead of data
@@ -2359,7 +2228,7 @@ static char *zi_time(__G__ datetimez, modtimez, d_t_str)
         mm = (unsigned)(t->tm_min);
         ss = (unsigned)(t->tm_sec);
     } else
-#endif /* USE_EF_UT_TIME */
+#  endif /* USE_EF_UT_TIME */
     {
         yr = ((unsigned)(*datetimez >> 25) & 0x7f) + 80;
         mo = ((unsigned)(*datetimez >> 21) & 0x0f);

@@ -23,11 +23,11 @@
  */
 
 #ifndef __crypt_h   /* don't include more than once */
-#define __crypt_h
+#  define __crypt_h
 
-#ifdef CRYPT
-#  undef CRYPT
-#endif
+#  ifdef CRYPT
+#    undef CRYPT
+#  endif
 /*
    Logic of selecting "full crypt" code:
    a) default behaviour:
@@ -39,131 +39,106 @@
       - never full crypt code
    NO_CRYPT takes precedence over USE_CRYPT
  */
-#if defined(NO_CRYPT)
-#  define CRYPT  0  /* dummy version */
-#else
-#if defined(USE_CRYPT)
-#  define CRYPT  1  /* full version */
-#else
-#if !defined(SFX)
-#  define CRYPT  1  /* full version for zip and main unzip */
-#else
-#  define CRYPT  0  /* dummy version for unzip sfx */
-#endif
-#endif /* ?USE_CRYPT */
-#endif /* ?NO_CRYPT */
+#  if defined(NO_CRYPT)
+#    define CRYPT  0  /* dummy version */
+#  else
+#    if defined(USE_CRYPT)
+#      define CRYPT  1  /* full version */
+#    else
+#      if !defined(SFX)
+#        define CRYPT  1  /* full version for zip and main unzip */
+#      else
+#        define CRYPT  0  /* dummy version for unzip sfx */
+#      endif
+#    endif /* ?USE_CRYPT */
+#  endif /* ?NO_CRYPT */
 
-#if CRYPT
+#  if CRYPT
 /* full version */
 
-#ifdef CR_BETA
-#  undef CR_BETA    /* this is not a beta release */
-#endif
+#    ifdef CR_BETA
+#      undef CR_BETA    /* this is not a beta release */
+#    endif
 
-#define CR_MAJORVER        2
-#define CR_MINORVER        11
-#ifdef CR_BETA
-#  define CR_BETA_VER      "c BETA"
-#  define CR_VERSION_DATE  "05 Jan 2007"       /* last real code change */
-#else
-#  define CR_BETA_VER      ""
-#  define CR_VERSION_DATE  "05 Jan 2007"       /* last public release date */
-#  define CR_RELEASE
-#endif
+#    define CR_MAJORVER        2
+#    define CR_MINORVER        11
+#    ifdef CR_BETA
+#      define CR_BETA_VER      "c BETA"
+#      define CR_VERSION_DATE  "05 Jan 2007"       /* last real code change */
+#    else
+#      define CR_BETA_VER      ""
+#      define CR_VERSION_DATE  "05 Jan 2007"       /* last public release date */
+#      define CR_RELEASE
+#    endif
 
-#ifndef __G         /* UnZip only, for now (DLL stuff) */
-#  define __G
-#  define __G__
-#  define __GDEF
-#  define __GPRO    void
-#  define __GPRO__
-#endif
-
-#if defined(MSDOS) || defined(OS2) || defined(WIN32)
-#  ifndef DOS_OS2_W32
-#    define DOS_OS2_W32
-#  endif
-#endif
-
-#if defined(DOS_OS2_W32) || defined(__human68k__)
-#  ifndef DOS_H68_OS2_W32
-#    define DOS_H68_OS2_W32
-#  endif
-#endif
-
-#if defined(VM_CMS) || defined(MVS)
-#  ifndef CMS_MVS
-#    define CMS_MVS
-#  endif
-#endif
+#    ifndef __G         /* UnZip only, for now (DLL stuff) */
+#      define __G
+#      define __G__
+#      define __GDEF
+#      define __GPRO    void
+#      define __GPRO__
+#    endif
 
 /* To allow combining of Zip and UnZip static libraries in a single binary,
  * the Zip and UnZip versions of the crypt core functions have to be named
  * differently.
  */
-#ifdef ZIP
-#  ifdef REALLY_SHORT_SYMS
-#    define decrypt_byte   zdcrby
-#  else
-#    define decrypt_byte   zp_decrypt_byte
-#  endif
-#  define  update_keys     zp_update_keys
-#  define  init_keys       zp_init_keys
-#else /* !ZIP */
-#  ifdef REALLY_SHORT_SYMS
-#    define decrypt_byte   dcrbyt
-#  endif
-#endif /* ?ZIP */
+#    ifdef ZIP
+#      define decrypt_byte   zp_decrypt_byte
+#      define  update_keys     zp_update_keys
+#      define  init_keys       zp_init_keys
+#    else /* !ZIP */
+#    endif /* ?ZIP */
 
-#define IZ_PWLEN  80    /* input buffer size for reading encryption key */
-#ifndef PWLEN           /* for compatibility with previous zcrypt release... */
-#  define PWLEN IZ_PWLEN
-#endif
-#define RAND_HEAD_LEN  12       /* length of encryption random header */
+#    define IZ_PWLEN  80    /* input buffer size for reading encryption key */
+#    ifndef PWLEN           /* for compatibility with previous zcrypt release... */
+#      define PWLEN IZ_PWLEN
+#    endif
+#    define RAND_HEAD_LEN  12       /* length of encryption random header */
 
 /* the crc_32_tab array has to be provided externally for the crypt calculus */
 
 /* encode byte c, using temp t.  Warning: c must not have side effects. */
-#define zencode(c,t)  (t=decrypt_byte(__G), update_keys(c), t^(c))
+#    define zencode(c,t)  (t=decrypt_byte(__G), update_keys(c), t^(c))
 
 /* decode byte c in place */
-#define zdecode(c)   update_keys(__G__ c ^= decrypt_byte(__G))
+#    define zdecode(c)   update_keys(__G__ c ^= decrypt_byte(__G))
 
 int  decrypt_byte(__GPRO);
 int  update_keys(__GPRO__ int c);
 void init_keys(__GPRO__ const char *passwd);
 
-#ifdef ZIP
+#    ifdef ZIP
    void crypthead(const char *, ulg, FILE *);
-#  ifdef UTIL
+#      ifdef UTIL
      int zipcloak(struct zlist far *, FILE *, FILE *, const char *);
      int zipbare(struct zlist far *, FILE *, FILE *, const char *);
-#  else
+#      else
      unsigned zfwrite(void *, extent, extent, FILE *);
      extern char *key;
-#  endif
-#endif /* ZIP */
+#      endif
+#    endif /* ZIP */
 
-#if (defined(UNZIP) && !defined(FUNZIP))
+#    if (defined(UNZIP) && !defined(FUNZIP))
    int  decrypt(__GPRO__ const char *passwrd);
-#endif
+#    endif
 
-#ifdef FUNZIP
+#    ifdef FUNZIP
    extern int encrypted;
-#  ifdef NEXTBYTE
-#    undef NEXTBYTE
-#  endif
-#  define NEXTBYTE \
+#      ifdef NEXTBYTE
+#        undef NEXTBYTE
+#      endif
+#      define NEXTBYTE \
    (encrypted? update_keys(__G__ getc(G.in)^decrypt_byte(__G)) : getc(G.in))
-#endif /* FUNZIP */
+#    endif /* FUNZIP */
 
-#else /* !CRYPT */
+#  else /* !CRYPT */
 /* dummy version */
 
-#define zencode
-#define zdecode
+#    define zencode
+#    define zdecode
 
-#define zfwrite  fwrite
+#    define zfwrite  fwrite
 
-#endif /* ?CRYPT */
+#  endif /* ?CRYPT */
 #endif /* !__crypt_h */

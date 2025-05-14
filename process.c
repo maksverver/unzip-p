@@ -32,24 +32,17 @@
 
 #define UNZIP_INTERNAL
 #include "unzip.h"
-#ifdef WINDLL
-#  ifdef POCKET_UNZIP
-#    include "wince/intrface.h"
-#  else
-#    include "windll/windll.h"
-#  endif
-#endif
 #if defined(DYNALLOC_CRCTAB) || defined(UNICODE_SUPPORT)
 #  include "crc32.h"
 #endif
 
 static int    do_seekable           (__GPRO__ int lastchance);
 #ifdef DO_SAFECHECK_2GB
-# ifdef USE_STRM_INPUT
+#  ifdef USE_STRM_INPUT
 static zoff_t file_size             (FILE *file);
-# else
+#  else
 static zoff_t file_size             (int fh);
-# endif
+#  endif
 #endif /* DO_SAFECHECK_2GB */
 static int    rec_find              (__GPRO__ zoff_t, char *, int);
 static int    find_ecrec64          (__GPRO__ zoff_t searchlen);
@@ -68,23 +61,23 @@ static const char Far CannotAllocateBuffers[] =
 #ifdef SFX
    static const char Far CannotFindMyself[] =
      "unzipsfx:  cannot find myself! [%s]\n";
-# ifdef CHEAP_SFX_AUTORUN
+#  ifdef CHEAP_SFX_AUTORUN
    static const char Far AutorunPrompt[] =
      "\nAuto-run command: %s\nExecute this command? [y/n] ";
    static const char Far NotAutoRunning[] =
      "Not executing auto-run command.";
-# endif
+#  endif
 
 #else /* !SFX */
    /* process_zipfiles() strings */
-# if (defined(IZ_CHECK_TZ) && defined(USE_EF_UT_TIME))
+#  if (defined(IZ_CHECK_TZ) && defined(USE_EF_UT_TIME))
      static const char Far WarnInvalidTZ[] =
        "Warning: TZ environment variable not found, cannot use UTC times!!\n";
-# endif
-# if !(defined(UNIX) || defined(AMIGA))
+#  endif
+#  if !(defined(UNIX))
    static const char Far CannotFindWildcardMatch[] =
      "%s:  cannot find any matches for wildcard specification \"%s\".\n";
-# endif /* !(UNIX || AMIGA) */
+#  endif /* !(UNIX) */
    static const char Far FilesProcessOK[] =
      "%d archive%s successfully processed.\n";
    static const char Far ArchiveWarning[] =
@@ -99,34 +92,25 @@ static const char Far CannotAllocateBuffers[] =
    static const char Far NoZipfileFound[] = "No zipfiles found.\n";
 
    /* do_seekable() strings */
-# ifdef UNIX
+#  ifdef UNIX
    static const char Far CannotFindZipfileDirMsg[] =
      "%s:  cannot find zipfile directory in one of %s or\n\
         %s%s.zip, and cannot find %s, period.\n";
    static const char Far CannotFindEitherZipfile[] =
      "%s:  cannot find or open %s, %s.zip or %s.\n";
-# else /* !UNIX */
+#  else /* !UNIX */
    static const char Far CannotFindZipfileDirMsg[] =
      "%s:  cannot find zipfile directory in %s,\n\
         %sand cannot find %s, period.\n";
-# ifdef VMS
-   static const char Far CannotFindEitherZipfile[] =
-     "%s:  cannot find %s (%s).\n";
-# else /* !VMS */
    static const char Far CannotFindEitherZipfile[] =
      "%s:  cannot find either %s or %s.\n";
-# endif /* ?VMS */
-# endif /* ?UNIX */
+#  endif /* ?UNIX */
    extern const char Far Zipnfo[];        /* in unzip.c */
-#ifndef WINDLL
    static const char Far Unzip[] = "unzip";
-#else
-   static const char Far Unzip[] = "UnZip DLL";
-#endif
-#ifdef DO_SAFECHECK_2GB
+#  ifdef DO_SAFECHECK_2GB
    static const char Far ZipfileTooBig[] =
      "Trying to read large file (> 2 GiB) without large file support\n";
-#endif /* DO_SAFECHECK_2GB */
+#  endif /* DO_SAFECHECK_2GB */
    static const char Far MaybeExe[] =
      "note:  %s may be a plain executable, not an archive\n";
    static const char Far CentDirNotInZipMsg[] = "\n\
@@ -137,7 +121,7 @@ static const char Far CannotAllocateBuffers[] =
      "\nwarning [%s]:  end-of-central-directory record claims this\n\
   is disk %lu but that the central directory starts on disk %lu; this is a\n\
   contradiction.  Attempting to process anyway.\n";
-# ifdef NO_MULTIPART
+#  ifdef NO_MULTIPART
    static const char Far NoMultiDiskArcSupport[] =
      "\nerror [%s]:  zipfile is part of multi-disk archive\n\
   (sorry, not yet supported).\n";
@@ -149,19 +133,19 @@ static const char Far CannotAllocateBuffers[] =
   of mid-1992 it still hadn't been.  (If further errors do occur, archive\n\
   was probably created by PKZIP 2.04c or later; UnZip does not yet support\n\
   multi-part archives.)\n";
-# else
+#  else
    static const char Far MaybePakBug[] = "warning [%s]:\
   zipfile claims to be last disk of a multi-part archive;\n\
   attempting to process anyway, assuming all parts have been concatenated\n\
   together in order.  Expect \"errors\" and warnings...true multi-part support\
 \n  doesn't exist yet (coming soon).\n";
-# endif
+#  endif
    static const char Far ExtraBytesAtStart[] =
      "warning [%s]:  %s extra byte%s at beginning or within zipfile\n\
   (attempting to process anyway)\n";
 #endif /* ?SFX */
 
-#if ((!defined(WINDLL) && !defined(SFX)) || !defined(NO_ZIPINFO))
+#if ((!defined(SFX)) || !defined(NO_ZIPINFO))
    static const char Far LogInitline[] = "Archive:  %s\n";
 #endif
 
@@ -258,11 +242,6 @@ int process_zipfiles(__G)    /* return PK-type error code */
         return(PK_MEM);
     }
     G.hold = G.inbuf + INBUFSIZ;     /* to check for boundary-spanning sigs */
-#ifndef VMS     /* VMS uses its own buffer scheme for textmode flush(). */
-#ifdef SMALL_MEM
-    G.outbuf2 = G.outbuf+RAWBUFSIZ;  /* never changes */
-#endif
-#endif /* !VMS */
 
 #if 0 /* CRC_32_TAB has been NULLified by CONSTRUCTGLOBALS !!!! */
     /* allocate the CRC table later when we know we can read zipfile data */
@@ -286,16 +265,10 @@ int process_zipfiles(__G)    /* return PK-type error code */
     of whether the function does anything, should be removed from the ifdefs.
   ---------------------------------------------------------------------------*/
 
-#if (defined(WIN32) && defined(USE_EF_UT_TIME))
-    /* For the Win32 environment, we may have to "prepare" the environment
-       prior to the tzset() call, to work around tzset() implementation bugs.
-     */
-    iz_w32_prepareTZenv();
-#endif
 
 #if (defined(IZ_CHECK_TZ) && defined(USE_EF_UT_TIME))
 #  ifndef VALID_TIMEZONE
-#     define VALID_TIMEZONE(tmp) \
+#    define VALID_TIMEZONE(tmp) \
              (((tmp = getenv("TZ")) != NULL) && (*tmp != '\0'))
 #  endif
     {
@@ -313,10 +286,8 @@ int process_zipfiles(__G)    /* return PK-type error code */
 /* For systems that do not have tzset() but supply this function using another
    name (_tzset() or something similar), an appropiate "#define tzset ..."
    should be added to the system specifc configuration section.  */
-#if (!defined(T20_VMS) && !defined(MACOS) && !defined(RISCOS) && !defined(QDOS))
-#if (!defined(BSD) && !defined(MTS) && !defined(CMS_MVS) && !defined(TANDEM))
+#if (!defined(BSD))
     tzset();
-#endif
 #endif
 
 /* Initialize UnZip's built-in pseudo hard-coded "ISO <--> OEM" translation,
@@ -345,7 +316,7 @@ int process_zipfiles(__G)    /* return PK-type error code */
 
 #ifdef SFX
     if ((error = do_seekable(__G__ 0)) == PK_NOZIP) {
-#ifdef EXE_EXTENSION
+#  ifdef EXE_EXTENSION
         int len=strlen(G.argv0);
 
         /* append .exe if appropriate; also .sfx? */
@@ -357,10 +328,7 @@ int process_zipfiles(__G)    /* return PK-type error code */
             free(G.zipfn);
             G.zipfn = G.argv0;  /* for "cannot find myself" message only */
         }
-#endif /* EXE_EXTENSION */
-#ifdef WIN32
-        G.zipfn = G.argv0;  /* for "cannot find myself" message only */
-#endif
+#  endif /* EXE_EXTENSION */
     }
     if (error) {
         if (error == IZ_DIR)
@@ -371,7 +339,7 @@ int process_zipfiles(__G)    /* return PK-type error code */
             Info(slide, 1, ((char *)slide, LoadFarString(CannotFindMyself),
               G.zipfn));
     }
-#ifdef CHEAP_SFX_AUTORUN
+#  ifdef CHEAP_SFX_AUTORUN
     if (G.autorun_command[0] && !uO.qflag) { /* NO autorun without prompt! */
         Info(slide, 0x81, ((char *)slide, LoadFarString(AutorunPrompt),
                       FnFilter1(G.autorun_command)));
@@ -381,7 +349,7 @@ int process_zipfiles(__G)    /* return PK-type error code */
         else
             Info(slide, 1, ((char *)slide, LoadFarString(NotAutoRunning)));
     }
-#endif /* CHEAP_SFX_AUTORUN */
+#  endif /* CHEAP_SFX_AUTORUN */
 
 #else /* !SFX */
     NumWinFiles = NumLoseFiles = NumWarnFiles = 0;
@@ -394,9 +362,9 @@ int process_zipfiles(__G)    /* return PK-type error code */
 
         /* print a blank line between the output of different zipfiles */
         if (!uO.qflag  &&  error != PK_NOZIP  &&  error != IZ_DIR
-#ifdef TIMESTAMP
+#  ifdef TIMESTAMP
             && (!uO.T_flag || uO.zipinfo_mode)
-#endif
+#  endif
             && (NumWinFiles+NumLoseFiles+NumWarnFiles+NumMissFiles) > 0)
             (*G.message)((void *)&G, (uch *)"\n", 1L, 0);
 
@@ -414,19 +382,13 @@ int process_zipfiles(__G)    /* return PK-type error code */
         Trace((stderr, "do_seekable(0) returns %d\n", error));
         if (error != IZ_DIR && error > error_in_archive)
             error_in_archive = error;
-#ifdef WINDLL
-        if (error == IZ_CTRLC) {
-            free_G_buffers(__G);
-            return error;
-        }
-#endif
 
     } /* end while-loop (wildcard zipfiles) */
 
     if ((NumWinFiles + NumWarnFiles + NumLoseFiles) == 0  &&
         (NumMissDirs + NumMissFiles) == 1  &&  lastzipfn != (char *)NULL)
     {
-#if (!defined(UNIX) && !defined(AMIGA)) /* filenames with wildcard characters */
+#  if (!defined(UNIX)) /* filenames with wildcard characters */
         if (iswild(G.wildzipfn)) {
             if (iswild(lastzipfn)) {
                 NumMissDirs = NumMissFiles = 0;
@@ -438,9 +400,8 @@ int process_zipfiles(__G)    /* return PK-type error code */
                       G.wildzipfn));
             }
         } else
-#endif
+#  endif
         {
-#ifndef VMS
             /* 2004-11-24 SMS.
              * VMS has already tried a default file type of ".zip" in
              * do_wild(), so adding ZSUFX here only causes confusion by
@@ -453,18 +414,17 @@ int process_zipfiles(__G)    /* return PK-type error code */
              * do_seekable() again with the same zipfile name (and the
              * lastchance flag set), just to trigger the error report...
              */
-#if defined(UNIX) || defined(QDOS)
+#  if defined(UNIX)
             char *p =
-#endif
+#  endif
               strcpy(lastzipfn + strlen(lastzipfn), ZSUFX);
-#endif /* !VMS */
 
             G.zipfn = lastzipfn;
 
             NumMissDirs = NumMissFiles = 0;
             error_in_archive = PK_COOL;
 
-#if defined(UNIX) || defined(QDOS)
+#  if defined(UNIX)
    /* only Unix has case-sensitive filesystems */
    /* Well FlexOS (sometimes) also has them,  but support is per media */
    /* and a pig to code for,  so treat as case insensitive for now */
@@ -475,9 +435,9 @@ int process_zipfiles(__G)    /* return PK-type error code */
                 strcpy(p, ALT_ZSUFX);
                 error = do_seekable(__G__ 1);
             }
-#else
+#  else
             error = do_seekable(__G__ 1);
-#endif
+#  endif
             Trace((stderr, "do_seekable(1) returns %d\n", error));
             switch (error) {
               case PK_WARN:
@@ -502,12 +462,6 @@ int process_zipfiles(__G)    /* return PK-type error code */
 
             if (error > error_in_archive)
                 error_in_archive = error;
-#ifdef WINDLL
-            if (error == IZ_CTRLC) {
-                free_G_buffers(__G);
-                return error;
-            }
-#endif
         }
     }
 #endif /* ?SFX */
@@ -519,15 +473,15 @@ int process_zipfiles(__G)    /* return PK-type error code */
 
 #ifndef SFX
     if (iswild(G.wildzipfn) && uO.qflag < 3
-#ifdef TIMESTAMP
+#  ifdef TIMESTAMP
         && !(uO.T_flag && !uO.zipinfo_mode && uO.qflag > 1)
-#endif
+#  endif
                                                     )
     {
         if ((NumMissFiles + NumLoseFiles + NumWarnFiles > 0 || NumWinFiles != 1)
-#ifdef TIMESTAMP
+#  ifdef TIMESTAMP
             && !(uO.T_flag && !uO.zipinfo_mode && uO.qflag)
-#endif
+#  endif
             && !(uO.tflag && uO.qflag > 1))
             (*G.message)((void *)&G, (uch *)"\n", 1L, 0x401);
         if ((NumWinFiles > 1) ||
@@ -591,23 +545,21 @@ void free_G_buffers(__G)     /* releases all memory allocated in global vars */
     }
 #endif
 
-   if (G.key != (char *)NULL) {
+    if (G.key != (char *)NULL) {
         free(G.key);
         G.key = (char *)NULL;
-   }
+    }
 
-   if (G.extra_field != (uch *)NULL) {
+    if (G.extra_field != (uch *)NULL) {
         free(G.extra_field);
         G.extra_field = (uch *)NULL;
-   }
+    }
 
-#if (!defined(VMS) && !defined(SMALL_MEM))
     /* VMS uses its own buffer scheme for textmode flush() */
     if (G.outbuf2) {
         free(G.outbuf2);   /* malloc'd ONLY if unshrink and -a */
         G.outbuf2 = (uch *)NULL;
     }
-#endif
 
     if (G.outbuf)
         free(G.outbuf);
@@ -657,10 +609,10 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
     /* static int no_ecrec = FALSE;  SKM: moved to globals.h */
     int maybe_exe=FALSE;
     int too_weird_to_continue=FALSE;
-#ifdef TIMESTAMP
+#  ifdef TIMESTAMP
     time_t uxstamp;
     ulg nmember = 0L;
-#endif
+#  endif
 #endif
     int error=0, error_in_archive;
 
@@ -671,14 +623,11 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
   ---------------------------------------------------------------------------*/
 
     if (SSTAT(G.zipfn, &G.statbuf) ||
-#ifdef THEOS
-        (error = S_ISLIB(G.statbuf.st_mode)) != 0 ||
-#endif
         (error = S_ISDIR(G.statbuf.st_mode)) != 0)
     {
 #ifndef SFX
         if (lastchance && (uO.qflag < 3)) {
-#if defined(UNIX) || defined(QDOS)
+#  if defined(UNIX)
             if (G.no_ecrec)
                 Info(slide, 1, ((char *)slide,
                   LoadFarString(CannotFindZipfileDirMsg),
@@ -690,26 +639,18 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
                   LoadFarString(CannotFindEitherZipfile),
                   LoadFarStringSmall((uO.zipinfo_mode ? Zipnfo : Unzip)),
                   G.wildzipfn, G.wildzipfn, G.zipfn));
-#else /* !(UNIX || QDOS) */
+#  else /* !(UNIX) */
             if (G.no_ecrec)
                 Info(slide, 0x401, ((char *)slide,
                   LoadFarString(CannotFindZipfileDirMsg),
                   LoadFarStringSmall((uO.zipinfo_mode ? Zipnfo : Unzip)),
                   G.wildzipfn, uO.zipinfo_mode? "  " : "", G.zipfn));
             else
-#ifdef VMS
-                Info(slide, 0x401, ((char *)slide,
-                  LoadFarString(CannotFindEitherZipfile),
-                  LoadFarStringSmall((uO.zipinfo_mode ? Zipnfo : Unzip)),
-                  G.wildzipfn,
-                  (*G.zipfn ? G.zipfn : vms_msg_text())));
-#else /* !VMS */
                 Info(slide, 0x401, ((char *)slide,
                   LoadFarString(CannotFindEitherZipfile),
                   LoadFarStringSmall((uO.zipinfo_mode ? Zipnfo : Unzip)),
                   G.wildzipfn, G.zipfn));
-#endif /* ?VMS */
-#endif /* ?(UNIX || QDOS) */
+#  endif /* ?(UNIX) */
         }
 #endif /* !SFX */
         return error? IZ_DIR : PK_NOZIP;
@@ -717,16 +658,12 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
     G.ziplen = G.statbuf.st_size;
 
 #ifndef SFX
-#if defined(UNIX) || defined(DOS_OS2_W32) || defined(THEOS)
+#  if defined(UNIX)
     if (G.statbuf.st_mode & S_IEXEC)   /* no extension on Unix exes:  might */
         maybe_exe = TRUE;               /*  find unzip, not unzip.zip; etc. */
-#endif
+#  endif
 #endif /* !SFX */
 
-#ifdef VMS
-    if (check_format(__G))              /* check for variable-length format */
-        return PK_ERR;
-#endif
 
     if (open_input_file(__G))   /* this should never happen, given */
         return PK_NOZIP;        /*  the stat() test above, but... */
@@ -758,27 +695,22 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
     G.cur_zipfile_bufstart = 0;
     G.inptr = G.inbuf;
 
-#if ((!defined(WINDLL) && !defined(SFX)) || !defined(NO_ZIPINFO))
-# if (!defined(WINDLL) && !defined(SFX))
+#if ((!defined(SFX)) || !defined(NO_ZIPINFO))
+#  if (!defined(SFX))
     if ( (!uO.zipinfo_mode && !uO.qflag
-#  ifdef TIMESTAMP
+#    ifdef TIMESTAMP
           && !uO.T_flag
-#  endif
+#    endif
          )
-#  ifndef NO_ZIPINFO
+#    ifndef NO_ZIPINFO
          || (uO.zipinfo_mode && uO.hflag)
-#  endif
+#    endif
        )
-# else /* not (!WINDLL && !SFX) ==> !NO_ZIPINFO !! */
+#  else /* not (!SFX) ==> !NO_ZIPINFO !! */
     if (uO.zipinfo_mode && uO.hflag)
-# endif /* if..else..: (!WINDLL && !SFX) */
-# ifdef WIN32   /* Win32 console may require codepage conversion for G.zipfn */
-        Info(slide, 0, ((char *)slide, LoadFarString(LogInitline),
-          FnFilter1(G.zipfn)));
-# else
+#  endif /* if..else..: (!SFX) */
         Info(slide, 0, ((char *)slide, LoadFarString(LogInitline), G.zipfn));
-# endif
-#endif /* (!WINDLL && !SFX) || !NO_ZIPINFO */
+#endif /* (!SFX) || !NO_ZIPINFO */
 
     if ( (error_in_archive = find_ecrec(__G__
 #ifndef NO_ZIPINFO
@@ -840,13 +772,13 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
               (ulg)G.ecrec.num_disk_start_cdir));
             error_in_archive = PK_WARN;
         }
-#ifdef NO_MULTIPART   /* concatenation of multiple parts works in some cases */
+#  ifdef NO_MULTIPART   /* concatenation of multiple parts works in some cases */
     } else if (!uO.zipinfo_mode && !error && G.ecrec.number_this_disk != 0) {
         Info(slide, 0x401, ((char *)slide, LoadFarString(NoMultiDiskArcSupport),
           G.zipfn));
         error_in_archive = PK_FIND;
         too_weird_to_continue = TRUE;
-#endif
+#  endif
     }
 
     if (!too_weird_to_continue) {  /* (relatively) normal zipfile:  go for it */
@@ -959,17 +891,6 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
         Trace((stderr, "about to extract/list files (error = %d)\n",
           error_in_archive));
 
-#ifdef DLL
-        /* G.fValidate is used only to look at an archive to see if
-           it appears to be a valid archive.  There is no interest
-           in what the archive contains, nor in validating that the
-           entries in the archive are in good condition.  This is
-           currently used only in the Windows DLLs for purposes of
-           checking archives within an archive to determine whether
-           or not to display the inner archives.
-         */
-        if (!G.fValidate)
-#endif
         {
 #ifndef NO_ZIPINFO
             if (uO.zipinfo_mode)
@@ -977,11 +898,11 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
             else
 #endif
 #ifndef SFX
-#ifdef TIMESTAMP
+#  ifdef TIMESTAMP
             if (uO.T_flag)
                 error = get_time_stamp(__G__ &uxstamp, &nmember);
             else
-#endif
+#  endif
             if (uO.vflag && !uO.tflag && !uO.cflag)
                 error = list_files(__G);              /* LIST 'EM */
             else
@@ -1002,11 +923,7 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
 
 #ifdef TIMESTAMP
     if (uO.T_flag && !uO.zipinfo_mode && (nmember > 0L)) {
-# ifdef WIN32
-        if (stamp_file(__G__ G.zipfn, uxstamp)) {       /* TIME-STAMP 'EM */
-# else
         if (stamp_file(G.zipfn, uxstamp)) {             /* TIME-STAMP 'EM */
-# endif
             if (uO.qflag < 3)
                 Info(slide, 0x201, ((char *)slide,
                   LoadFarString(ZipTimeStampFailed), G.zipfn));
@@ -1034,22 +951,22 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
    small-file program.  Probably should be somewhere else.
    The file has to be opened previously
 */
-#ifdef USE_STRM_INPUT
+#  ifdef USE_STRM_INPUT
 static zoff_t file_size(file)
     FILE *file;
 {
     int sts;
     size_t siz;
-#else /* !USE_STRM_INPUT */
+#  else /* !USE_STRM_INPUT */
 static zoff_t file_size(fh)
     int fh;
 {
     int siz;
-#endif /* ?USE_STRM_INPUT */
+#  endif /* ?USE_STRM_INPUT */
     zoff_t ofs;
     char waste[4];
 
-#ifdef USE_STRM_INPUT
+#  ifdef USE_STRM_INPUT
     /* Seek to actual EOF. */
     sts = zfseeko(file, 0, SEEK_END);
     if (sts != 0) {
@@ -1079,7 +996,7 @@ static zoff_t file_size(fh)
             }
         }
     }
-#else /* !USE_STRM_INPUT */
+#  else /* !USE_STRM_INPUT */
     /* Seek to actual EOF. */
     ofs = zlseek(fh, 0, SEEK_END);
     if (ofs == (zoff_t) -1) {
@@ -1105,7 +1022,7 @@ static zoff_t file_size(fh)
             }
         }
     }
-#endif /* ?USE_STRM_INPUT */
+#  endif /* ?USE_STRM_INPUT */
     return ofs;
 } /* end function file_size() */
 #endif /* DO_SAFECHECK_2GB */
@@ -1597,11 +1514,6 @@ static int process_zip_cmmnt(__G)       /* return PK-type error code */
     Get the zipfile comment (up to 64KB long), if any, and print it out.
   ---------------------------------------------------------------------------*/
 
-#ifdef WINDLL
-    /* for comment button: */
-    if ((!G.fValidate) && (G.lpUserFunctions != NULL))
-       G.lpUserFunctions->cchComment = G.ecrec.zipfile_comment_length;
-#endif /* WINDLL */
 
 #ifndef NO_ZIPINFO
     /* ZipInfo, verbose format */
@@ -1639,25 +1551,23 @@ static int process_zip_cmmnt(__G)       /* return PK-type error code */
 #endif /* !NO_ZIPINFO */
     if ( G.ecrec.zipfile_comment_length &&
          (uO.zflag > 0
-#ifndef WINDLL
           || (uO.zflag == 0
-# ifndef NO_ZIPINFO
+#ifndef NO_ZIPINFO
               && !uO.zipinfo_mode
-# endif
-# ifdef TIMESTAMP
+#endif
+#ifdef TIMESTAMP
               && !uO.T_flag
-# endif
+#endif
               && !uO.qflag)
-#endif /* !WINDLL */
          ) )
     {
         if (do_string(__G__ G.ecrec.zipfile_comment_length,
 #if (defined(SFX) && defined(CHEAP_SFX_AUTORUN))
-# ifndef NO_ZIPINFO
+#  ifndef NO_ZIPINFO
                       (oU.zipinfo_mode ? DISPLAY : CHECK_AUTORUN)
-# else
+#  else
                       CHECK_AUTORUN
-# endif
+#  endif
 #else
                       DISPLAY
 #endif
@@ -2104,7 +2014,7 @@ int getUnicodeData(__G__ ef_buf, ef_len)
 
 
 
-#ifdef UNICODE_WCHAR
+#  ifdef UNICODE_WCHAR
   /*---------------------------------------------
  * Unicode conversion functions
  *
@@ -2205,7 +2115,7 @@ static ulg ucs4_char_from_utf8(utf8)
 }
 
 
-#if 0 /* currently unused */
+#    if 0 /* currently unused */
 /* utf8_from_ucs4_char - Convert UCS char to UTF-8
  *
  * Returns the number of bytes put into utf8buf to represent ch, from 1 to 6,
@@ -2242,7 +2152,7 @@ static int utf8_from_ucs4_char(utf8buf, ch)
     *utf8buf++ = (char) (0x80 | ((ch >> (6 * trailing)) & 0x3F));
   return ret;
 }
-#endif /* unused */
+#    endif /* unused */
 
 
 /*===================================================================*/
@@ -2275,7 +2185,7 @@ static int utf8_to_ucs4_string(utf8, ucs4buf, buflen)
 }
 
 
-#if 0 /* currently unused */
+#    if 0 /* currently unused */
 /* ucs4_string_to_utf8
  *
  *
@@ -2319,7 +2229,7 @@ static int utf8_chars(utf8)
 {
   return utf8_to_ucs4_string(utf8, NULL, 0);
 }
-#endif /* unused */
+#    endif /* unused */
 
 /* --------------------------------------------------- */
 /* Unicode Support
@@ -2336,7 +2246,7 @@ static int utf8_chars(utf8)
  * different sizes of wchar_t.
  */
 
-#if 0 /* currently unused */
+#    if 0 /* currently unused */
 /* is_ascii_string
  * Checks if a string is all ascii
  */
@@ -2360,7 +2270,7 @@ char *local_to_utf8_string(local_string)
 {
   return wide_to_utf8_string(local_to_wide_string(local_string));
 }
-# endif /* unused */
+#    endif /* unused */
 
 /* wide_to_escape_string
    provides a string that represents a wide char not in local char set
@@ -2393,7 +2303,7 @@ char *local_to_utf8_string(local_string)
   */
 
  /* set this to the max bytes an escape can be */
-#define MAX_ESCAPE_BYTES 8
+#    define MAX_ESCAPE_BYTES 8
 
 char *wide_to_escape_string(wide_char)
   zwchar wide_char;
@@ -2432,7 +2342,7 @@ char *wide_to_escape_string(wide_char)
   return r;
 }
 
-#if 0 /* currently unused */
+#    if 0 /* currently unused */
 /* returns the wide character represented by the escape string */
 zwchar escape_string_to_wide(escape_string)
   const char *escape_string;
@@ -2480,9 +2390,8 @@ zwchar escape_string_to_wide(escape_string)
   }
   return w;
 }
-#endif /* unused */
+#    endif /* unused */
 
-#ifndef WIN32  /* WIN32 supplies a special variant of this function */
 /* convert wide character string to multi-byte character string */
 char *wide_to_local_string(wide_string, escape_all)
   const zwchar *wide_string;
@@ -2574,9 +2483,8 @@ char *wide_to_local_string(wide_string, escape_all)
 
   return local_string;
 }
-#endif /* !WIN32 */
 
-#if 0 /* currently unused */
+#    if 0 /* currently unused */
 /* convert local string to display character set string */
 char *local_to_display_string(local_string)
   const char *local_string;
@@ -2593,7 +2501,7 @@ char *local_to_display_string(local_string)
 
   strcpy(display_string, local_string);
 
-#ifdef EBCDIC
+#      ifdef EBCDIC
   {
     char *ebc;
 
@@ -2604,11 +2512,11 @@ char *local_to_display_string(local_string)
     free(display_string);
     display_string = ebc;
   }
-#endif
+#      endif
 
   return display_string;
 }
-#endif /* unused */
+#    endif /* unused */
 
 /* UTF-8 to local */
 char *utf8_to_local_string(utf8_string, escape_all)
@@ -2630,7 +2538,7 @@ char *utf8_to_local_string(utf8_string, escape_all)
   return loc;
 }
 
-#if 0 /* currently unused */
+#    if 0 /* currently unused */
 /* convert multi-byte character string to wide character string */
 zwchar *local_to_wide_string(local_string)
   const char *local_string;
@@ -2685,7 +2593,7 @@ char *wide_to_utf8_string(wide_string)
 
   return utf8_string;
 }
-#endif /* unused */
+#    endif /* unused */
 
 /* convert UTF-8 string to wide string */
 zwchar *utf8_to_wide_string(utf8_string)
@@ -2706,7 +2614,7 @@ zwchar *utf8_to_wide_string(utf8_string)
   return wide_string;
 }
 
-#endif /* UNICODE_WCHAR */
+#  endif /* UNICODE_WCHAR */
 #endif /* UNICODE_SUPPORT */
 
 
@@ -2715,7 +2623,7 @@ zwchar *utf8_to_wide_string(utf8_string)
 
 #ifdef USE_EF_UT_TIME
 
-#ifdef IZ_HAVE_UXUIDGID
+#  ifdef IZ_HAVE_UXUIDGID
 static int read_ux3_value(dbuf, uidgid_sz, p_uidgid)
     const uch *dbuf;    /* buffer a uid or gid value */
     unsigned uidgid_sz; /* size of uid/gid value */
@@ -2732,10 +2640,10 @@ static int read_ux3_value(dbuf, uidgid_sz, p_uidgid)
         break;
       case 8:
         uidgid64 = makeint64(dbuf);
-#ifndef LARGE_FILE_SUPPORT
+#    ifndef LARGE_FILE_SUPPORT
         if (uidgid64 == (zusz_t)0xffffffffL)
             return FALSE;
-#endif
+#    endif
         *p_uidgid = (ulg)uidgid64;
         if ((zusz_t)(*p_uidgid) != uidgid64)
             return FALSE;
@@ -2743,7 +2651,7 @@ static int read_ux3_value(dbuf, uidgid_sz, p_uidgid)
     }
     return TRUE;
 }
-#endif /* IZ_HAVE_UXUIDGID */
+#  endif /* IZ_HAVE_UXUIDGID */
 
 
 /*******************************/
@@ -2764,11 +2672,11 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
     unsigned eb_len;
     int have_new_type_eb = 0;
     long i_time;        /* buffer for Unix style 32-bit integer time value */
-#ifdef TIME_T_TYPE_DOUBLE
+#  ifdef TIME_T_TYPE_DOUBLE
     int ut_in_archive_sgn = 0;
-#else
+#  else
     int ut_zip_unzip_compatible = FALSE;
-#endif
+#  endif
 
 /*---------------------------------------------------------------------------
     This function scans the extra field for EF_TIME, EF_IZUNIX2, EF_IZUNIX, or
@@ -2821,7 +2729,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         TTrace((stderr,"  UT e.f. modification time = %ld\n",
                                 i_time));
 
-#ifdef TIME_T_TYPE_DOUBLE
+#  ifdef TIME_T_TYPE_DOUBLE
                         if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                             if (dos_mdatetime == DOSTIME_MINIMUM) {
                               ut_in_archive_sgn = -1;
@@ -2845,7 +2753,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                             ut_in_archive_sgn = 0;
                             z_utim->mtime = (time_t)i_time;
                         }
-#else /* !TIME_T_TYPE_DOUBLE */
+#  else /* !TIME_T_TYPE_DOUBLE */
                         if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                             ut_zip_unzip_compatible =
                               ((time_t)0x80000000L < (time_t)0L)
@@ -2864,7 +2772,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                             ut_zip_unzip_compatible = FALSE;
                         }
                         z_utim->mtime = (time_t)i_time;
-#endif /* ?TIME_T_TYPE_DOUBLE */
+#  endif /* ?TIME_T_TYPE_DOUBLE */
                     } else {
                         flags &= ~EB_UT_FL_MTIME;
                         TTrace((stderr,"  UT e.f. truncated; no modtime\n"));
@@ -2880,7 +2788,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         eb_idx += 4;
                         TTrace((stderr,"  UT e.f. access time = %ld\n",
                                 i_time));
-#ifdef TIME_T_TYPE_DOUBLE
+#  ifdef TIME_T_TYPE_DOUBLE
                         if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                             if (ut_in_archive_sgn == -1)
                               z_utim->atime =
@@ -2897,7 +2805,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         } else {
                             z_utim->atime = (time_t)i_time;
                         }
-#else /* !TIME_T_TYPE_DOUBLE */
+#  else /* !TIME_T_TYPE_DOUBLE */
                         if (((ulg)(i_time) & (ulg)(0x80000000L)) &&
                             !ut_zip_unzip_compatible) {
                             flags &= ~EB_UT_FL_ATIME;
@@ -2906,7 +2814,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         } else {
                             z_utim->atime = (time_t)i_time;
                         }
-#endif /* ?TIME_T_TYPE_DOUBLE */
+#  endif /* ?TIME_T_TYPE_DOUBLE */
                     } else {
                         flags &= ~EB_UT_FL_ATIME;
                     }
@@ -2916,7 +2824,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         i_time = (long)makelong((EB_HEADSIZE+eb_idx) + ef_buf);
                         TTrace((stderr,"  UT e.f. creation time = %ld\n",
                                 i_time));
-#ifdef TIME_T_TYPE_DOUBLE
+#  ifdef TIME_T_TYPE_DOUBLE
                         if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                             if (ut_in_archive_sgn == -1)
                               z_utim->ctime =
@@ -2933,7 +2841,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         } else {
                             z_utim->ctime = (time_t)i_time;
                         }
-#else /* !TIME_T_TYPE_DOUBLE */
+#  else /* !TIME_T_TYPE_DOUBLE */
                         if (((ulg)(i_time) & (ulg)(0x80000000L)) &&
                             !ut_zip_unzip_compatible) {
                             flags &= ~EB_UT_FL_CTIME;
@@ -2942,7 +2850,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         } else {
                             z_utim->ctime = (time_t)i_time;
                         }
-#endif /* ?TIME_T_TYPE_DOUBLE */
+#  endif /* ?TIME_T_TYPE_DOUBLE */
                     } else {
                         flags &= ~EB_UT_FL_CTIME;
                     }
@@ -2958,7 +2866,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                 /* Ignore any prior (EF_IZUNIX/EF_PKUNIX) UID/GID. */
                 flags &= 0x0ff;
             }
-#ifdef IZ_HAVE_UXUIDGID
+#  ifdef IZ_HAVE_UXUIDGID
             if (have_new_type_eb > 1)
                 break;          /* IZUNIX3 overrides IZUNIX2 e.f. block ! */
             if (eb_len == EB_UX2_MINLEN && z_uidgid != NULL) {
@@ -2966,7 +2874,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                 z_uidgid[1] = (ulg)makeword((EB_HEADSIZE+EB_UX2_GID) + ef_buf);
                 flags |= EB_UX2_VALID;   /* signal success */
             }
-#endif
+#  endif
             break;
 
           case EF_IZUNIX3:
@@ -2983,7 +2891,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
           GID           Variable    GID for this entry
         */
 
-#ifdef IZ_HAVE_UXUIDGID
+#  ifdef IZ_HAVE_UXUIDGID
             if (eb_len >= EB_UX3_MINLEN
                 && z_uidgid != NULL
                 && (*((EB_HEADSIZE + 0) + ef_buf) == 1))
@@ -3004,7 +2912,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                     flags |= EB_UX2_VALID;   /* signal success */
                 }
             }
-#endif /* IZ_HAVE_UXUIDGID */
+#  endif /* IZ_HAVE_UXUIDGID */
             break;
 
           case EF_IZUNIX:
@@ -3019,7 +2927,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                     flags |= (EB_UT_FL_MTIME | EB_UT_FL_ATIME);
                     i_time = (long)makelong((EB_HEADSIZE+EB_UX_MTIME)+ef_buf);
                     TTrace((stderr,"  Unix EF modtime = %ld\n", i_time));
-#ifdef TIME_T_TYPE_DOUBLE
+#  ifdef TIME_T_TYPE_DOUBLE
                     if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                         if (dos_mdatetime == DOSTIME_MINIMUM) {
                             ut_in_archive_sgn = -1;
@@ -3042,7 +2950,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         ut_in_archive_sgn = 0;
                         z_utim->mtime = (time_t)i_time;
                     }
-#else /* !TIME_T_TYPE_DOUBLE */
+#  else /* !TIME_T_TYPE_DOUBLE */
                     if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                         ut_zip_unzip_compatible =
                           ((time_t)0x80000000L < (time_t)0L)
@@ -3060,10 +2968,10 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         ut_zip_unzip_compatible = FALSE;
                     }
                     z_utim->mtime = (time_t)i_time;
-#endif /* ?TIME_T_TYPE_DOUBLE */
+#  endif /* ?TIME_T_TYPE_DOUBLE */
                     i_time = (long)makelong((EB_HEADSIZE+EB_UX_ATIME)+ef_buf);
                     TTrace((stderr,"  Unix EF actime = %ld\n", i_time));
-#ifdef TIME_T_TYPE_DOUBLE
+#  ifdef TIME_T_TYPE_DOUBLE
                     if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                         if (ut_in_archive_sgn == -1)
                             z_utim->atime =
@@ -3080,7 +2988,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                     } else {
                         z_utim->atime = (time_t)i_time;
                     }
-#else /* !TIME_T_TYPE_DOUBLE */
+#  else /* !TIME_T_TYPE_DOUBLE */
                     if (((ulg)(i_time) & (ulg)(0x80000000L)) &&
                         !ut_zip_unzip_compatible && (flags & 0x0ff)) {
                         /* atime not in range of UnZip's time_t */
@@ -3090,15 +2998,15 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                     } else {
                         z_utim->atime = (time_t)i_time;
                     }
-#endif /* ?TIME_T_TYPE_DOUBLE */
+#  endif /* ?TIME_T_TYPE_DOUBLE */
                 }
-#ifdef IZ_HAVE_UXUIDGID
+#  ifdef IZ_HAVE_UXUIDGID
                 if (eb_len >= EB_UX_FULLSIZE && z_uidgid != NULL) {
                     z_uidgid[0] = makeword((EB_HEADSIZE+EB_UX_UID) + ef_buf);
                     z_uidgid[1] = makeword((EB_HEADSIZE+EB_UX_GID) + ef_buf);
                     flags |= EB_UX2_VALID;
                 }
-#endif /* IZ_HAVE_UXUIDGID */
+#  endif /* IZ_HAVE_UXUIDGID */
             }
             break;
 
@@ -3117,9 +3025,9 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
 #endif /* USE_EF_UT_TIME */
 
 
-#if (defined(RISCOS) || defined(ACORN_FTYPE_NFS))
+#if (defined(ACORN_FTYPE_NFS))
 
-#define SPARKID_2 0x30435241    /* = "ARC0" */
+#  define SPARKID_2 0x30435241    /* = "ARC0" */
 
 /*******************************/
 /* Function getRISCOSexfield() */
@@ -3172,4 +3080,4 @@ void *getRISCOSexfield(ef_buf, ef_len)
     return NULL;
 }
 
-#endif /* (RISCOS || ACORN_FTYPE_NFS) */
+#endif /* (ACORN_FTYPE_NFS) */

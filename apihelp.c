@@ -10,9 +10,9 @@
 
 #ifdef API_DOC
 
-#define UNZIP_INTERNAL
-#include "unzip.h"
-#include "unzvers.h"
+#  define UNZIP_INTERNAL
+#  include "unzip.h"
+#  include "unzvers.h"
 
 
 APIDocStruct APIDoc[] = {
@@ -124,10 +124,10 @@ void APIhelp(__G__ argc, argv)
 
         if (function_help(__G__ APIDoc, argv[1]))
             return;
-#ifdef SYSTEM_API_DETAILS
+#  ifdef SYSTEM_API_DETAILS
         if (function_help(__G__ SYSTEM_API_DETAILS, argv[1]))
             return;
-#endif
+#  endif
         Info(slide, 0, ((char *)slide,
           "%s is not a documented command.\n\n", argv[1]));
     }
@@ -144,9 +144,9 @@ C functions: -- See unzip.h for details\n\
   int UzpFileTree(char *name, cbList(callBack),\n\
                   char *cpInclude[], char *cpExclude[]);\n\n"));
 
-#ifdef SYSTEM_API_BRIEF
+#  ifdef SYSTEM_API_BRIEF
     Info(slide, 0, ((char *)slide, SYSTEM_API_BRIEF));
-#endif
+#  endif
 
     Info(slide, 0, ((char *)slide,
       "\nFor more information, type 'unzip -A <function-name>'\n"));

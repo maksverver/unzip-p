@@ -38,15 +38,9 @@ const char Far FilenameNotMatched[] = "caution: filename not matched:  %s\n";
 const char Far ExclFilenameNotMatched[] =
   "caution: excluded filename not matched:  %s\n";
 
-#ifdef VMS
-  const char Far ReportMsg[] = "\
-  (please check that you have transferred or created the zipfile in the\n\
-  appropriate BINARY mode--this includes ftp, Kermit, AND unzip'd zipfiles)\n";
-#else
   const char Far ReportMsg[] = "\
   (please check that you have transferred or created the zipfile in the\n\
   appropriate BINARY mode and that you have compiled UnZip properly)\n";
-#endif
 
 #ifndef SFX
   const char Far Zipnfo[] = "zipinfo";

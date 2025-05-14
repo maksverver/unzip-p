@@ -25,23 +25,23 @@
 
 #if (!defined(USE_ZLIB) || defined(USE_OWN_CRCTAB))
 
-#include "crc32.h"
+#  include "crc32.h"
 
 /* When only the table of precomputed CRC values is needed, only the basic
    system-independent table containing 256 entries is created; any support
    for "unfolding" optimization is disabled.
  */
-#if (defined(USE_ZLIB) || defined(CRC_TABLE_ONLY))
-#  ifdef IZ_CRCOPTIM_UNFOLDTBL
-#    undef IZ_CRCOPTIM_UNFOLDTBL
-#  endif
-#endif /* (USE_ZLIB || CRC_TABLE_ONLY) */
+#  if (defined(USE_ZLIB) || defined(CRC_TABLE_ONLY))
+#    ifdef IZ_CRCOPTIM_UNFOLDTBL
+#      undef IZ_CRCOPTIM_UNFOLDTBL
+#    endif
+#  endif /* (USE_ZLIB || CRC_TABLE_ONLY) */
 
-#if defined(IZ_CRCOPTIM_UNFOLDTBL)
-#  define CRC_TBLS  4
-#else
-#  define CRC_TBLS  1
-#endif
+#  if defined(IZ_CRCOPTIM_UNFOLDTBL)
+#    define CRC_TBLS  4
+#  else
+#    define CRC_TBLS  1
+#  endif
 
 
 /*
@@ -71,7 +71,7 @@
   word-at-a-time CRC calculation, where a word is four bytes.
 */
 
-#ifdef DYNAMIC_CRC_TABLE
+#  ifdef DYNAMIC_CRC_TABLE
 
 /* =========================================================================
  * Make the crc table. This function is needed only if you want to compute
@@ -80,32 +80,32 @@
 
 local void make_crc_table(void);
 
-#if (defined(DYNALLOC_CRCTAB) && defined(REENTRANT))
+#    if (defined(DYNALLOC_CRCTAB) && defined(REENTRANT))
    error: Dynamic allocation of CRC table not safe with reentrant code.
-#endif /* DYNALLOC_CRCTAB && REENTRANT */
+#    endif /* DYNALLOC_CRCTAB && REENTRANT */
 
-#ifdef DYNALLOC_CRCTAB
+#    ifdef DYNALLOC_CRCTAB
    local ulg near *crc_table = NULL;
-# if 0          /* not used, since sizeof("near *") <= sizeof(int) */
+#      if 0          /* not used, since sizeof("near *") <= sizeof(int) */
    /* Use this section when access to a "local int" is faster than access to
       a "local pointer" (e.g.: i86 16bit code with far pointers). */
    local int crc_table_empty = 1;
-#  define CRC_TABLE_IS_EMPTY    (crc_table_empty != 0)
-#  define MARK_CRCTAB_FILLED    crc_table_empty = 0
-#  define MARK_CRCTAB_EMPTY     crc_table_empty = 1
-# else
+#        define CRC_TABLE_IS_EMPTY    (crc_table_empty != 0)
+#        define MARK_CRCTAB_FILLED    crc_table_empty = 0
+#        define MARK_CRCTAB_EMPTY     crc_table_empty = 1
+#      else
    /* Use this section on systems where the size of pointers and ints is
       equal (e.g.: all 32bit systems). */
-#  define CRC_TABLE_IS_EMPTY    (crc_table == NULL)
-#  define MARK_CRCTAB_FILLED    crc_table = crctab_p
-#  define MARK_CRCTAB_EMPTY     crc_table = NULL
-# endif
-#else /* !DYNALLOC_CRCTAB */
+#        define CRC_TABLE_IS_EMPTY    (crc_table == NULL)
+#        define MARK_CRCTAB_FILLED    crc_table = crctab_p
+#        define MARK_CRCTAB_EMPTY     crc_table = NULL
+#      endif
+#    else /* !DYNALLOC_CRCTAB */
    local ulg near crc_table[CRC_TBLS*256];
    local int crc_table_empty = 1;
-#  define CRC_TABLE_IS_EMPTY    (crc_table_empty != 0)
-#  define MARK_CRCTAB_FILLED    crc_table_empty = 0
-#endif /* ?DYNALLOC_CRCTAB */
+#      define CRC_TABLE_IS_EMPTY    (crc_table_empty != 0)
+#      define MARK_CRCTAB_FILLED    crc_table_empty = 0
+#    endif /* ?DYNALLOC_CRCTAB */
 
 
 local void make_crc_table()
@@ -113,13 +113,13 @@ local void make_crc_table()
   ulg c;                /* crc shift register */
   int n;                /* counter for all possible eight bit values */
   int k;                /* byte being shifted into crc apparatus */
-#ifdef DYNALLOC_CRCTAB
+#    ifdef DYNALLOC_CRCTAB
   ulg near *crctab_p;   /* temporary pointer to allocated crc_table area */
-#else /* !DYNALLOC_CRCTAB */
-# define crctab_p crc_table
-#endif /* DYNALLOC_CRCTAB */
+#    else /* !DYNALLOC_CRCTAB */
+#      define crctab_p crc_table
+#    endif /* DYNALLOC_CRCTAB */
 
-#ifdef COMPUTE_XOR_PATTERN
+#    ifdef COMPUTE_XOR_PATTERN
   /* This piece of code has been left here to explain how the XOR pattern
    * used in the creation of the crc_table values can be recomputed.
    * For production versions of this function, it is more efficient to
@@ -133,16 +133,16 @@ local void make_crc_table()
   xor = 0L;
   for (n = 0; n < sizeof(p)/sizeof(uch); n++)
     xor |= 1L << (31 - p[n]);
-#else
-# define xor 0xedb88320L
-#endif
+#    else
+#      define xor 0xedb88320L
+#    endif
 
-#ifdef DYNALLOC_CRCTAB
+#    ifdef DYNALLOC_CRCTAB
   crctab_p = (ulg near *) nearmalloc (CRC_TBLS*256*sizeof(ulg));
   if (crctab_p == NULL) {
     ziperr(ZE_MEM, "crc_table allocation");
   }
-#endif /* DYNALLOC_CRCTAB */
+#    endif /* DYNALLOC_CRCTAB */
 
   /* generate a crc for every 8-bit value */
   for (n = 0; n < 256; n++) {
@@ -152,7 +152,7 @@ local void make_crc_table()
     crctab_p[n] = REV_BE(c);
   }
 
-#ifdef IZ_CRCOPTIM_UNFOLDTBL
+#    ifdef IZ_CRCOPTIM_UNFOLDTBL
   /* generate crc for each value followed by one, two, and three zeros */
   for (n = 0; n < 256; n++) {
       c = crctab_p[n];
@@ -161,22 +161,22 @@ local void make_crc_table()
           crctab_p[k*256+n] = c;
       }
   }
-#endif /* IZ_CRCOPTIM_UNFOLDTBL */
+#    endif /* IZ_CRCOPTIM_UNFOLDTBL */
 
   MARK_CRCTAB_FILLED;
 }
 
-#else /* !DYNAMIC_CRC_TABLE */
+#  else /* !DYNAMIC_CRC_TABLE */
 
-#ifdef DYNALLOC_CRCTAB
+#    ifdef DYNALLOC_CRCTAB
    error: Inconsistent flags, DYNALLOC_CRCTAB without DYNAMIC_CRC_TABLE.
-#endif
+#    endif
 
 /* ========================================================================
  * Table of CRC-32's of all single-byte values (made by make_crc_table)
  */
 local const ulg near crc_table[CRC_TBLS*256] = {
-# ifdef IZ_CRC_BE_OPTIMIZ
+#    ifdef IZ_CRC_BE_OPTIMIZ
     0x00000000L, 0x96300777L, 0x2c610eeeL, 0xba510999L, 0x19c46d07L,
     0x8ff46a70L, 0x35a563e9L, 0xa395649eL, 0x3288db0eL, 0xa4b8dc79L,
     0x1ee9d5e0L, 0x88d9d297L, 0x2b4cb609L, 0xbd7cb17eL, 0x072db8e7L,
@@ -229,7 +229,7 @@ local const ulg near crc_table[CRC_TBLS*256] = {
     0x9306d7cdL, 0x2957de54L, 0xbf67d923L, 0x2e7a66b3L, 0xb84a61c4L,
     0x021b685dL, 0x942b6f2aL, 0x37be0bb4L, 0xa18e0cc3L, 0x1bdf055aL,
     0x8def022dL
-#  ifdef IZ_CRCOPTIM_UNFOLDTBL
+#      ifdef IZ_CRCOPTIM_UNFOLDTBL
     ,
     0x00000000L, 0x41311b19L, 0x82623632L, 0xc3532d2bL, 0x04c56c64L,
     0x45f4777dL, 0x86a75a56L, 0xc796414fL, 0x088ad9c8L, 0x49bbc2d1L,
@@ -389,8 +389,8 @@ local const ulg near crc_table[CRC_TBLS*256] = {
     0x95e6b8b1L, 0x7b490da3L, 0x1e2eb11bL, 0x483ed243L, 0x2d596efbL,
     0xc3f6dbe9L, 0xa6916751L, 0x1fa9b0ccL, 0x7ace0c74L, 0x9461b966L,
     0xf10605deL
-#  endif /* IZ_CRCOPTIM_UNFOLDTBL */
-# else /* !IZ_CRC_BE_OPTIMIZ */
+#      endif /* IZ_CRCOPTIM_UNFOLDTBL */
+#    else /* !IZ_CRC_BE_OPTIMIZ */
     0x00000000L, 0x77073096L, 0xee0e612cL, 0x990951baL, 0x076dc419L,
     0x706af48fL, 0xe963a535L, 0x9e6495a3L, 0x0edb8832L, 0x79dcb8a4L,
     0xe0d5e91eL, 0x97d2d988L, 0x09b64c2bL, 0x7eb17cbdL, 0xe7b82d07L,
@@ -443,7 +443,7 @@ local const ulg near crc_table[CRC_TBLS*256] = {
     0xcdd70693L, 0x54de5729L, 0x23d967bfL, 0xb3667a2eL, 0xc4614ab8L,
     0x5d681b02L, 0x2a6f2b94L, 0xb40bbe37L, 0xc30c8ea1L, 0x5a05df1bL,
     0x2d02ef8dL
-#  ifdef IZ_CRCOPTIM_UNFOLDTBL
+#      ifdef IZ_CRCOPTIM_UNFOLDTBL
     ,
     0x00000000L, 0x191b3141L, 0x32366282L, 0x2b2d53c3L, 0x646cc504L,
     0x7d77f445L, 0x565aa786L, 0x4f4196c7L, 0xc8d98a08L, 0xd1c2bb49L,
@@ -603,30 +603,30 @@ local const ulg near crc_table[CRC_TBLS*256] = {
     0xb1b8e695L, 0xa30d497bL, 0x1bb12e1eL, 0x43d23e48L, 0xfb6e592dL,
     0xe9dbf6c3L, 0x516791a6L, 0xccb0a91fL, 0x740cce7aL, 0x66b96194L,
     0xde0506f1L
-#  endif /* IZ_CRCOPTIM_UNFOLDTBL */
-# endif /* ? IZ_CRC_BE_OPTIMIZ */
+#      endif /* IZ_CRCOPTIM_UNFOLDTBL */
+#    endif /* ? IZ_CRC_BE_OPTIMIZ */
 };
-#endif /* ?DYNAMIC_CRC_TABLE */
+#  endif /* ?DYNAMIC_CRC_TABLE */
 
 /* use "(void)" here to work around a Borland TC++ 1.0 problem */
-#ifdef USE_ZLIB
+#  ifdef USE_ZLIB
 const uLongf *get_crc_table(void)
-#else
+#  else
 const ulg near *get_crc_table(void)
-#endif
+#  endif
 {
-#ifdef DYNAMIC_CRC_TABLE
+#  ifdef DYNAMIC_CRC_TABLE
   if (CRC_TABLE_IS_EMPTY)
     make_crc_table();
-#endif
-#ifdef USE_ZLIB
+#  endif
+#  ifdef USE_ZLIB
   return (const uLongf *)crc_table;
-#else
+#  else
   return crc_table;
-#endif
+#  endif
 }
 
-#ifdef DYNALLOC_CRCTAB
+#  ifdef DYNALLOC_CRCTAB
 void free_crc_table()
 {
   if (!CRC_TABLE_IS_EMPTY)
@@ -635,41 +635,41 @@ void free_crc_table()
     MARK_CRCTAB_EMPTY;
   }
 }
-#endif
+#  endif
 
-#ifndef USE_ZLIB
-#ifndef CRC_TABLE_ONLY
-#ifndef ASM_CRC
+#  ifndef USE_ZLIB
+#    ifndef CRC_TABLE_ONLY
+#      ifndef ASM_CRC
 
-#define DO1(crc, buf)  crc = CRC32(crc, *buf++, crc_32_tab)
-#define DO2(crc, buf)  DO1(crc, buf); DO1(crc, buf)
-#define DO4(crc, buf)  DO2(crc, buf); DO2(crc, buf)
-#define DO8(crc, buf)  DO4(crc, buf); DO4(crc, buf)
+#        define DO1(crc, buf)  crc = CRC32(crc, *buf++, crc_32_tab)
+#        define DO2(crc, buf)  DO1(crc, buf); DO1(crc, buf)
+#        define DO4(crc, buf)  DO2(crc, buf); DO2(crc, buf)
+#        define DO8(crc, buf)  DO4(crc, buf); DO4(crc, buf)
 
-#if (defined(IZ_CRC_BE_OPTIMIZ) || defined(IZ_CRC_LE_OPTIMIZ))
+#        if (defined(IZ_CRC_BE_OPTIMIZ) || defined(IZ_CRC_LE_OPTIMIZ))
 
-# ifdef IZ_CRCOPTIM_UNFOLDTBL
-#  ifdef IZ_CRC_BE_OPTIMIZ
-#    define DO_OPT4(c, buf4)  c ^= *(buf4)++; \
+#          ifdef IZ_CRCOPTIM_UNFOLDTBL
+#            ifdef IZ_CRC_BE_OPTIMIZ
+#              define DO_OPT4(c, buf4)  c ^= *(buf4)++; \
         c = crc_32_tab[c & 0xff] ^ crc_32_tab[256+((c>>8) & 0xff)] ^ \
             crc_32_tab[2*256+((c>>16) & 0xff)] ^ crc_32_tab[3*256+(c>>24)]
-#  else /* !IZ_CRC_BE_OPTIMIZ */
-#    define DO_OPT4(c, buf4)  c ^= *(buf4)++; \
+#            else /* !IZ_CRC_BE_OPTIMIZ */
+#              define DO_OPT4(c, buf4)  c ^= *(buf4)++; \
         c = crc_32_tab[3*256+(c & 0xff)] ^ crc_32_tab[2*256+((c>>8) & 0xff)] \
            ^ crc_32_tab[256+((c>>16) & 0xff)] ^ crc_32_tab[c>>24]
-#  endif /* ?IZ_CRC_BE_OPTIMIZ */
-# else /* !IZ_CRCOPTIM_UNFOLDTBL */
-#    define DO_OPT4(c, buf4)  c ^= *(buf4)++; \
+#            endif /* ?IZ_CRC_BE_OPTIMIZ */
+#          else /* !IZ_CRCOPTIM_UNFOLDTBL */
+#            define DO_OPT4(c, buf4)  c ^= *(buf4)++; \
        c = CRC32UPD(c, crc_32_tab); \
        c = CRC32UPD(c, crc_32_tab); \
        c = CRC32UPD(c, crc_32_tab); \
        c = CRC32UPD(c, crc_32_tab)
-# endif /* ?IZ_CRCOPTIM_UNFOLDTBL */
+#          endif /* ?IZ_CRCOPTIM_UNFOLDTBL */
 
-# define DO_OPT16(crc, buf4) DO_OPT4(crc, buf4); DO_OPT4(crc, buf4); \
+#          define DO_OPT16(crc, buf4) DO_OPT4(crc, buf4); DO_OPT4(crc, buf4); \
                              DO_OPT4(crc, buf4); DO_OPT4(crc, buf4);
 
-#endif /* (IZ_CRC_BE_OPTIMIZ || IZ_CRC_LE_OPTIMIZ) */
+#        endif /* (IZ_CRC_BE_OPTIMIZ || IZ_CRC_LE_OPTIMIZ) */
 
 
 /* ========================================================================= */
@@ -690,7 +690,7 @@ ulg crc32(crc, buf, len)
 
   c = (REV_BE((z_uint4)crc) ^ 0xffffffffL);
 
-#if (defined(IZ_CRC_BE_OPTIMIZ) || defined(IZ_CRC_LE_OPTIMIZ))
+#        if (defined(IZ_CRC_BE_OPTIMIZ) || defined(IZ_CRC_LE_OPTIMIZ))
   /* Align buf pointer to next DWORD boundary. */
   while (len && ((ptrdiff_t)buf & 3)) {
     DO1(c, buf);
@@ -708,21 +708,21 @@ ulg crc32(crc, buf, len)
     }
     buf = (const uch *)buf4;
   }
-#else /* !(IZ_CRC_BE_OPTIMIZ || IZ_CRC_LE_OPTIMIZ) */
-#ifndef NO_UNROLLED_LOOPS
+#        else /* !(IZ_CRC_BE_OPTIMIZ || IZ_CRC_LE_OPTIMIZ) */
+#          ifndef NO_UNROLLED_LOOPS
   while (len >= 8) {
     DO8(c, buf);
     len -= 8;
   }
-#endif /* !NO_UNROLLED_LOOPS */
-#endif /* ?(IZ_CRC_BE_OPTIMIZ || IZ_CRC_LE_OPTIMIZ) */
+#          endif /* !NO_UNROLLED_LOOPS */
+#        endif /* ?(IZ_CRC_BE_OPTIMIZ || IZ_CRC_LE_OPTIMIZ) */
   if (len) do {
     DO1(c, buf);
   } while (--len);
 
   return REV_BE(c) ^ 0xffffffffL;   /* (instead of ~c for 64-bit machines) */
 }
-#endif /* !ASM_CRC */
-#endif /* !CRC_TABLE_ONLY */
-#endif /* !USE_ZLIB */
+#      endif /* !ASM_CRC */
+#    endif /* !CRC_TABLE_ONLY */
+#  endif /* !USE_ZLIB */
 #endif /* !USE_ZLIB || USE_OWN_CRCTAB */

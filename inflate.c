@@ -287,17 +287,9 @@
 #endif
 
 /* some buffer counters must be capable of holding 64k for Deflate64 */
-#if (defined(USE_DEFLATE64) && defined(INT_16BIT))
-#  define UINT_D64 ulg
-#else
-#  define UINT_D64 unsigned
-#endif
+#define UINT_D64 unsigned
 
-#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
-#  define wsize G._wsize    /* wsize is a variable */
-#else
-#  define wsize WSIZE       /* wsize is a constant */
-#endif
+#define wsize WSIZE       /* wsize is a constant */
 
 
 #ifndef NEXTBYTE        /* default is to simply get a byte from stdin */
@@ -341,29 +333,29 @@
    The preprocessor flag NO_ZLIBCALLBCK can be set to force usage of the
    old zlib 1.1.x interface, for testing purpose.
  */
-#ifdef USE_ZLIB_INFLATCB
-#  undef USE_ZLIB_INFLATCB
-#endif
-#if (defined(ZLIB_VERNUM) && ZLIB_VERNUM >= 0x1200 && !defined(NO_ZLIBCALLBCK))
-#  define USE_ZLIB_INFLATCB 1
-#else
-#  define USE_ZLIB_INFLATCB 0
-#endif
+#  ifdef USE_ZLIB_INFLATCB
+#    undef USE_ZLIB_INFLATCB
+#  endif
+#  if (defined(ZLIB_VERNUM) && ZLIB_VERNUM >= 0x1200 && !defined(NO_ZLIBCALLBCK))
+#    define USE_ZLIB_INFLATCB 1
+#  else
+#    define USE_ZLIB_INFLATCB 0
+#  endif
 
 /* Check for incompatible combinations of zlib and Deflate64 support. */
-#if defined(USE_DEFLATE64)
-# if !USE_ZLIB_INFLATCB
+#  if defined(USE_DEFLATE64)
+#    if !USE_ZLIB_INFLATCB
   #error Deflate64 is incompatible with traditional (pre-1.2.x) zlib interface!
-# else
+#    else
    /* The Deflate64 callback function in the framework of zlib 1.2.x requires
       the inclusion of the unsupported infback9 header file:
     */
-#  include "infback9.h"
-# endif
-#endif /* USE_DEFLATE64 */
+#      include "infback9.h"
+#    endif
+#  endif /* USE_DEFLATE64 */
 
 
-#if USE_ZLIB_INFLATCB
+#  if USE_ZLIB_INFLATCB
 
 static unsigned zlib_inCB(void FAR *pG, unsigned char FAR * FAR * pInbuf);
 static int zlib_outCB(void FAR *pG, unsigned char FAR *outbuf,
@@ -382,14 +374,14 @@ static int zlib_outCB(pG, outbuf, outcnt)
     unsigned char FAR *outbuf;
     unsigned outcnt;
 {
-#ifdef FUNZIP
+#    ifdef FUNZIP
     return flush(__G__ (ulg)(outcnt));
-#else
+#    else
     return ((G.mem_mode) ? memflush(__G__ outbuf, (ulg)(outcnt))
                          : flush(__G__ outbuf, (ulg)(outcnt), 0));
-#endif
+#    endif
 }
-#endif /* USE_ZLIB_INFLATCB */
+#  endif /* USE_ZLIB_INFLATCB */
 
 
 /*
@@ -411,14 +403,7 @@ int UZinflate(__G__ is_defl64)
 {
     int retval = 0;     /* return code: 0 = "no error" */
     int err=Z_OK;
-#if USE_ZLIB_INFLATCB
-
-#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
-    if (G.redirect_slide)
-        wsize = G.redirect_size, redirSlide = G.redirect_buffer;
-    else
-        wsize = WSIZE, redirSlide = slide;
-#endif
+#  if USE_ZLIB_INFLATCB
 
     if (!G.inflInit) {
         /* local buffer for efficiency */
@@ -442,7 +427,7 @@ int UZinflate(__G__ is_defl64)
         G.inflInit = 1;
     }
 
-#ifdef USE_DEFLATE64
+#    ifdef USE_DEFLATE64
     if (is_defl64)
     {
         Trace((stderr, "initializing inflate9()\n"));
@@ -493,7 +478,7 @@ int UZinflate(__G__ is_defl64)
         }
     }
     else
-#endif /* USE_DEFLATE64 */
+#    endif /* USE_DEFLATE64 */
     {
         /* For the callback interface, inflate initialization has to
            be called before each decompression call.
@@ -558,15 +543,9 @@ int UZinflate(__G__ is_defl64)
         }
     }
 
-#else /* !USE_ZLIB_INFLATCB */
+#  else /* !USE_ZLIB_INFLATCB */
     int repeated_buf_err;
 
-#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
-    if (G.redirect_slide)
-        wsize = G.redirect_size, redirSlide = G.redirect_buffer;
-    else
-        wsize = WSIZE, redirSlide = slide;
-#endif
 
     G.dstrm.next_out = redirSlide;
     G.dstrm.avail_out = wsize;
@@ -612,12 +591,12 @@ int UZinflate(__G__ is_defl64)
         G.inflInit = 1;
     }
 
-#ifdef FUNZIP
+#    ifdef FUNZIP
     while (err != Z_STREAM_END) {
-#else /* !FUNZIP */
+#    else /* !FUNZIP */
     while (G.csize > 0) {
         Trace((stderr, "first loop:  G.csize = %ld\n", G.csize));
-#endif /* ?FUNZIP */
+#    endif /* ?FUNZIP */
         while (G.dstrm.avail_out > 0) {
             err = inflate(&G.dstrm, Z_PARTIAL_FLUSH);
 
@@ -628,11 +607,11 @@ int UZinflate(__G__ is_defl64)
             } else if (err != Z_OK && err != Z_STREAM_END)
                 Trace((stderr, "oops!  (inflate(first loop) err = %d)\n", err));
 
-#ifdef FUNZIP
+#    ifdef FUNZIP
             if (err == Z_STREAM_END)    /* "END-of-entry-condition" ? */
-#else /* !FUNZIP */
+#    else /* !FUNZIP */
             if (G.csize <= 0L)          /* "END-of-entry-condition" ? */
-#endif /* ?FUNZIP */
+#    endif /* ?FUNZIP */
                 break;
 
             if (G.dstrm.avail_in == 0) {
@@ -666,14 +645,14 @@ int UZinflate(__G__ is_defl64)
         } else if (err == Z_MEM_ERROR) {
             retval = 3; goto uzinflate_cleanup_exit;
         } else if (err == Z_BUF_ERROR) {                /* DEBUG */
-#ifdef FUNZIP
+#    ifdef FUNZIP
             Trace((stderr,
                    "zlib inflate() did not detect stream end\n"));
-#else
+#    else
             Trace((stderr,
                    "zlib inflate() did not detect stream end (%s, %s)\n",
                    G.zipfn, G.filename));
-#endif
+#    endif
             if ((!repeated_buf_err) && (G.dstrm.avail_in == 0)) {
                 /* when detecting this problem for the first time,
                    try to provide one fake byte beyond "EOF"... */
@@ -707,7 +686,7 @@ uzinflate_cleanup_exit:
     if (err != Z_OK)
         Trace((stderr, "oops!  (inflateReset() err = %d)\n", err));
 
-#endif /* ?USE_ZLIB_INFLATCB */
+#  endif /* ?USE_ZLIB_INFLATCB */
     return retval;
 }
 
@@ -743,26 +722,26 @@ static const unsigned border[] = {
         16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
 
 /* - Copy lengths for literal codes 257..285 */
-#ifdef USE_DEFLATE64
+#  ifdef USE_DEFLATE64
 static const ush cplens64[] = {
         3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
         35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 3, 0, 0};
         /* For Deflate64, the code 285 is defined differently. */
-#else
-#  define cplens32 cplens
-#endif
+#  else
+#    define cplens32 cplens
+#  endif
 static const ush cplens32[] = {
         3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
         35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258, 0, 0};
         /* note: see note #13 above about the 258 in this list. */
 /* - Extra bits for literal codes 257..285 */
-#ifdef USE_DEFLATE64
+#  ifdef USE_DEFLATE64
 static const uch cplext64[] = {
         0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
         3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 16, INVALID_CODE, INVALID_CODE};
-#else
-#  define cplext32 cplext
-#endif
+#  else
+#    define cplext32 cplext
+#  endif
 static const uch cplext32[] = {
         0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
         3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, INVALID_CODE, INVALID_CODE};
@@ -771,51 +750,51 @@ static const uch cplext32[] = {
 static const ush cpdist[] = {
         1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193,
         257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145,
-#if (defined(USE_DEFLATE64) || defined(PKZIP_BUG_WORKAROUND))
+#  if (defined(USE_DEFLATE64) || defined(PKZIP_BUG_WORKAROUND))
         8193, 12289, 16385, 24577, 32769, 49153};
-#else
+#  else
         8193, 12289, 16385, 24577};
-#endif
+#  endif
 
 /* - Extra bits for distance codes 0..29 (0..31 for Deflate64) */
-#ifdef USE_DEFLATE64
+#  ifdef USE_DEFLATE64
 static const uch cpdext64[] = {
         0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
         7, 7, 8, 8, 9, 9, 10, 10, 11, 11,
         12, 12, 13, 13, 14, 14};
-#else
-#  define cpdext32 cpdext
-#endif
+#  else
+#    define cpdext32 cpdext
+#  endif
 static const uch cpdext32[] = {
         0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
         7, 7, 8, 8, 9, 9, 10, 10, 11, 11,
-#ifdef PKZIP_BUG_WORKAROUND
+#  ifdef PKZIP_BUG_WORKAROUND
         12, 12, 13, 13, INVALID_CODE, INVALID_CODE};
-#else
+#  else
         12, 12, 13, 13};
-#endif
+#  endif
 
-#ifdef PKZIP_BUG_WORKAROUND
-#  define MAXLITLENS 288
-#else
-#  define MAXLITLENS 286
-#endif
-#if (defined(USE_DEFLATE64) || defined(PKZIP_BUG_WORKAROUND))
-#  define MAXDISTS 32
-#else
-#  define MAXDISTS 30
-#endif
+#  ifdef PKZIP_BUG_WORKAROUND
+#    define MAXLITLENS 288
+#  else
+#    define MAXLITLENS 286
+#  endif
+#  if (defined(USE_DEFLATE64) || defined(PKZIP_BUG_WORKAROUND))
+#    define MAXDISTS 32
+#  else
+#    define MAXDISTS 30
+#  endif
 
 
 /* moved to consts.h (included in unzip.c), resp. funzip.c */
-#if 0
+#  if 0
 /* And'ing with mask_bits[n] masks the lower n bits */
 const unsigned near mask_bits[17] = {
     0x0000,
     0x0001, 0x0003, 0x0007, 0x000f, 0x001f, 0x003f, 0x007f, 0x00ff,
     0x01ff, 0x03ff, 0x07ff, 0x0fff, 0x1fff, 0x3fff, 0x7fff, 0xffff
 };
-#endif /* 0 */
+#  endif /* 0 */
 
 
 /* Macros for inflate() bit peeking and grabbing.
@@ -855,30 +834,30 @@ const unsigned near mask_bits[17] = {
  */
 
 /* These have been moved to globals.h */
-#if 0
+#  if 0
 ulg bb;                         /* bit buffer */
 unsigned bk;                    /* bits in bit buffer */
-#endif
+#  endif
 
-#ifndef CHECK_EOF
-#  define CHECK_EOF   /* default as of 5.13/5.2 */
-#endif
+#  ifndef CHECK_EOF
+#    define CHECK_EOF   /* default as of 5.13/5.2 */
+#  endif
 
-#ifndef CHECK_EOF
-#  define NEEDBITS(n) {while(k<(n)){b|=((ulg)NEXTBYTE)<<k;k+=8;}}
-#else
-# ifdef FIX_PAST_EOB_BY_TABLEADJUST
-#  define NEEDBITS(n) {while(k<(n)){int c=NEXTBYTE;\
+#  ifndef CHECK_EOF
+#    define NEEDBITS(n) {while(k<(n)){b|=((ulg)NEXTBYTE)<<k;k+=8;}}
+#  else
+#    ifdef FIX_PAST_EOB_BY_TABLEADJUST
+#      define NEEDBITS(n) {while(k<(n)){int c=NEXTBYTE;\
     if(c==EOF){retval=1;goto cleanup_and_exit;}\
     b|=((ulg)c)<<k;k+=8;}}
-# else
-#  define NEEDBITS(n) {while((int)k<(int)(n)){int c=NEXTBYTE;\
+#    else
+#      define NEEDBITS(n) {while((int)k<(int)(n)){int c=NEXTBYTE;\
     if(c==EOF){if((int)k>=0)break;retval=1;goto cleanup_and_exit;}\
     b|=((ulg)c)<<k;k+=8;}}
-# endif
-#endif
+#    endif
+#  endif
 
-#define DUMPBITS(n) {b>>=(n);k-=(n);}
+#  define DUMPBITS(n) {b>>=(n);k-=(n);}
 
 
 /*
@@ -920,7 +899,7 @@ static const unsigned lbits = 9;
 static const unsigned dbits = 6;
 
 
-#ifndef ASM_INFLATECODES
+#  ifndef ASM_INFLATECODES
 
 int inflate_codes(__G__ tl, td, bl, bd)
      __GDEF
@@ -993,21 +972,12 @@ unsigned bl, bd;        /* number of bits decoded by tl[] and td[] */
 
         /* do the copy */
         do {
-#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
-          if (G.redirect_slide) {
-            /* &= w/ wsize unnecessary & wrong if redirect */
-            if ((UINT_D64)d >= wsize)
-              return 1;         /* invalid compressed data */
-            e = (unsigned)(wsize - (d > (unsigned)w ? (UINT_D64)d : w));
-          }
-          else
-#endif
             e = (unsigned)(wsize -
                            ((d &= (unsigned)(wsize-1)) > (unsigned)w ?
                             (UINT_D64)d : w));
           if ((UINT_D64)e > n) e = (unsigned)n;
           n -= e;
-#ifndef NOMEMCPY
+#    ifndef NOMEMCPY
           if ((unsigned)w - d >= e)
           /* (this test assumes unsigned comparison) */
           {
@@ -1016,7 +986,7 @@ unsigned bl, bd;        /* number of bits decoded by tl[] and td[] */
             d += e;
           }
           else                  /* do it slowly to avoid memcpy() overlap */
-#endif /* !NOMEMCPY */
+#    endif /* !NOMEMCPY */
             do {
               redirSlide[w++] = redirSlide[d++];
             } while (--e);
@@ -1056,7 +1026,7 @@ cleanup_and_exit:
   return retval;
 }
 
-#endif /* ASM_INFLATECODES */
+#  endif /* ASM_INFLATECODES */
 
 
 
@@ -1119,11 +1089,11 @@ cleanup_and_exit:
 
 /* Globals for literal tables (built once) */
 /* Moved to globals.h                      */
-#if 0
+#  if 0
 struct huft *fixed_tl = (struct huft *)NULL;
 struct huft *fixed_td;
 int fixed_bl, fixed_bd;
-#endif
+#  endif
 
 static int inflate_fixed(__G)
      __GDEF
@@ -1148,13 +1118,13 @@ static int inflate_fixed(__G)
     for (; i < 288; i++)          /* make a complete, but wrong code set */
       l[i] = 8;
     G.fixed_bl = 7;
-#ifdef USE_DEFLATE64
+#  ifdef USE_DEFLATE64
     if ((i = huft_build(__G__ l, 288, 257, G.cplens, G.cplext,
                         &G.fixed_tl, &G.fixed_bl)) != 0)
-#else
+#  else
     if ((i = huft_build(__G__ l, 288, 257, cplens, cplext,
                         &G.fixed_tl, &G.fixed_bl)) != 0)
-#endif
+#  endif
     {
       G.fixed_tl = (struct huft *)NULL;
       return i;
@@ -1164,13 +1134,13 @@ static int inflate_fixed(__G)
     for (i = 0; i < MAXDISTS; i++)      /* make an incomplete code set */
       l[i] = 5;
     G.fixed_bd = 5;
-#ifdef USE_DEFLATE64
+#  ifdef USE_DEFLATE64
     if ((i = huft_build(__G__ l, MAXDISTS, 0, cpdist, G.cpdext,
                         &G.fixed_td, &G.fixed_bd)) > 1)
-#else
+#  else
     if ((i = huft_build(__G__ l, MAXDISTS, 0, cpdist, cpdext,
                         &G.fixed_td, &G.fixed_bd)) > 1)
-#endif
+#  endif
     {
       huft_free(G.fixed_tl);
       G.fixed_td = G.fixed_tl = (struct huft *)NULL;
@@ -1316,11 +1286,11 @@ static int inflate_dynamic(__G)
 
   /* build the decoding tables for literal/length and distance codes */
   bl = lbits;
-#ifdef USE_DEFLATE64
+#  ifdef USE_DEFLATE64
   retval = huft_build(__G__ ll, nl, 257, G.cplens, G.cplext, &tl, &bl);
-#else
+#  else
   retval = huft_build(__G__ ll, nl, 257, cplens, cplext, &tl, &bl);
-#endif
+#  endif
   if (bl == 0)                  /* no literals or lengths */
     retval = 1;
   if (retval)
@@ -1332,23 +1302,23 @@ static int inflate_dynamic(__G)
     }
     return retval;              /* incomplete code set */
   }
-#ifdef FIX_PAST_EOB_BY_TABLEADJUST
+#  ifdef FIX_PAST_EOB_BY_TABLEADJUST
   /* Adjust the requested distance base table size so that a distance code
      fetch never tries to get bits behind an immediatly following end-of-block
      code. */
   bd = (dbits <= bl+1 ? dbits : bl+1);
-#else
+#  else
   bd = dbits;
-#endif
-#ifdef USE_DEFLATE64
+#  endif
+#  ifdef USE_DEFLATE64
   retval = huft_build(__G__ ll + nl, nd, 0, cpdist, G.cpdext, &td, &bd);
-#else
+#  else
   retval = huft_build(__G__ ll + nl, nd, 0, cpdist, cpdext, &td, &bd);
-#endif
-#ifdef PKZIP_BUG_WORKAROUND
+#  endif
+#  ifdef PKZIP_BUG_WORKAROUND
   if (retval == 1)
     retval = 0;
-#endif
+#  endif
   if (bd == 0 && nl > 257)    /* lengths but no distances */
     retval = 1;
   if (retval)
@@ -1434,23 +1404,17 @@ int inflate(__G__ is_defl64)
 {
   int e;                /* last block flag */
   int r;                /* result code */
-#ifdef DEBUG
+#  ifdef DEBUG
   unsigned h = 0;       /* maximum struct huft's malloc'ed */
-#endif
+#  endif
 
-#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
-  if (G.redirect_slide)
-    wsize = G.redirect_size, redirSlide = G.redirect_buffer;
-  else
-    wsize = WSIZE, redirSlide = slide;   /* how they're #defined if !DLL */
-#endif
 
   /* initialize window, bit buffer */
   G.wp = 0;
   G.bk = 0;
   G.bb = 0;
 
-#ifdef USE_DEFLATE64
+#  ifdef USE_DEFLATE64
   if (is_defl64) {
     G.cplens = cplens64;
     G.cplext = cplext64;
@@ -1468,7 +1432,7 @@ int inflate(__G__ is_defl64)
     G.fixed_td = G.fixed_td32;
     G.fixed_bd = G.fixed_bd32;
   }
-#else /* !USE_DEFLATE64 */
+#  else /* !USE_DEFLATE64 */
   if (is_defl64) {
     /* This should not happen unless UnZip is built from object files
      * compiled with inconsistent option setting.  Handle this by
@@ -1477,25 +1441,25 @@ int inflate(__G__ is_defl64)
     Trace((stderr, "\nThis inflate() cannot handle Deflate64!\n"));
     return 2;
   }
-#endif /* ?USE_DEFLATE64 */
+#  endif /* ?USE_DEFLATE64 */
 
   /* decompress until the last block */
   do {
-#ifdef DEBUG
+#  ifdef DEBUG
     G.hufts = 0;
-#endif
+#  endif
     if ((r = inflate_block(__G__ &e)) != 0)
       return r;
-#ifdef DEBUG
+#  ifdef DEBUG
     if (G.hufts > h)
       h = G.hufts;
-#endif
+#  endif
   } while (!e);
 
   Trace((stderr, "\n%u bytes in Huffman tables (%u/entry)\n",
          h * (unsigned)sizeof(struct huft), (unsigned)sizeof(struct huft)));
 
-#ifdef USE_DEFLATE64
+#  ifdef USE_DEFLATE64
   if (is_defl64) {
     G.fixed_tl64 = G.fixed_tl;
     G.fixed_bl64 = G.fixed_bl;
@@ -1507,7 +1471,7 @@ int inflate(__G__ is_defl64)
     G.fixed_td32 = G.fixed_td;
     G.fixed_bd32 = G.fixed_bd;
   }
-#endif
+#  endif
 
   /* flush out redirSlide and return (success, unless final FLUSH failed) */
   return (FLUSH(G.wp));

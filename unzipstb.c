@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include "unzip.h"
 #if !defined(NO_STDDEF_H)
-# include <stddef.h>
+#  include <stddef.h>
 #endif
 #include "unzvers.h"
 
@@ -57,9 +57,9 @@ int main(int argc, char *argv[])
      * UzpMain().  The APIs for these two calls have maintained backward
      * compatibility since at least the UnZip release 5.3 !
      */
-#   define UZDLL_MINVERS_MAJOR          5
-#   define UZDLL_MINVERS_MINOR          3
-#   define UZDLL_MINVERS_PATCHLEVEL     0
+#define UZDLL_MINVERS_MAJOR          5
+#define UZDLL_MINVERS_MINOR          3
+#define UZDLL_MINVERS_PATCHLEVEL     0
     /* This UnZip DLL stub requires a DLL version of at least: */
     if ( (pVersion->unzip.major < UZDLL_MINVERS_MAJOR) ||
          ((pVersion->unzip.major == UZDLL_MINVERS_MAJOR) &&
@@ -86,21 +86,9 @@ int main(int argc, char *argv[])
 #endif
          + sizeof(_version_type) ))
     {
-#ifdef OS2DLL
-#       define UZ_API_COMP_MAJOR        UZ_OS2API_COMP_MAJOR
-#       define UZ_API_COMP_MINOR        UZ_OS2API_COMP_MINOR
-#       define UZ_API_COMP_REVIS        UZ_OS2API_COMP_REVIS
-#else /* !OS2DLL */
-#ifdef WINDLL
-#       define UZ_API_COMP_MAJOR        UZ_WINAPI_COMP_MAJOR
-#       define UZ_API_COMP_MINOR        UZ_WINAPI_COMP_MINOR
-#       define UZ_API_COMP_REVIS        UZ_WINAPI_COMP_REVIS
-#else /* !WINDLL */
-#       define UZ_API_COMP_MAJOR        UZ_GENAPI_COMP_MAJOR
-#       define UZ_API_COMP_MINOR        UZ_GENAPI_COMP_MINOR
-#       define UZ_API_COMP_REVIS        UZ_GENAPI_COMP_REVIS
-#endif /* ?WINDLL */
-#endif /* ?OS2DLL */
+#define UZ_API_COMP_MAJOR        UZ_GENAPI_COMP_MAJOR
+#define UZ_API_COMP_MINOR        UZ_GENAPI_COMP_MINOR
+#define UZ_API_COMP_REVIS        UZ_GENAPI_COMP_REVIS
         printf(
           "   UnZip API version: can handle <= %u.%u%u, DLL supplies %u.%u%u\n",
           UZ_API_COMP_MAJOR, UZ_API_COMP_MINOR, UZ_API_COMP_REVIS,
