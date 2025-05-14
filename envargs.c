@@ -38,9 +38,6 @@
 #  define ISspace(c) isspace((unsigned)c)
 #endif /* ?__EMX__ */
 
-#if (!defined(RISCOS) && defined(NO_STDLIB_H))
-extern char *getenv();
-#endif
 static int count_args(const char *);
 
 

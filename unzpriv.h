@@ -150,10 +150,6 @@
 #  define _ALL_SOURCE
 #endif
 
-#if defined(apollo)          /* defines __STDC__ */
-#    define NO_STDLIB_H
-#endif
-
 #ifdef DNIX
 #  define SYSV
 #  define SHORT_NAMES         /* 14-char limitation on path components */
@@ -644,12 +640,8 @@
 #include <signal.h>      /* used in unzip.c, fileio.c */
 
 
-#ifndef NO_STDDEF_H
-#  include <stddef.h>
-#endif
-#ifndef NO_STDLIB_H
-#  include <stdlib.h>  /* standard library prototypes, malloc(), etc. */
-#endif
+#include <stddef.h>
+#include <stdlib.h>  /* standard library prototypes, malloc(), etc. */
 typedef size_t extent;
 
 
