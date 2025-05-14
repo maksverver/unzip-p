@@ -104,7 +104,7 @@ static int extract_or_test_member(__GPRO);
    static void set_deferred_symlink(__GPRO__ slinkentry *slnk_entry);
 #endif
 #ifdef SET_DIR_ATTRIB
-   static int Cdecl dircomp(const void *a, const void *b);
+   static int dircomp(const void *a, const void *b);
 #endif
 
 
@@ -2634,7 +2634,7 @@ wchar_t *fnfilterw( src, dst, siz)
 /*  Function dircomp()  */
 /************************/
 
-static int Cdecl dircomp(a, b)  /* used by qsort(); swiped from Zip */
+static int dircomp(a, b)  /* used by qsort(); swiped from Zip */
     const void *a, *b;
 {
     /* order is significant:  this sorts in reverse order (deepest first) */

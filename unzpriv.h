@@ -364,10 +364,6 @@ typedef size_t extent;
 #    define Far
 #  endif
 
-#  ifndef Cdecl
-#    define Cdecl
-#  endif
-
 #  ifndef MAIN
 #    define MAIN  main
 #  endif
