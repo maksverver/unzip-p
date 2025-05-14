@@ -6,3 +6,6 @@ A nonexhaustive list of things I've changed:
   - Automated tests (5118111)
   - zipgrep: change egrep to grep -E (f2fe7ce)
     (this prevents printing of deprecation warnings on Arch Linux)
+  - Deleted code for obsolete operating systems and compilers.
+  - Replaced macros like OF, zvoid, ZCONST, etc. with ANSI C equivalents.
+  - Found a bug related to umask() and fixed it! (commit e8a8430)
