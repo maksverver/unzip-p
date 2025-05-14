@@ -197,7 +197,6 @@
 #ifdef pyr  /* Pyramid:  has BSD and AT&T "universes" */
 #  ifdef BSD
 #    define pyr_bsd
-#    define USE_STRINGS_H  /* instead of more common string.h */
 #    define ZMEM           /* ZMEM now uses bcopy/bzero: not in AT&T universe */
 #  endif                   /* (AT&T memcpy claimed to be very slow, though) */
 #  define DECLARE_ERRNO
@@ -636,11 +635,7 @@
 
 #include <ctype.h>       /* skip for VMS, to use tolower() function? */
 #include <errno.h>       /* used in mapname() */
-#ifdef USE_STRINGS_H
-#  include <strings.h>   /* strcpy, strcmp, memcpy, index/rindex, etc. */
-#else
-#  include <string.h>    /* strcpy, strcmp, memcpy, strchr/strrchr, etc. */
-#endif
+#include <string.h>    /* strcpy, strcmp, memcpy, strchr/strrchr, etc. */
 #if (!defined(NO_LIMITS_H))
 #  include <limits.h>    /* MAX/MIN constant symbols for system types... */
 #endif
