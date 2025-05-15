@@ -297,9 +297,7 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
 #  ifdef TIMESTAMP
      static const char TimeStamp[] = "TIMESTAMP";
 #  endif
-#  ifdef UNIXBACKUP
      static const char UnixBackup[] = "UNIXBACKUP";
-#  endif
 #  ifdef USE_EF_UT_TIME
      static const char Use_EF_UT_time[] = "USE_EF_UT_TIME";
 #  endif
@@ -986,14 +984,12 @@ int uz_opts(__G__ pargc, pargv)
                         uO.aflag = 0;
                     }
                     break;
-#ifdef UNIXBACKUP
                 case ('B'): /* -B: back up existing files */
                     if (negative)
                         uO.B_flag = FALSE, negative = 0;
                     else
                         uO.B_flag = TRUE;
                     break;
-#endif
                 case ('c'):
                     if (negative) {
                         uO.cflag = FALSE, negative = 0;
@@ -1947,11 +1943,9 @@ static void show_version_info(__G)
           TimeStamp));
         ++numopts;
 #  endif
-#  ifdef UNIXBACKUP
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           UnixBackup));
         ++numopts;
-#  endif
 #  ifdef USE_EF_UT_TIME
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_EF_UT_time));

@@ -101,11 +101,6 @@ freely, subject to the above disclaimer and the following restrictions:
 #    define LINUX
 #  endif
 
-/* NO_UNIXBACKUP overrides UNIXBACKUP */
-#  if defined(NO_UNIXBACKUP) && defined(UNIXBACKUP)
-#    undef UNIXBACKUP
-#  endif
-
 
 /*---------------------------------------------------------------------------
     Grab system-dependent definition of EXPENTRY for prototypes below.
@@ -189,13 +184,7 @@ typedef struct _UzpOpts {
     char *pwdarg;       /* pointer to command-line password (-P option) */
     int zipinfo_mode;   /* behave like ZipInfo or like normal UnZip? */
     int aflag;          /* -a: do ASCII-EBCDIC and/or end-of-line translation */
-#    if defined(UNIX)
     int B_flag;         /* -B: back up existing files by renaming to *~##### */
-#    else
-#      ifdef UNIXBACKUP
-    int B_flag;         /* -B: back up existing files by renaming to *~##### */
-#      endif
-#    endif
     int cflag;          /* -c: output to stdout */
     int C_flag;         /* -C: match filenames case-insensitively */
     int D_flag;         /* -D: don't restore directory (-DD: any) timestamps */

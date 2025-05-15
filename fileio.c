@@ -124,11 +124,9 @@ static const char CannotOpenZipfile[] =
 #if (defined(UNIX))
    static const char CannotDeleteOldFile[] =
      "error:  cannot delete old %s\n        %s\n";
-#  ifdef UNIXBACKUP
    static const char CannotRenameOldFile[] =
      "error:  cannot rename old %s\n        %s\n";
    static const char BackupSuffix[] = "~";
-#  endif
 #endif /* UNIX */
 static const char CannotCreateFile[] =
     "error:  cannot create %s\n        %s\n";
@@ -216,7 +214,6 @@ int open_outfile(__G)           /* return 1 if fail */
     {
         Trace((stderr, "open_outfile:  stat(%s) returns 0:  file exists\n",
           FnFilter1(G.filename)));
-#  ifdef UNIXBACKUP
         if (uO.B_flag) {    /* do backup */
             char *tname;
             z_stat tmpstat;
@@ -282,7 +279,6 @@ int open_outfile(__G)           /* return 1 if fail */
               FnFilter1(G.filename), FnFilter2(tname)));
             free(tname);
         } else
-#  endif /* UNIXBACKUP */
         {
             if (unlink(G.filename) != 0) {
                 Info(slide, 0x401, ((char *)slide,

@@ -82,11 +82,6 @@
  * (This list of systems must be kept in sync with the list of systems
  * that add the B_flag to the UzpOpts structure, see unzip.h.)
  */
-#  if (!defined(NO_UNIXBACKUP) && !defined(UNIXBACKUP))
-#    if defined(UNIX)
-#      define UNIXBACKUP
-#    endif
-#  endif
 
 
 #  if (!defined(DYNAMIC_CRC_TABLE) && !defined(FUNZIP))
