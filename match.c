@@ -353,6 +353,8 @@ int iswild(p)        /* originally only used for stat()-bug workaround in */
 
 #ifdef TEST_MATCH
 
+#  include <stdio.h>
+
 #  define put(s) {fputs(s,stdout); fflush(stdout);}
 #  ifdef main
 #    undef main
@@ -364,17 +366,21 @@ int main(int argc, char **argv)
 
     for (;;) {
         put("Pattern (return to exit): ");
-        gets(pat);
+        fgets(pat, sizeof(pat), stdin);
         if (!pat[0])
             break;
         for (;;) {
             put("String (return for new pattern): ");
-            gets(str);
+            fgets(str, sizeof(str), stdin);
             if (!str[0])
                 break;
-            printf("Case sensitive: %s  insensitive: %s\n",
-              match(str, pat, 0) ? "YES" : "NO",
-              match(str, pat, 1) ? "YES" : "NO");
+            printf(
+                "Match forward slash:  case sensitive: %3s  insensitive (-C): %3s\n"
+                "Don't match (-W):     case sensitive: %3s  insensitive (-C): %3s\n",
+                match(str, pat, 0, 0) ? "YES" : "NO ",
+                match(str, pat, 1, 0) ? "YES" : "NO ",
+                match(str, pat, 0, '/') ? "YES" : "NO ",
+                match(str, pat, 1, '/') ? "YES" : "NO ");
         }
     }
     EXIT(0);
