@@ -72,7 +72,6 @@ CFLAGS_SECURITY = \
 
 # Commonly enabled features (I got these from the Arch linux PKGBUILD)
 CFLAGS_FEATURES = \
-    -DACORN_FTYPE_NFS \
     -DWILD_STOP_AT_DIR \
     -DLARGE_FILE_SUPPORT \
     -DUNICODE_SUPPORT \

@@ -1306,9 +1306,7 @@ int      getZip64Data               (__GPRO__ const uch *ef_buf,
 unsigned ef_scan_for_izux           (const uch *ef_buf, unsigned ef_len,
                                      int ef_is_c, ulg dos_mdatetime,
                                      iztimes *z_utim, ulg *z_uidgid);
-#  if (defined(ACORN_FTYPE_NFS))
-   void *getRISCOSexfield          (const uch *ef_buf, unsigned ef_len);
-#  endif
+void *getRISCOSexfield              (const uch *ef_buf, unsigned ef_len);
 
 #  ifndef SFX
 

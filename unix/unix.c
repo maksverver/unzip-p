@@ -78,7 +78,6 @@ typedef struct uxdirattr {      /* struct for holding unix style directory */
 #  define UxAtt(d)  ((uxdirattr *)d)    /* typecast shortcut */
 #endif /* SET_DIR_ATTRIB */
 
-#ifdef ACORN_FTYPE_NFS
 /* Acorn bits for NFS filetyping */
 typedef struct {
   uch ID[2];
@@ -89,7 +88,6 @@ typedef struct {
   uch attr[4];
 } RO_extra_block;
 
-#endif /* ACORN_FTYPE_NFS */
 
 /* static int created_dir;      */      /* used in mapname(), checkdir() */
 /* static int renamed_fullpath; */      /* ditto */
@@ -445,10 +443,8 @@ int mapname(__G__ renamed)
     char pathcomp[FILNAMSIZ];      /* path-component buffer */
     char *pp, *cp=(char *)NULL;    /* character pointers */
     char *lastsemi=(char *)NULL;   /* pointer to last semi-colon in pathcomp */
-#ifdef ACORN_FTYPE_NFS
     char *lastcomma=(char *)NULL;  /* pointer to last comma in pathcomp */
     RO_extra_block *ef_spark;      /* pointer Acorn FTYPE ef block */
-#endif
     int killed_ddot = FALSE;       /* is set when skipping "../" pathcomp */
     int error = MPN_OK;
     unsigned workch;               /* hold the character being tested */
@@ -525,12 +521,10 @@ int mapname(__G__ renamed)
                 *pp++ = ';';      /* keep for now; remove VMS ";##" */
                 break;            /*  later, if requested */
 
-#ifdef ACORN_FTYPE_NFS
             case ',':             /* NFS filetype extension */
                 lastcomma = pp;
                 *pp++ = ',';      /* keep for now; may need to remove */
                 break;            /*  later, if requested */
-#endif
 
             default:
                 /* disable control character filter when requested,
@@ -614,7 +608,6 @@ int mapname(__G__ renamed)
     else if (strcmp(pathcomp, "..") == 0)
         strcpy(pathcomp, "__");
 
-#ifdef ACORN_FTYPE_NFS
     /* translate Acorn filetype information if asked to do so */
     if (uO.acorn_nfs_ext &&
         (ef_spark = (RO_extra_block *)
@@ -632,7 +625,6 @@ int mapname(__G__ renamed)
         if ((ft & 1<<31)==0) ft=0x000FFD00;
         sprintf(pathcomp+strlen(pathcomp), ",%03x", (int)(ft>>8) & 0xFFF);
     }
-#endif /* ACORN_FTYPE_NFS */
 
     if (*pathcomp == '\0') {
         Info(slide, 1, ((char *)slide, "mapname:  conversion of %s failed\n",
@@ -817,12 +809,8 @@ int checkdir(__G__ pathcomp, flag)
 
     if (FUNCTION == INIT) {
         Trace((stderr, "initializing buildpath to "));
-#ifdef ACORN_FTYPE_NFS
         if ((G.buildpath = (char *)malloc(strlen(G.filename)+G.rootlen+
                                           (uO.acorn_nfs_ext ? 5 : 1)))
-#else
-        if ((G.buildpath = (char *)malloc(strlen(G.filename)+G.rootlen+1))
-#endif
             == (char *)NULL)
             return MPN_NOMEM;
         if ((G.rootlen > 0) && !G.renamed_fullpath) {

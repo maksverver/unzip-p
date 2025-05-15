@@ -3025,9 +3025,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
 #endif /* USE_EF_UT_TIME */
 
 
-#if (defined(ACORN_FTYPE_NFS))
-
-#  define SPARKID_2 0x30435241    /* = "ARC0" */
+#define SPARKID_2 0x30435241    /* = "ARC0" */
 
 /*******************************/
 /* Function getRISCOSexfield() */
@@ -3079,5 +3077,3 @@ void *getRISCOSexfield(ef_buf, ef_len)
 
     return NULL;
 }
-
-#endif /* (ACORN_FTYPE_NFS) */

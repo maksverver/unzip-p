@@ -248,9 +248,7 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
      "\nUnZip and ZipInfo environment options:\n";
    static const char EnvOptFormat[] = "%16s:  %.1024s\n";
    static const char None[] = "[none]";
-#  ifdef ACORN_FTYPE_NFS
-     static const char AcornFtypeNFS[] = "ACORN_FTYPE_NFS";
-#  endif
+   static const char AcornFtypeNFS[] = "ACORN_FTYPE_NFS";
 #  ifdef ASM_CRC
      static const char AsmCRC[] = "ASM_CRC";
 #  endif
@@ -1080,14 +1078,12 @@ int uz_opts(__G__ pargc, pargv)
                     else
                         uO.fflag = uO.uflag = TRUE;
                     break;
-#if (defined(ACORN_FTYPE_NFS))
                 case ('F'):    /* Acorn filetype & NFS extension handling */
                     if (negative)
                         uO.acorn_nfs_ext = FALSE, negative = 0;
                     else
                         uO.acorn_nfs_ext = TRUE;
                     break;
-#endif /* ACORN_FTYPE_NFS */
                 case ('h'):    /* just print help message and quit */
                     if (showhelp == 0) {
 #ifndef SFX
@@ -1883,11 +1879,9 @@ static void show_version_info(__G)
           UnzipUsageLine2v));
         version(__G);
         Info(slide, 0, ((char *)slide, CompileOptions));
-#  ifdef ACORN_FTYPE_NFS
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           AcornFtypeNFS));
         ++numopts;
-#  endif
 #  ifdef ASM_CRC
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           AsmCRC));
