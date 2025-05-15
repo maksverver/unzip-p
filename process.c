@@ -37,13 +37,6 @@
 #endif
 
 static int    do_seekable           (__GPRO__ int lastchance);
-#ifdef DO_SAFECHECK_2GB
-#  ifdef USE_STRM_INPUT
-static zoff_t file_size             (FILE *file);
-#  else
-static zoff_t file_size             (int fh);
-#  endif
-#endif /* DO_SAFECHECK_2GB */
 static int    rec_find              (__GPRO__ zoff_t, char *, int);
 static int    find_ecrec64          (__GPRO__ zoff_t searchlen);
 static int    find_ecrec            (__GPRO__ zoff_t searchlen);
@@ -107,10 +100,6 @@ static const char CannotAllocateBuffers[] =
 #  endif /* ?UNIX */
    extern const char Zipnfo[];        /* in unzip.c */
    static const char Unzip[] = "unzip";
-#  ifdef DO_SAFECHECK_2GB
-   static const char ZipfileTooBig[] =
-     "Trying to read large file (> 2 GiB) without large file support\n";
-#  endif /* DO_SAFECHECK_2GB */
    static const char MaybeExe[] =
      "note:  %s may be a plain executable, not an archive\n";
    static const char CentDirNotInZipMsg[] = "\n\
@@ -668,21 +657,6 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
     if (open_input_file(__G))   /* this should never happen, given */
         return PK_NOZIP;        /*  the stat() test above, but... */
 
-#ifdef DO_SAFECHECK_2GB
-    /* Need more care: Do not trust the size returned by stat() but
-       determine it by reading beyond the end of the file. */
-    G.ziplen = file_size(G.zipfd);
-
-    if (G.ziplen == EOF) {
-        Info(slide, 0x401, ((char *)slide, ZipfileTooBig));
-        /*
-        printf(
-" We need a better error message for: 64-bit file, 32-bit program.\n");
-        */
-        CLOSE_INFILE();
-        return IZ_ERRBF;
-    }
-#endif /* DO_SAFECHECK_2GB */
 
 /*---------------------------------------------------------------------------
     Find and process the end-of-central-directory header.  UnZip need only
@@ -941,91 +915,6 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
 } /* end function do_seekable() */
 
 
-
-
-#ifdef DO_SAFECHECK_2GB
-/************************/
-/* Function file_size() */
-/************************/
-/* File size determination which does not mislead for large files in a
-   small-file program.  Probably should be somewhere else.
-   The file has to be opened previously
-*/
-#  ifdef USE_STRM_INPUT
-static zoff_t file_size(file)
-    FILE *file;
-{
-    int sts;
-    size_t siz;
-#  else /* !USE_STRM_INPUT */
-static zoff_t file_size(fh)
-    int fh;
-{
-    int siz;
-#  endif /* ?USE_STRM_INPUT */
-    zoff_t ofs;
-    char waste[4];
-
-#  ifdef USE_STRM_INPUT
-    /* Seek to actual EOF. */
-    sts = zfseeko(file, 0, SEEK_END);
-    if (sts != 0) {
-        /* fseeko() failed.  (Unlikely.) */
-        ofs = EOF;
-    } else {
-        /* Get apparent offset at EOF. */
-        ofs = zftello(file);
-        if (ofs < 0) {
-            /* Offset negative (overflow).  File too big. */
-            ofs = EOF;
-        } else {
-            /* Seek to apparent EOF offset.
-               Won't be at actual EOF if offset was truncated.
-            */
-            sts = zfseeko(file, ofs, SEEK_SET);
-            if (sts != 0) {
-                /* fseeko() failed.  (Unlikely.) */
-                ofs = EOF;
-            } else {
-                /* Read a byte at apparent EOF.  Should set EOF flag. */
-                siz = fread(waste, 1, 1, file);
-                if (feof(file) == 0) {
-                    /* Not at EOF, but should be.  File too big. */
-                    ofs = EOF;
-                }
-            }
-        }
-    }
-#  else /* !USE_STRM_INPUT */
-    /* Seek to actual EOF. */
-    ofs = zlseek(fh, 0, SEEK_END);
-    if (ofs == (zoff_t) -1) {
-        /* zlseek() failed.  (Unlikely.) */
-        ofs = EOF;
-    } else if (ofs < 0) {
-        /* Offset negative (overflow).  File too big. */
-        ofs = EOF;
-    } else {
-        /* Seek to apparent EOF offset.
-           Won't be at actual EOF if offset was truncated.
-        */
-        ofs = zlseek(fh, ofs, SEEK_SET);
-        if (ofs == (zoff_t) -1) {
-            /* zlseek() failed.  (Unlikely.) */
-            ofs = EOF;
-        } else {
-            /* Read a byte at apparent EOF.  Should set EOF flag. */
-            siz = read(fh, waste, 1);
-            if (siz != 0) {
-                /* Not at EOF, but should be.  File too big. */
-                ofs = EOF;
-            }
-        }
-    }
-#  endif /* ?USE_STRM_INPUT */
-    return ofs;
-} /* end function file_size() */
-#endif /* DO_SAFECHECK_2GB */
 
 
 
@@ -2640,10 +2529,6 @@ static int read_ux3_value(dbuf, uidgid_sz, p_uidgid)
         break;
       case 8:
         uidgid64 = makeint64(dbuf);
-#    ifndef LARGE_FILE_SUPPORT
-        if (uidgid64 == (zusz_t)0xffffffffL)
-            return FALSE;
-#    endif
         *p_uidgid = (ulg)uidgid64;
         if ((zusz_t)(*p_uidgid) != uidgid64)
             return FALSE;

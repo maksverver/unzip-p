@@ -181,21 +181,10 @@ typedef size_t extent;
 /*************/
 
 #  define UNZIP_BZ2VERS   46
-#  ifdef ZIP64_SUPPORT
-#    ifndef LARGE_FILE_SUPPORT
-#      define LARGE_FILE_SUPPORT
-#    endif
-#    ifdef USE_BZIP2
-#      define UNZIP_VERSION   UNZIP_BZ2VERS
-#    else
-#      define UNZIP_VERSION   45
-#    endif
+#  ifdef USE_BZIP2
+#    define UNZIP_VERSION   UNZIP_BZ2VERS
 #  else
-#    ifdef USE_DEFLATE64
-#      define UNZIP_VERSION   21   /* compatible with PKUNZIP 4.0 */
-#    else
-#      define UNZIP_VERSION   20   /* compatible with PKUNZIP 2.0 */
-#    endif
+#    define UNZIP_VERSION   45
 #  endif
 #  define VMS_UNZIP_VERSION 42   /* if OS-needed-to-extract is VMS:  can do */
 
@@ -555,70 +544,29 @@ typedef size_t extent;
 #    define IS_VOLID(m)  ((m) & 0x08)
 #  endif
 
-/***********************************/
-/*  LARGE_FILE_SUPPORT             */
-/***********************************/
-/* This whole section lifted from Zip 3b tailor.h
-
- * Types are in OS dependent headers (eg, w32cfg.h)
- *
- * LARGE_FILE_SUPPORT and ZIP64_SUPPORT are automatically
- * set in OS dependent headers (for some ports) based on the port and compiler.
- *
- * E. Gordon 9/21/2003
- * Updated 1/28/2004
- * Lifted and placed here 6/7/2004 - Myles Bennett
- */
-#  ifdef LARGE_FILE_SUPPORT
-  /* 64-bit Large File Support */
-
 /* ---------------------------- */
 
-#    if defined(UNIX)
+#  if defined(UNIX)
 
     /* 64-bit stat functions */
-#      define zstat stat
-#      define zfstat fstat
-
-    /* 64-bit fseeko */
-#      define zlseek lseek
-#      define zfseeko fseeko
-
-    /* 64-bit ftello */
-#      define zftello ftello
-
-    /* 64-bit fopen */
-#      define zfopen fopen
-#      define zfdopen fdopen
-
-#    endif /* UNIX */
-
-/* ---------------------------- */
-
-#  else
-  /* No Large File Support */
-
 #    define zstat stat
 #    define zfstat fstat
+
+    /* 64-bit fseeko */
 #    define zlseek lseek
-#    define zfseeko fseek
-#    define zftello ftell
+#    define zfseeko fseeko
+
+    /* 64-bit ftello */
+#    define zftello ftello
+
+    /* 64-bit fopen */
 #    define zfopen fopen
 #    define zfdopen fdopen
 
-#    if defined(UNIX)
-    /* For these systems, implement "64bit file vs. 32bit prog" check  */
-#      ifndef DO_SAFECHECK_2GB
-#        define DO_SAFECHECK_2GB
-#      endif
-#    endif
+#  endif /* UNIX */
 
-#  endif
+/* ---------------------------- */
 
-/* No "64bit file vs. 32bit prog" check for SFX stub, to save space */
-#  if (defined(DO_SAFECHECK_2GB) && defined(SFX))
-#    undef DO_SAFECHECK_2GB
-#  endif
 
 #  ifndef SSTAT
 #    ifdef WILD_STAT_BUG
@@ -633,13 +581,8 @@ typedef size_t extent;
 
 #  ifndef FZOFFT_FMT
 
-#    ifdef LARGE_FILE_SUPPORT
-#      define FZOFFT_FMT "ll"
-#      define FZOFFT_HEX_WID_VALUE "16"
-#    else /* def LARGE_FILE_SUPPORT */
-#      define FZOFFT_FMT "l"
-#      define FZOFFT_HEX_WID_VALUE "8"
-#    endif /* def LARGE_FILE_SUPPORT */
+#    define FZOFFT_FMT "ll"
+#    define FZOFFT_HEX_WID_VALUE "16"
 
 #  endif /* ndef FZOFFT_FMT */
 
@@ -945,15 +888,13 @@ typedef size_t extent;
 /*  Typedefs  */
 /**************/
 
-#  ifdef ZIP64_SUPPORT
-#    ifndef Z_UINT8_DEFINED
-#      if (defined(__GNUC__))
+#  ifndef Z_UINT8_DEFINED
+#    if (defined(__GNUC__))
   typedef unsigned long long    z_uint8;
-#      else
+#    else
   typedef unsigned __int64      z_uint8;
-#      endif
-#      define Z_UINT8_DEFINED
 #    endif
+#    define Z_UINT8_DEFINED
 #  endif
 #  ifndef Z_UINT4_DEFINED
 #    if (!defined(NO_LIMITS_H))
@@ -990,22 +931,15 @@ typedef size_t extent;
    c) enumeration and counts of zipfile volumes of multivolume archives
       (2 bytes / 4 bytes)
  */
-#  ifdef ZIP64_SUPPORT
   typedef  z_uint8              zusz_t;     /* zipentry sizes & offsets */
   typedef  z_uint8              zucn_t;     /* archive entry counts */
   typedef  z_uint4              zuvl_t;     /* multivolume numbers */
-#    define MASK_ZUCN64            (~(zucn_t)0)
+#  define MASK_ZUCN64            (~(zucn_t)0)
 /* In case we ever get to support an environment where z_uint8 may be WIDER
    than 64 bit wide, we will have to apply a construct similar to
      #define MASK_ZUCN64        (~(zucn_t)0 & (zucn_t)0xffffffffffffffffULL)
    for the 64-bit mask.
  */
-#  else
-  typedef  ulg                  zusz_t;     /* zipentry sizes & offsets */
-  typedef  unsigned int         zucn_t;     /* archive entry counts */
-  typedef  unsigned short       zuvl_t;     /* multivolume numbers */
-#    define MASK_ZUCN64            (~(zucn_t)0)
-#  endif
 #  define MASK_ZUCN16             ((zucn_t)0xFFFF)
 
 #  ifdef NO_UID_GID

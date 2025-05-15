@@ -2757,14 +2757,9 @@ __GDEF
         bstrm.next_out = (char *)redirSlide;
         bstrm.avail_out = wsize;
     }
-#  ifdef LARGE_FILE_SUPPORT
     Trace((stderr, "total in = %llu, total out = %llu\n",
       (zusz_t)(bstrm.total_in_lo32) + ((zusz_t)(bstrm.total_in_hi32))<<32,
       (zusz_t)(bstrm.total_out_lo32) + ((zusz_t)(bstrm.total_out_hi32))<<32));
-#  else
-    Trace((stderr, "total in = %lu, total out = %lu\n", bstrm.total_in_lo32,
-      bstrm.total_out_lo32));
-#  endif
 
     G.inptr = (uch *)bstrm.next_in;
     G.incnt -= G.inptr - G.inbuf;       /* reset for other routines */

@@ -342,14 +342,10 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
      static const char Use_MultiVol[] =
      "MULT_VOLUME (multi-volume archives supported)";
 #  endif
-#  ifdef LARGE_FILE_SUPPORT
      static const char Use_LFS[] =
      "LARGE_FILE_SUPPORT (large files over 2 GiB supported)";
-#  endif
-#  ifdef ZIP64_SUPPORT
      static const char Use_Zip64[] =
      "ZIP64_SUPPORT (archives using Zip64 for large files supported)";
-#  endif
 #  ifdef USE_VFAT
      static const char Use_VFAT_support[] = "USE_VFAT";
 #  endif
@@ -629,7 +625,6 @@ int unzip(__G__ argc, argv)
   ---------------------------------------------------------------------------*/
 
 #ifdef DEBUG
-#  ifdef LARGE_FILE_SUPPORT
   /* test if we can support large files - 10/6/04 EG */
     if (sizeof(zoff_t) < 8) {
         Info(slide, 0x401, ((char *)slide, "LARGE_FILE_SUPPORT set but not supported\n"));
@@ -658,7 +653,6 @@ int unzip(__G__ argc, argv)
             goto cleanup_and_exit;
         }
     }
-#  endif /* LARGE_FILE_SUPPORT */
 
     /* 2004-11-30 SMS.
        Test the NEXTBYTE macro for proper operation.
@@ -2002,16 +1996,12 @@ static void show_version_info(__G)
           Use_MultiVol));
         ++numopts;
 #  endif
-#  ifdef LARGE_FILE_SUPPORT
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_LFS));
         ++numopts;
-#  endif
-#  ifdef ZIP64_SUPPORT
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_Zip64));
         ++numopts;
-#  endif
 #  ifdef USE_VFAT
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_VFAT_support));
