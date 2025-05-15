@@ -56,13 +56,13 @@ const char *fnames[2] = {"*", NULL};    /* default filenames vector */
          0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
      };
 
-     static const char Far TooManyThreads[] =
+     static const char TooManyThreads[] =
        "error:  more than %d simultaneous threads.\n\
         Some threads are probably not calling DESTROYTHREAD()\n";
-     static const char Far EntryNotFound[] =
+     static const char EntryNotFound[] =
        "error:  couldn't find global pointer in table.\n\
         Maybe somebody accidentally called DESTROYTHREAD() twice.\n";
-     static const char Far GlobalPointerMismatch[] =
+     static const char GlobalPointerMismatch[] =
        "error:  global pointer in table does not match pointer passed as\
  parameter\n";
 
@@ -80,7 +80,7 @@ static void registerGlobalPointer(__G)
         scan++;
 
     if (scan == THREADID_ENTRIES) {
-        const char *tooMany = LoadFarString(TooManyThreads);
+        const char *tooMany = TooManyThreads;
         Info(slide, 0x421, ((char *)slide, tooMany, THREADID_ENTRIES));
         free(pG);
         EXIT(PK_MEM);   /* essentially memory error before we've started */
@@ -113,9 +113,9 @@ void deregisterGlobalPointer(__G)
     if (scan == THREADID_ENTRIES || threadPtrTable[scan] != pG) {
         const char *noEntry;
         if (scan == THREADID_ENTRIES)
-            noEntry = LoadFarString(EntryNotFound);
+            noEntry = EntryNotFound;
         else
-            noEntry = LoadFarString(GlobalPointerMismatch);
+            noEntry = GlobalPointerMismatch;
         Info(slide, 0x421, ((char *)slide, noEntry));
         EXIT(PK_WARN);   /* programming error, but after we're all done */
     }
@@ -143,7 +143,7 @@ Uz_Globs *getGlobalPointer()
   ---------------------------------------------------------------------------*/
 
     if (scan == THREADID_ENTRIES) {
-        const char *noEntry = LoadFarString(EntryNotFound);
+        const char *noEntry = EntryNotFound;
         fprintf(stderr, noEntry);  /* can't use Info w/o a global pointer */
         EXIT(PK_ERR);   /* programming error while still working */
     }

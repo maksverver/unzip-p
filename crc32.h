@@ -22,7 +22,7 @@
    void     free_crc_table     (void);
 #  endif
 #  ifndef USE_ZLIB
-   const ulg near *get_crc_table     (void);
+   const ulg *get_crc_table     (void);
 #  endif
 #  if (defined(USE_ZLIB) || defined(CRC_TABLE_ONLY))
 #    ifdef IZ_CRC_BE_OPTIMIZ

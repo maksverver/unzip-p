@@ -107,87 +107,87 @@ static void  show_version_info     (__GPRO);
 /* constant local variables: */
 
 #ifndef SFX
-   static const char Far EnvUnZip[] = ENV_UNZIP;
-   static const char Far EnvUnZip2[] = ENV_UNZIP2;
-   static const char Far EnvZipInfo[] = ENV_ZIPINFO;
-   static const char Far EnvZipInfo2[] = ENV_ZIPINFO2;
-  static const char Far NoMemEnvArguments[] =
+   static const char EnvUnZip[] = ENV_UNZIP;
+   static const char EnvUnZip2[] = ENV_UNZIP2;
+   static const char EnvZipInfo[] = ENV_ZIPINFO;
+   static const char EnvZipInfo2[] = ENV_ZIPINFO2;
+  static const char NoMemEnvArguments[] =
     "envargs:  cannot get memory for arguments";
-  static const char Far CmdLineParamTooLong[] =
+  static const char CmdLineParamTooLong[] =
     "error:  command line parameter #%d exceeds internal size limit\n";
 #endif /* !SFX */
 
 #if (defined(REENTRANT) && !defined(NO_EXCEPT_SIGNALS))
-  static const char Far CantSaveSigHandler[] =
+  static const char CantSaveSigHandler[] =
     "error:  cannot save signal handler settings\n";
 #endif
 
 #if (!defined(SFX) || defined(SFX_EXDIR))
-   static const char Far NotExtracting[] =
+   static const char NotExtracting[] =
      "caution:  not extracting; -d ignored\n";
-   static const char Far MustGiveExdir[] =
+   static const char MustGiveExdir[] =
      "error:  must specify directory to which to extract with -d option\n";
-   static const char Far OnlyOneExdir[] =
+   static const char OnlyOneExdir[] =
      "error:  -d option used more than once (only one exdir allowed)\n";
 #endif
 #if (defined(UNICODE_SUPPORT) && !defined(UNICODE_WCHAR))
-  static const char Far UTF8EscapeUnSupp[] =
+  static const char UTF8EscapeUnSupp[] =
     "warning:  -U \"escape all non-ASCII UTF-8 chars\" is not supported\n";
 #endif
 
 #if CRYPT
-   static const char Far MustGivePasswd[] =
+   static const char MustGivePasswd[] =
      "error:  must give decryption password with -P option\n";
 #endif
 
 #ifndef SFX
-   static const char Far Zfirst[] =
+   static const char Zfirst[] =
    "error:  -Z must be first option for ZipInfo mode (check UNZIP variable?)\n";
 #endif
-static const char Far InvalidOptionsMsg[] = "error:\
+static const char InvalidOptionsMsg[] = "error:\
   -fn or any combination of -c, -l, -p, -t, -u and -v options invalid\n";
-static const char Far IgnoreOOptionMsg[] =
+static const char IgnoreOOptionMsg[] =
   "caution:  both -n and -o specified; ignoring -o\n";
 
 /* usage() strings */
 #ifndef SFX
-   static const char Far Example3[] = "ReadMe";
-   static const char Far Example2[] = " \
+   static const char Example3[] = "ReadMe";
+   static const char Example2[] = " \
  unzip -p foo | more  => send contents of foo.zip via pipe into program more\n";
 
 /* local1[]:  command options */
 #  if defined(TIMESTAMP)
-   static const char Far local1[] =
+   static const char local1[] =
      "  -T  timestamp archive to latest";
 #  else /* !TIMESTAMP */
-   static const char Far local1[] = "";
+   static const char local1[] = "";
 #  endif /* ?TIMESTAMP */
 
 /* local2[] and local3[]:  modifier options */
 #  ifdef UNIX
-   static const char Far local2[] = " -X  restore UID/GID info";
+   static const char local2[] = " -X  restore UID/GID info";
 #    ifdef MORE
-   static const char Far local3[] = "\
+   static const char local3[] = "\
   -K  keep setuid/setgid/tacky permissions   -M  pipe through \"more\" pager\n";
 #    else
-   static const char Far local3[] = "\
+   static const char local3[] = "\
   -K  keep setuid/setgid/tacky permissions\n";
 #    endif
 #  else /* !UNIX */
 #    ifdef MORE
-   static const char Far local2[] = " -M  pipe through \"more\" pager";
-   static const char Far local3[] = "\n";
+   static const char local2[] = " -M  pipe through \"more\" pager";
+   static const char local3[] = "\n";
 #    else
-   static const char Far local2[] = "";    /* Atari, Mac, CMS/MVS etc. */
-   static const char Far local3[] = "";
+   static const char local2[] = "";    /* Atari, Mac, CMS/MVS etc. */
+   static const char local3[] = "";
 #    endif
 #  endif /* ?UNIX */
 #endif /* !SFX */
 
 #ifndef NO_ZIPINFO
-   static const char Far ZipInfoExample[] = "*, ?, [] (e.g., \"[a-j]*.zip\")";
+   static const char ZipInfoExample[] = "*, ?, [] (e.g., \"[a-j]*.zip\")";
 
-static const char Far ZipInfoUsageLine1[] = "\
+static const char ZipInfoUsageLine1[] = "\
 ZipInfo %d.%d%d%s of %s, by Greg Roelofs and the Info-ZIP group.\n\
 \n\
 List name, date/time, attribute, size, compression method, etc., about files\n\
@@ -196,20 +196,20 @@ in list (excluding those in xlist) contained in the specified .zip archive(s).\
    usage:  zipinfo [-12smlvChMtTz] file[.zip] [list...] [-x xlist...]\n\
       or:  unzip %s-Z%s [-12smlvChMtTz] file[.zip] [list...] [-x xlist...]\n";
 
-static const char Far ZipInfoUsageLine2[] = "\nmain\
+static const char ZipInfoUsageLine2[] = "\nmain\
  listing-format options:             -s  short Unix \"ls -l\" format (def.)\n\
   -1  filenames ONLY, one per line       -m  medium Unix \"ls -l\" format\n\
   -2  just filenames but allow -h/-t/-z  -l  long Unix \"ls -l\" format\n\
                                          -v  verbose, multi-page format\n";
 
 #  ifndef UNIX
-static const char Far ZipInfoUsageLine3[] = "miscellaneous options:\n\
+static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
   -h  print header line       -t  print totals for listed files or for all\n\
   -z  print zipfile comment   -T  print file times in sortable decimal format\
 \n  -C  be case-insensitive   %s\
   -x  exclude filenames that follow from listing\n";
 #  else /* UNIX */
-static const char Far ZipInfoUsageLine3[] = "miscellaneous options:\n\
+static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
   -h  print header line       -t  print totals for listed files or for all\n\
   -z  print zipfile comment   -T  print file times in sortable decimal format\
 \n  -C  be case-insensitive   %s\
@@ -218,201 +218,201 @@ static const char Far ZipInfoUsageLine3[] = "miscellaneous options:\n\
   -I  CHARSET  specify a character encoding for UNIX and other archives\n";
 #  endif /* !UNIX */
 #  ifdef MORE
-   static const char Far ZipInfoUsageLine4[] =
+   static const char ZipInfoUsageLine4[] =
      "  -M  page output through built-in \"more\"\n";
 #  else /* !MORE */
-   static const char Far ZipInfoUsageLine4[] = "";
+   static const char ZipInfoUsageLine4[] = "";
 #  endif /* ?MORE */
 #endif /* !NO_ZIPINFO */
 
 #ifdef BETA
-     static const char Far BetaVersion[] = "%s\
+     static const char BetaVersion[] = "%s\
         THIS IS STILL A BETA VERSION OF UNZIP%s -- DO NOT DISTRIBUTE.\n\n";
 #endif
 
 #ifdef SFX
-     static const char Far UnzipSFXBanner[] =
+     static const char UnzipSFXBanner[] =
      "UnZipSFX %d.%d%d%s of %s, by Info-ZIP (http://www.info-zip.org).\n";
 #  ifdef SFX_EXDIR
-     static const char Far UnzipSFXOpts[] =
+     static const char UnzipSFXOpts[] =
     "Valid options are -tfupcz and -d <exdir>; modifiers are -abjnoqCL%sV%s.\n";
 #  else
-     static const char Far UnzipSFXOpts[] =
+     static const char UnzipSFXOpts[] =
        "Valid options are -tfupcz; modifiers are -abjnoqCL%sV%s.\n";
 #  endif
 #else /* !SFX */
-   static const char Far CompileOptions[] =
+   static const char CompileOptions[] =
      "UnZip special compilation options:\n";
-   static const char Far CompileOptFormat[] = "        %s\n";
-   static const char Far EnvOptions[] =
+   static const char CompileOptFormat[] = "        %s\n";
+   static const char EnvOptions[] =
      "\nUnZip and ZipInfo environment options:\n";
-   static const char Far EnvOptFormat[] = "%16s:  %.1024s\n";
-   static const char Far None[] = "[none]";
+   static const char EnvOptFormat[] = "%16s:  %.1024s\n";
+   static const char None[] = "[none]";
 #  ifdef ACORN_FTYPE_NFS
-     static const char Far AcornFtypeNFS[] = "ACORN_FTYPE_NFS";
+     static const char AcornFtypeNFS[] = "ACORN_FTYPE_NFS";
 #  endif
 #  ifdef ASM_CRC
-     static const char Far AsmCRC[] = "ASM_CRC";
+     static const char AsmCRC[] = "ASM_CRC";
 #  endif
 #  ifdef ASM_INFLATECODES
-     static const char Far AsmInflateCodes[] = "ASM_INFLATECODES";
+     static const char AsmInflateCodes[] = "ASM_INFLATECODES";
 #  endif
 #  ifdef CHECK_VERSIONS
-     static const char Far Check_Versions[] = "CHECK_VERSIONS";
+     static const char Check_Versions[] = "CHECK_VERSIONS";
 #  endif
 #  ifdef COPYRIGHT_CLEAN
-     static const char Far Copyright_Clean[] =
+     static const char Copyright_Clean[] =
      "COPYRIGHT_CLEAN (PKZIP 0.9x unreducing method not supported)";
 #  endif
 #  ifdef DEBUG
-     static const char Far UDebug[] = "DEBUG";
+     static const char UDebug[] = "DEBUG";
 #  endif
 #  ifdef DEBUG_TIME
-     static const char Far DebugTime[] = "DEBUG_TIME";
+     static const char DebugTime[] = "DEBUG_TIME";
 #  endif
 #  ifdef LZW_CLEAN
-     static const char Far LZW_Clean[] =
+     static const char LZW_Clean[] =
      "LZW_CLEAN (PKZIP/Zip 1.x unshrinking method not supported)";
 #  endif
 #  ifndef MORE
-     static const char Far No_More[] = "NO_MORE";
+     static const char No_More[] = "NO_MORE";
 #  endif
 #  ifdef NO_ZIPINFO
-     static const char Far No_ZipInfo[] = "NO_ZIPINFO";
+     static const char No_ZipInfo[] = "NO_ZIPINFO";
 #  endif
 #  ifdef REENTRANT
-     static const char Far Reentrant[] = "REENTRANT";
+     static const char Reentrant[] = "REENTRANT";
 #  endif
 #  ifdef REGARGS
-     static const char Far RegArgs[] = "REGARGS";
+     static const char RegArgs[] = "REGARGS";
 #  endif
 #  ifdef RETURN_CODES
-     static const char Far Return_Codes[] = "RETURN_CODES";
+     static const char Return_Codes[] = "RETURN_CODES";
 #  endif
 #  ifdef SET_DIR_ATTRIB
-     static const char Far SetDirAttrib[] = "SET_DIR_ATTRIB";
+     static const char SetDirAttrib[] = "SET_DIR_ATTRIB";
 #  endif
 #  ifdef SYMLINKS
-     static const char Far SymLinkSupport[] =
+     static const char SymLinkSupport[] =
      "SYMLINKS (symbolic links supported, if RTL and file system permit)";
 #  endif
 #  ifdef TIMESTAMP
-     static const char Far TimeStamp[] = "TIMESTAMP";
+     static const char TimeStamp[] = "TIMESTAMP";
 #  endif
 #  ifdef UNIXBACKUP
-     static const char Far UnixBackup[] = "UNIXBACKUP";
+     static const char UnixBackup[] = "UNIXBACKUP";
 #  endif
 #  ifdef USE_EF_UT_TIME
-     static const char Far Use_EF_UT_time[] = "USE_EF_UT_TIME";
+     static const char Use_EF_UT_time[] = "USE_EF_UT_TIME";
 #  endif
 #  ifndef LZW_CLEAN
-     static const char Far Use_Unshrink[] =
+     static const char Use_Unshrink[] =
      "USE_UNSHRINK (PKZIP/Zip 1.x unshrinking method supported)";
 #  endif
 #  ifndef COPYRIGHT_CLEAN
-     static const char Far Use_Smith_Code[] =
+     static const char Use_Smith_Code[] =
      "USE_SMITH_CODE (PKZIP 0.9x unreducing method supported)";
 #  endif
 #  ifdef USE_DEFLATE64
-     static const char Far Use_Deflate64[] =
+     static const char Use_Deflate64[] =
      "USE_DEFLATE64 (PKZIP 4.x Deflate64(tm) supported)";
 #  endif
 #  ifdef UNICODE_SUPPORT
 #    ifdef UTF8_MAYBE_NATIVE
 #      ifdef UNICODE_WCHAR
        /* direct native UTF-8 check AND charset transform via wchar_t */
-       static const char Far Use_Unicode[] =
+       static const char Use_Unicode[] =
        "UNICODE_SUPPORT [wide-chars, char coding: %s] (handle UTF-8 paths)";
 #      else
        /* direct native UTF-8 check, only */
-       static const char Far Use_Unicode[] =
+       static const char Use_Unicode[] =
        "UNICODE_SUPPORT [char coding: %s] (handle UTF-8 paths)";
 #      endif
-       static const char Far SysChUTF8[] = "UTF-8";
-       static const char Far SysChOther[] = "other";
+       static const char SysChUTF8[] = "UTF-8";
+       static const char SysChOther[] = "other";
 #    else /* !UTF8_MAYBE_NATIVE */
        /* charset transform via wchar_t, no native UTF-8 support */
-       static const char Far Use_Unicode[] =
+       static const char Use_Unicode[] =
        "UNICODE_SUPPORT [wide-chars] (handle UTF-8 paths)";
 #    endif /* ?UTF8_MAYBE_NATIVE */
 #  endif /* UNICODE_SUPPORT */
 #  ifdef _MBCS
-     static const char Far Have_MBCS_Support[] =
+     static const char Have_MBCS_Support[] =
      "MBCS-support (multibyte character support, MB_CUR_MAX = %u)";
 #  endif
 #  ifdef MULT_VOLUME
-     static const char Far Use_MultiVol[] =
+     static const char Use_MultiVol[] =
      "MULT_VOLUME (multi-volume archives supported)";
 #  endif
 #  ifdef LARGE_FILE_SUPPORT
-     static const char Far Use_LFS[] =
+     static const char Use_LFS[] =
      "LARGE_FILE_SUPPORT (large files over 2 GiB supported)";
 #  endif
 #  ifdef ZIP64_SUPPORT
-     static const char Far Use_Zip64[] =
+     static const char Use_Zip64[] =
      "ZIP64_SUPPORT (archives using Zip64 for large files supported)";
 #  endif
 #  ifdef USE_VFAT
-     static const char Far Use_VFAT_support[] = "USE_VFAT";
+     static const char Use_VFAT_support[] = "USE_VFAT";
 #  endif
 #  ifdef USE_ZLIB
-     static const char Far UseZlib[] =
+     static const char UseZlib[] =
      "USE_ZLIB (compiled with version %s; using version %s)";
 #  endif
 #  ifdef USE_BZIP2
-     static const char Far UseBZip2[] =
+     static const char UseBZip2[] =
      "USE_BZIP2 (PKZIP 4.6+, using bzip2 lib version %s)";
 #  endif
 #  ifdef VMS_TEXT_CONV
-     static const char Far VmsTextConv[] = "VMS_TEXT_CONV";
+     static const char VmsTextConv[] = "VMS_TEXT_CONV";
 #  endif
 #  ifdef WILD_STOP_AT_DIR
-     static const char Far WildStopAtDir[] = "WILD_STOP_AT_DIR";
+     static const char WildStopAtDir[] = "WILD_STOP_AT_DIR";
 #  endif
 #  if CRYPT
 #    ifdef PASSWD_FROM_STDIN
-       static const char Far PasswdStdin[] = "PASSWD_FROM_STDIN";
+       static const char PasswdStdin[] = "PASSWD_FROM_STDIN";
 #    endif
-     static const char Far Decryption[] =
+     static const char Decryption[] =
        "        [decryption, version %d.%d%s of %s]\n";
-     static const char Far CryptDate[] = CR_VERSION_DATE;
+     static const char CryptDate[] = CR_VERSION_DATE;
 #  endif
 
 #  ifdef COPYRIGHT_CLEAN
-   static const char Far UnzipUsageLine1[] = "\
+   static const char UnzipUsageLine1[] = "\
 UnZip %d.%d%d%s of %s, by Info-ZIP.  Maintained by C. Spieler.  Send\n\
 bug reports using http://www.info-zip.org/zip-bug.html; see README for details.\
 \n\n";
 #  else
-   static const char Far UnzipUsageLine1[] = "\
+   static const char UnzipUsageLine1[] = "\
 UnZip %d.%d%d%s of %s, by Info-ZIP.  UnReduce (c) 1989 by S. H. Smith.\n\
 Send bug reports using //www.info-zip.org/zip-bug.html; see README for details.\
 \n\n";
 #  endif /* ?COPYRIGHT_CLEAN */
 #  define UnzipUsageLine1v       UnzipUsageLine1
 
-static const char Far UnzipUsageLine2v[] = "\
+static const char UnzipUsageLine2v[] = "\
 Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip/ ;\
 \nsee ftp://ftp.info-zip.org/pub/infozip/UnZip.html for other sites.\
 \n\n";
 
-static const char Far UnzipUsageLine2[] = "\
+static const char UnzipUsageLine2[] = "\
 Usage: unzip %s[-opts[modifiers]] file[.zip] [list] [-x xlist] [-d exdir]\n \
  Default action is to extract files in list, except those in xlist, to exdir;\n\
   file[.zip] may be a wildcard.  %s\n";
 
 #  ifdef NO_ZIPINFO
 #    define ZIPINFO_MODE_OPTION  ""
-   static const char Far ZipInfoMode[] =
+   static const char ZipInfoMode[] =
      "(ZipInfo mode is disabled in this version.)";
 #  else
 #    define ZIPINFO_MODE_OPTION  "[-Z] "
-   static const char Far ZipInfoMode[] =
+   static const char ZipInfoMode[] =
      "-Z => ZipInfo mode (\"unzip -Z\" for usage).";
 #  endif /* ?NO_ZIPINFO */
 
 
-static const char Far UnzipUsageLine3[] = "\n\
+static const char UnzipUsageLine3[] = "\n\
   -p  extract files to pipe, no messages     -l  list files (short format)\n\
   -f  freshen existing files, create none    -t  test compressed archive data\n\
   -u  update files, create if necessary      -z  display archive comment only\n\
@@ -429,7 +429,7 @@ static const char Far UnzipUsageLine3[] = "\n\
  */
 #  if (defined(UNICODE_SUPPORT))
 #    if   (defined UNIX)
-static const char Far UnzipUsageLine4[] = "\
+static const char UnzipUsageLine4[] = "\
 modifiers:\n\
   -n  never overwrite existing files         -q  quiet mode (-qq => quieter)\n\
   -o  overwrite files WITHOUT prompting      -a  auto-convert any text files\n\
@@ -440,7 +440,7 @@ lowercase\n %-42s  -V  retain VMS version numbers\n%s\
   -O  CHARSET  specify a character encoding for DOS, Windows and OS/2 archives\n\
   -I  CHARSET  specify a character encoding for UNIX and other archives\n\n";
 #    else /* !VMS */
-static const char Far UnzipUsageLine4[] = "\
+static const char UnzipUsageLine4[] = "\
 modifiers:\n\
   -n  never overwrite existing files         -q  quiet mode (-qq => quieter)\n\
   -o  overwrite files WITHOUT prompting      -a  auto-convert any text files\n\
@@ -450,7 +450,7 @@ modifiers:\n\
 lowercase\n %-42s  -V  retain VMS version numbers\n%s";
 #    endif /* ?VMS */
 #  else /* !UNICODE_SUPPORT */
-static const char Far UnzipUsageLine4[] = "\
+static const char UnzipUsageLine4[] = "\
 modifiers:\n\
   -n  never overwrite existing files         -q  quiet mode (-qq => quieter)\n\
   -o  overwrite files WITHOUT prompting      -a  auto-convert any text files\n\
@@ -459,7 +459,7 @@ modifiers:\n\
 lowercase\n %-42s  -V  retain VMS version numbers\n%s";
 #  endif /* ?UNICODE_SUPPORT */
 
-static const char Far UnzipUsageLine5[] = "\
+static const char UnzipUsageLine5[] = "\
 See \"unzip -hh\" or unzip.txt for more help.  Examples:\n\
   unzip data1 -x joe   => extract all files except joe from zipfile data1.zip\n\
 %s\
@@ -717,21 +717,21 @@ int unzip(__G__ argc, argv)
             break;
     }
     ++p;
-    if (STRNICMP(p, LoadFarStringSmall(Zipnfo), 7) == 0 ||
+    if (STRNICMP(p, Zipnfo, 7) == 0 ||
         STRNICMP(p, "ii", 2) == 0 ||
         (argc > 1 && strncmp(argv[1], "-Z", 2) == 0))
     {
         uO.zipinfo_mode = TRUE;
-        if ((error = envargs(&argc, &argv, LoadFarStringSmall(EnvZipInfo),
-                             LoadFarStringSmall2(EnvZipInfo2))) != PK_OK)
-            perror(LoadFarString(NoMemEnvArguments));
+        if ((error = envargs(&argc, &argv, EnvZipInfo,
+                             EnvZipInfo2)) != PK_OK)
+            perror(NoMemEnvArguments);
     } else
 #  endif /* !NO_ZIPINFO */
     {
         uO.zipinfo_mode = FALSE;
-        if ((error = envargs(&argc, &argv, LoadFarStringSmall(EnvUnZip),
-                             LoadFarStringSmall2(EnvUnZip2))) != PK_OK)
-            perror(LoadFarString(NoMemEnvArguments));
+        if ((error = envargs(&argc, &argv, EnvUnZip,
+                             EnvUnZip2)) != PK_OK)
+            perror(NoMemEnvArguments);
     }
 
     if (!error) {
@@ -745,7 +745,7 @@ int unzip(__G__ argc, argv)
         for (i = 1 ; i < argc; i++) {
            if (strlen(argv[i]) > ((WSIZE>>2) - 160)) {
                Info(slide, 0x401, ((char *)slide,
-                 LoadFarString(CmdLineParamTooLong), i));
+                 CmdLineParamTooLong, i));
                retcode = PK_PARAM;
                goto cleanup_and_exit;
            }
@@ -832,7 +832,7 @@ int unzip(__G__ argc, argv)
                         uO.exdir = *pp;
                     else {
                         Info(slide, 0x401, ((char *)slide,
-                          LoadFarString(MustGiveExdir)));
+                          MustGiveExdir));
                         /* don't extract here by accident */
                         retcode = PK_PARAM;
                         goto cleanup_and_exit;
@@ -870,7 +870,7 @@ int unzip(__G__ argc, argv)
         G.process_all_files = TRUE;      /* for speed */
 
     if (uO.exdir != (char *)NULL && !G.extract_flag)    /* -d ignored */
-        Info(slide, 0x401, ((char *)slide, LoadFarString(NotExtracting)));
+        Info(slide, 0x401, ((char *)slide, NotExtracting));
 #endif /* ?(SFX && !SFX_EXDIR) */
 
 #ifdef UNICODE_SUPPORT
@@ -879,7 +879,7 @@ int unzip(__G__ argc, argv)
 #  ifdef UNICODE_WCHAR
         G.unicode_escape_all = TRUE;
 #  else
-        Info(slide, 0x401, ((char *)slide, LoadFarString(UTF8EscapeUnSupp)));
+        Info(slide, 0x401, ((char *)slide, UTF8EscapeUnSupp));
 #  endif
 #endif
 
@@ -932,7 +932,7 @@ static int setsignalhandler(__G__ p_savedhandler_chain, signal_type,
     savsig = malloc(sizeof(savsigs_info));
     if (savsig == NULL) {
         /* error message and break */
-        Info(slide, 0x401, ((char *)slide, LoadFarString(CantSaveSigHandler)));
+        Info(slide, 0x401, ((char *)slide, CantSaveSigHandler));
         return PK_MEM;
     }
     savsig->sigtype = signal_type;
@@ -1027,12 +1027,12 @@ int uz_opts(__G__ pargc, pargv)
                 case ('d'):
                     if (negative) {   /* negative not allowed with -d exdir */
                         Info(slide, 0x401, ((char *)slide,
-                          LoadFarString(MustGiveExdir)));
+                          MustGiveExdir));
                         return(PK_PARAM);  /* don't extract here by accident */
                     }
                     if (uO.exdir != (char *)NULL) {
                         Info(slide, 0x401, ((char *)slide,
-                          LoadFarString(OnlyOneExdir)));
+                          OnlyOneExdir));
                         return(PK_PARAM);    /* GRR:  stupid restriction? */
                     } else {
                         /* first check for "-dexdir", then for "-d exdir" */
@@ -1043,13 +1043,13 @@ int uz_opts(__G__ pargc, pargv)
                                 uO.exdir = *++argv;
                                 if (*uO.exdir == '-') {
                                     Info(slide, 0x401, ((char *)slide,
-                                      LoadFarString(MustGiveExdir)));
+                                      MustGiveExdir));
                                     return(PK_PARAM);
                                 }
                                 /* else uO.exdir points at extraction dir */
                             } else {
                                 Info(slide, 0x401, ((char *)slide,
-                                  LoadFarString(MustGiveExdir)));
+                                  MustGiveExdir));
                                 return(PK_PARAM);
                             }
                         }
@@ -1231,14 +1231,14 @@ int uz_opts(__G__ pargc, pargv)
                 case ('P'):
                     if (negative) {   /* negative not allowed with -P passwd */
                         Info(slide, 0x401, ((char *)slide,
-                          LoadFarString(MustGivePasswd)));
+                          MustGivePasswd));
                         return(PK_PARAM);  /* don't extract here by accident */
                     }
                     if (uO.pwdarg != (char *)NULL) {
 /*
                         GRR:  eventually support multiple passwords?
                         Info(slide, 0x401, ((char *)slide,
-                          LoadFarString(OnlyOnePasswd)));
+                          OnlyOnePasswd));
                         return(PK_PARAM);
  */
                     } else {
@@ -1250,13 +1250,13 @@ int uz_opts(__G__ pargc, pargv)
                                 uO.pwdarg = *++argv;
                                 if (*uO.pwdarg == '-') {
                                     Info(slide, 0x401, ((char *)slide,
-                                      LoadFarString(MustGivePasswd)));
+                                      MustGivePasswd));
                                     return(PK_PARAM);
                                 }
                                 /* else pwdarg points at decryption password */
                             } else {
                                 Info(slide, 0x401, ((char *)slide,
-                                  LoadFarString(MustGivePasswd)));
+                                  MustGivePasswd));
                                 return(PK_PARAM);
                             }
                         }
@@ -1371,7 +1371,7 @@ int uz_opts(__G__ pargc, pargv)
                     break;
 #ifndef SFX
                 case ('Z'):    /* should have been first option (ZipInfo) */
-                    Info(slide, 0x401, ((char *)slide, LoadFarString(Zfirst)));
+                    Info(slide, 0x401, ((char *)slide, Zfirst));
                     error = TRUE;
                     break;
 #endif /* !SFX */
@@ -1423,13 +1423,13 @@ opts_done:  /* yes, very ugly...but only used by UnZipSFX with -x xlist */
     if ((uO.cflag && (uO.tflag || uO.uflag)) ||
         (uO.tflag && uO.uflag) || (uO.fflag && uO.overwrite_none))
     {
-        Info(slide, 0x401, ((char *)slide, LoadFarString(InvalidOptionsMsg)));
+        Info(slide, 0x401, ((char *)slide, InvalidOptionsMsg));
         error = TRUE;
     }
     if (uO.aflag > 2)
         uO.aflag = 2;
     if (uO.overwrite_all && uO.overwrite_none) {
-        Info(slide, 0x401, ((char *)slide, LoadFarString(IgnoreOOptionMsg)));
+        Info(slide, 0x401, ((char *)slide, IgnoreOOptionMsg));
         uO.overwrite_all = FALSE;
     }
 #ifdef MORE
@@ -1459,12 +1459,12 @@ opts_done:  /* yes, very ugly...but only used by UnZipSFX with -x xlist */
 #ifdef SFX
     /* print our banner unless we're being fairly quiet */
     if (uO.qflag < 2)
-        Info(slide, error? 1 : 0, ((char *)slide, LoadFarString(UnzipSFXBanner),
+        Info(slide, error? 1 : 0, ((char *)slide, UnzipSFXBanner,
           UZ_MAJORVER, UZ_MINORVER, UZ_PATCHLEVEL, UZ_BETALEVEL,
-          LoadFarStringSmall(VersionDate)));
+          VersionDate));
 #  ifdef BETA
     /* always print the beta warning:  no unauthorized distribution!! */
-    Info(slide, error? 1 : 0, ((char *)slide, LoadFarString(BetaVersion), "\n",
+    Info(slide, error? 1 : 0, ((char *)slide, BetaVersion, "\n",
       "SFX"));
 #  endif
 #endif /* SFX */
@@ -1530,13 +1530,13 @@ int usage(__G__ error)   /* return PK-type error code */
     __GDEF
     int error;
 {
-    Info(slide, error? 1 : 0, ((char *)slide, LoadFarString(UnzipSFXBanner),
+    Info(slide, error? 1 : 0, ((char *)slide, UnzipSFXBanner,
       UZ_MAJORVER, UZ_MINORVER, UZ_PATCHLEVEL, UZ_BETALEVEL,
-      LoadFarStringSmall(VersionDate)));
-    Info(slide, error? 1 : 0, ((char *)slide, LoadFarString(UnzipSFXOpts),
+      VersionDate));
+    Info(slide, error? 1 : 0, ((char *)slide, UnzipSFXOpts,
       SFXOPT1, LOCAL));
 #  ifdef BETA
-    Info(slide, error? 1 : 0, ((char *)slide, LoadFarString(BetaVersion), "\n",
+    Info(slide, error? 1 : 0, ((char *)slide, BetaVersion, "\n",
       "SFX"));
 #  endif
 
@@ -1571,40 +1571,40 @@ int usage(__G__ error)   /* return PK-type error code */
 
 #  ifndef NO_ZIPINFO
 
-        Info(slide, flag, ((char *)slide, LoadFarString(ZipInfoUsageLine1),
+        Info(slide, flag, ((char *)slide, ZipInfoUsageLine1,
           ZI_MAJORVER, ZI_MINORVER, UZ_PATCHLEVEL, UZ_BETALEVEL,
-          LoadFarStringSmall(VersionDate),
-          LoadFarStringSmall2(ZipInfoExample), QUOTS,QUOTS));
-        Info(slide, flag, ((char *)slide, LoadFarString(ZipInfoUsageLine2)));
-        Info(slide, flag, ((char *)slide, LoadFarString(ZipInfoUsageLine3),
-          LoadFarStringSmall(ZipInfoUsageLine4)));
+          VersionDate,
+          ZipInfoExample, QUOTS,QUOTS));
+        Info(slide, flag, ((char *)slide, ZipInfoUsageLine2));
+        Info(slide, flag, ((char *)slide, ZipInfoUsageLine3,
+          ZipInfoUsageLine4));
 
 #  endif /* !NO_ZIPINFO */
 
     } else {   /* UnZip mode */
 
-        Info(slide, flag, ((char *)slide, LoadFarString(UnzipUsageLine1),
+        Info(slide, flag, ((char *)slide, UnzipUsageLine1,
           UZ_MAJORVER, UZ_MINORVER, UZ_PATCHLEVEL, UZ_BETALEVEL,
-          LoadFarStringSmall(VersionDate)));
+          VersionDate));
 #  ifdef BETA
-        Info(slide, flag, ((char *)slide, LoadFarString(BetaVersion), "", ""));
+        Info(slide, flag, ((char *)slide, BetaVersion, "", ""));
 #  endif
 
-        Info(slide, flag, ((char *)slide, LoadFarString(UnzipUsageLine2),
-          ZIPINFO_MODE_OPTION, LoadFarStringSmall(ZipInfoMode)));
+        Info(slide, flag, ((char *)slide, UnzipUsageLine2,
+          ZIPINFO_MODE_OPTION, ZipInfoMode));
 
-        Info(slide, flag, ((char *)slide, LoadFarString(UnzipUsageLine3),
-          LoadFarStringSmall(local1)));
+        Info(slide, flag, ((char *)slide, UnzipUsageLine3,
+          local1));
 
-        Info(slide, flag, ((char *)slide, LoadFarString(UnzipUsageLine4),
-          LoadFarStringSmall(local2), LoadFarStringSmall2(local3)));
+        Info(slide, flag, ((char *)slide, UnzipUsageLine4,
+          local2, local3));
 
         /* This is extra work for SMALL_MEM, but it will work since
          * LoadFarStringSmall2 uses the same buffer.  Remember, this
          * is a hack. */
-        Info(slide, flag, ((char *)slide, LoadFarString(UnzipUsageLine5),
-          LoadFarStringSmall(Example2), LoadFarStringSmall2(Example3),
-          LoadFarStringSmall2(Example3)));
+        Info(slide, flag, ((char *)slide, UnzipUsageLine5,
+          Example2, Example3,
+          Example3));
 
     } /* end if (uO.zipinfo_mode) */
 
@@ -1876,217 +1876,217 @@ static void show_version_info(__G)
         char *envptr;
         int numopts = 0;
 
-        Info(slide, 0, ((char *)slide, LoadFarString(UnzipUsageLine1v),
+        Info(slide, 0, ((char *)slide, UnzipUsageLine1v,
           UZ_MAJORVER, UZ_MINORVER, UZ_PATCHLEVEL, UZ_BETALEVEL,
-          LoadFarStringSmall(VersionDate)));
+          VersionDate));
         Info(slide, 0, ((char *)slide,
-          LoadFarString(UnzipUsageLine2v)));
+          UnzipUsageLine2v));
         version(__G);
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptions)));
+        Info(slide, 0, ((char *)slide, CompileOptions));
 #  ifdef ACORN_FTYPE_NFS
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(AcornFtypeNFS)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          AcornFtypeNFS));
         ++numopts;
 #  endif
 #  ifdef ASM_CRC
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(AsmCRC)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          AsmCRC));
         ++numopts;
 #  endif
 #  ifdef ASM_INFLATECODES
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(AsmInflateCodes)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          AsmInflateCodes));
         ++numopts;
 #  endif
 #  ifdef CHECK_VERSIONS
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Check_Versions)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Check_Versions));
         ++numopts;
 #  endif
 #  ifdef COPYRIGHT_CLEAN
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Copyright_Clean)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Copyright_Clean));
         ++numopts;
 #  endif
 #  ifdef DEBUG
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(UDebug)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          UDebug));
         ++numopts;
 #  endif
 #  ifdef DEBUG_TIME
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(DebugTime)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          DebugTime));
         ++numopts;
 #  endif
 #  ifdef LZW_CLEAN
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(LZW_Clean)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          LZW_Clean));
         ++numopts;
 #  endif
 #  ifndef MORE
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(No_More)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          No_More));
         ++numopts;
 #  endif
 #  ifdef NO_ZIPINFO
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(No_ZipInfo)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          No_ZipInfo));
         ++numopts;
 #  endif
 #  ifdef REENTRANT
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Reentrant)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Reentrant));
         ++numopts;
 #  endif
 #  ifdef REGARGS
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(RegArgs)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          RegArgs));
         ++numopts;
 #  endif
 #  ifdef RETURN_CODES
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Return_Codes)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Return_Codes));
         ++numopts;
 #  endif
 #  ifdef SET_DIR_ATTRIB
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(SetDirAttrib)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          SetDirAttrib));
         ++numopts;
 #  endif
 #  ifdef SYMLINKS
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(SymLinkSupport)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          SymLinkSupport));
         ++numopts;
 #  endif
 #  ifdef TIMESTAMP
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(TimeStamp)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          TimeStamp));
         ++numopts;
 #  endif
 #  ifdef UNIXBACKUP
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(UnixBackup)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          UnixBackup));
         ++numopts;
 #  endif
 #  ifdef USE_EF_UT_TIME
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_EF_UT_time)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_EF_UT_time));
         ++numopts;
 #  endif
 #  ifndef COPYRIGHT_CLEAN
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_Smith_Code)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_Smith_Code));
         ++numopts;
 #  endif
 #  ifndef LZW_CLEAN
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_Unshrink)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_Unshrink));
         ++numopts;
 #  endif
 #  ifdef USE_DEFLATE64
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_Deflate64)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_Deflate64));
         ++numopts;
 #  endif
 #  ifdef UNICODE_SUPPORT
 #    ifdef UTF8_MAYBE_NATIVE
-        sprintf((char *)(slide+256), LoadFarStringSmall(Use_Unicode),
-          LoadFarStringSmall2(G.native_is_utf8 ? SysChUTF8 : SysChOther));
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
+        sprintf((char *)(slide+256), Use_Unicode,
+          G.native_is_utf8 ? SysChUTF8 : SysChOther);
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
           (char *)(slide+256)));
 #    else
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_Unicode)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_Unicode));
 #    endif
         ++numopts;
 #  endif
 #  ifdef _MBCS
-        sprintf((char *)(slide+256), LoadFarStringSmall(Have_MBCS_Support),
+        sprintf((char *)(slide+256), Have_MBCS_Support,
           (unsigned int)MB_CUR_MAX);
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
           (char *)(slide+256)));
         ++numopts;
 #  endif
 #  ifdef MULT_VOLUME
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_MultiVol)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_MultiVol));
         ++numopts;
 #  endif
 #  ifdef LARGE_FILE_SUPPORT
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_LFS)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_LFS));
         ++numopts;
 #  endif
 #  ifdef ZIP64_SUPPORT
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_Zip64)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_Zip64));
         ++numopts;
 #  endif
 #  ifdef USE_VFAT
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(Use_VFAT_support)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          Use_VFAT_support));
         ++numopts;
 #  endif
 #  ifdef USE_ZLIB
-        sprintf((char *)(slide+256), LoadFarStringSmall(UseZlib),
+        sprintf((char *)(slide+256), UseZlib,
           ZLIB_VERSION, zlibVersion());
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
           (char *)(slide+256)));
         ++numopts;
 #  endif
 #  ifdef USE_BZIP2
-        sprintf((char *)(slide+256), LoadFarStringSmall(UseBZip2),
+        sprintf((char *)(slide+256), UseBZip2,
           BZ2_bzlibVersion());
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
           (char *)(slide+256)));
         ++numopts;
 #  endif
 #  ifdef VMS_TEXT_CONV
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(VmsTextConv)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          VmsTextConv));
         ++numopts;
 #  endif
 #  ifdef WILD_STOP_AT_DIR
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(WildStopAtDir)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          WildStopAtDir));
         ++numopts;
 #  endif
 #  if CRYPT
 #    ifdef PASSWD_FROM_STDIN
-        Info(slide, 0, ((char *)slide, LoadFarString(CompileOptFormat),
-          LoadFarStringSmall(PasswdStdin)));
+        Info(slide, 0, ((char *)slide, CompileOptFormat,
+          PasswdStdin));
 #    endif
-        Info(slide, 0, ((char *)slide, LoadFarString(Decryption),
+        Info(slide, 0, ((char *)slide, Decryption,
           CR_MAJORVER, CR_MINORVER, CR_BETA_VER,
-          LoadFarStringSmall(CryptDate)));
+          CryptDate));
         ++numopts;
 #  endif /* CRYPT */
         if (numopts == 0)
             Info(slide, 0, ((char *)slide,
-              LoadFarString(CompileOptFormat),
-              LoadFarStringSmall(None)));
+              CompileOptFormat,
+              None));
 
-        Info(slide, 0, ((char *)slide, LoadFarString(EnvOptions)));
-        envptr = getenv(LoadFarStringSmall(EnvUnZip));
-        Info(slide, 0, ((char *)slide, LoadFarString(EnvOptFormat),
-          LoadFarStringSmall(EnvUnZip),
+        Info(slide, 0, ((char *)slide, EnvOptions));
+        envptr = getenv(EnvUnZip);
+        Info(slide, 0, ((char *)slide, EnvOptFormat,
+          EnvUnZip,
           (envptr == (char *)NULL || *envptr == 0)?
-          LoadFarStringSmall2(None) : envptr));
-        envptr = getenv(LoadFarStringSmall(EnvUnZip2));
-        Info(slide, 0, ((char *)slide, LoadFarString(EnvOptFormat),
-          LoadFarStringSmall(EnvUnZip2),
+          None : envptr));
+        envptr = getenv(EnvUnZip2);
+        Info(slide, 0, ((char *)slide, EnvOptFormat,
+          EnvUnZip2,
           (envptr == (char *)NULL || *envptr == 0)?
-          LoadFarStringSmall2(None) : envptr));
-        envptr = getenv(LoadFarStringSmall(EnvZipInfo));
-        Info(slide, 0, ((char *)slide, LoadFarString(EnvOptFormat),
-          LoadFarStringSmall(EnvZipInfo),
+          None : envptr));
+        envptr = getenv(EnvZipInfo);
+        Info(slide, 0, ((char *)slide, EnvOptFormat,
+          EnvZipInfo,
           (envptr == (char *)NULL || *envptr == 0)?
-          LoadFarStringSmall2(None) : envptr));
-        envptr = getenv(LoadFarStringSmall(EnvZipInfo2));
-        Info(slide, 0, ((char *)slide, LoadFarString(EnvOptFormat),
-          LoadFarStringSmall(EnvZipInfo2),
+          None : envptr));
+        envptr = getenv(EnvZipInfo2);
+        Info(slide, 0, ((char *)slide, EnvOptFormat,
+          EnvZipInfo2,
           (envptr == (char *)NULL || *envptr == 0)?
-          LoadFarStringSmall2(None) : envptr));
+          None : envptr));
     }
 } /* end function show_version() */
 

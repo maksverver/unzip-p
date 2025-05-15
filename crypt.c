@@ -133,9 +133,9 @@
 #  include "crc32.h"
 
 #  ifdef IZ_CRC_BE_OPTIMIZ
-   local z_uint4 near crycrctab[256];
-   local z_uint4 near *cry_crctb_p = NULL;
-   local z_uint4 near *crytab_init(__GPRO);
+   local z_uint4 crycrctab[256];
+   local z_uint4 *cry_crctb_p = NULL;
+   local z_uint4 *crytab_init(__GPRO);
 #    define CRY_CRC_TAB  cry_crctb_p
 #    undef CRC32
 #    define CRC32(c, b, crctab) (crctab[((int)(c) ^ (b)) & 0xff] ^ ((c) >> 8))
@@ -209,7 +209,7 @@ void init_keys(__G__ passwd)
  * crypt-crc32-table.
  */
 #  ifdef IZ_CRC_BE_OPTIMIZ
-local z_uint4 near *crytab_init(__G)
+local z_uint4 *crytab_init(__G)
     __GDEF
 {
     int i;
@@ -269,7 +269,7 @@ void crypthead(passwd, crc, zfile)
  * using the password passwd.  Return an error code in the ZE_ class.
  */
 int zipcloak(z, source, dest, passwd)
-    struct zlist far *z;    /* zip entry to encrypt */
+    struct zlist *z;        /* zip entry to encrypt */
     FILE *source, *dest;    /* source and destination files */
     const char *passwd;     /* password string */
 {
@@ -324,7 +324,7 @@ int zipcloak(z, source, dest, passwd)
  * using the password passwd.  Return an error code in the ZE_ class.
  */
 int zipbare(z, source, dest, passwd)
-    struct zlist far *z;  /* zip entry to encrypt */
+    struct zlist *z;  /* zip entry to encrypt */
     FILE *source, *dest;  /* source and destination files */
     const char *passwd;   /* password string */
 {

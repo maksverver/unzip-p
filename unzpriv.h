@@ -303,15 +303,6 @@ typedef size_t extent;
 #    endif                    /*  at least 32K for zip's deflate method */
 #  endif
 
-#  define nearmalloc  malloc
-#  define nearfree    free
-#  ifndef near
-#    define near
-#  endif
-#  ifndef far
-#    define far
-#  endif
-
 #  if (defined(DYNALLOC_CRCTAB) && !defined(DYNAMIC_CRC_TABLE))
 #    undef DYNALLOC_CRCTAB
 #  endif
@@ -348,21 +339,10 @@ typedef size_t extent;
 #    define INBUFSIZ  8192  /* larger buffers for real OSes */
 #  endif
 
-#  define zfstrcpy(dest, src)       strcpy((dest), (src))
-#  define zfstrcmp(s1, s2)          strcmp((s1), (s2))
-#  define zfmalloc                  malloc
-#  define zffree(x)                 free(x)
-#  define LoadFarString(x)        (char *)(x)
-#  define LoadFarStringSmall(x)   (char *)(x)
-#  define LoadFarStringSmall2(x)  (char *)(x)
 #  define OUTBUFSIZ (lenEOL*WSIZE) /* more efficient text conversion */
 #  define TRANSBUFSIZ (lenEOL*OUTBUFSIZ)
        typedef int  shrint;          /* for efficiency/speed, we hope... */
 #  define RAWBUFSIZ OUTBUFSIZ
-
-#  ifndef Far
-#    define Far
-#  endif
 
 #  ifndef MAIN
 #    define MAIN  main
@@ -534,7 +514,7 @@ typedef size_t extent;
    /* Any system without a special calloc function */
 #    ifndef zcalloc
 #      define zcalloc(items, size) \
-          (void far *)calloc((unsigned)(items), (unsigned)(size))
+          (void *)calloc((unsigned)(items), (unsigned)(size))
 #    endif
 #    ifndef zcfree
 #      define zcfree    free
@@ -1105,7 +1085,7 @@ typedef struct min_info {
     unsigned GPFIsUTF8: 1;   /* crec gen_purpose_flag UTF-8 bit 11 is set */
 #  endif
 #  ifndef SFX
-    char Far *cfilname;      /* central header version of filename */
+    char *cfilname;          /* central header version of filename */
 #  endif
 } min_info;
 
@@ -1516,8 +1496,8 @@ char    *GetLoadPath        (__GPRO);                              /* local */
    void  prepare_ISO_OEM_translat      (__GPRO);                   /* local */
 #  endif
 #  if (defined(MALLOC_WORK) && defined(MY_ZCALLOC))
-   void far *zcalloc       (unsigned int, unsigned int);
-   void zcfree             (void far *);
+   void *zcalloc           (unsigned int, unsigned int);
+   void zcfree             (void *);
 #  endif /* MALLOC_WORK && MY_ZCALLOC */
 #  ifdef SYSTEM_SPECIFIC_CTOR
    void  SYSTEM_SPECIFIC_CTOR      (__GPRO);                       /* local */
@@ -1907,34 +1887,34 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 /*  Global constants  */
 /**********************/
 
-   extern const unsigned near mask_bits[17];
+   extern const unsigned mask_bits[17];
    extern const char *fnames[2];
 
 #  ifdef EBCDIC
    extern const uch ebcdic[];
 #  endif
 #  ifdef IZ_ISO2OEM_ARRAY
-   extern const uch Far *iso2oem;
-   extern const uch Far iso2oem_850[];
+   extern const uch *iso2oem;
+   extern const uch iso2oem_850[];
 #  endif
 #  ifdef IZ_OEM2ISO_ARRAY
-   extern const uch Far *oem2iso;
-   extern const uch Far oem2iso_850[];
+   extern const uch *oem2iso;
+   extern const uch oem2iso_850[];
 #  endif
 
-   extern const char Far  VersionDate[];
-   extern const char Far  CentSigMsg[];
+   extern const char  VersionDate[];
+   extern const char  CentSigMsg[];
 #  ifndef SFX
-   extern const char Far  EndSigMsg[];
+   extern const char  EndSigMsg[];
 #  endif
-   extern const char Far  SeekMsg[];
-   extern const char Far  FilenameNotMatched[];
-   extern const char Far  ExclFilenameNotMatched[];
-   extern const char Far  ReportMsg[];
+   extern const char  SeekMsg[];
+   extern const char  FilenameNotMatched[];
+   extern const char  ExclFilenameNotMatched[];
+   extern const char  ReportMsg[];
 
 #  ifndef SFX
-   extern const char Far  Zipnfo[];
-   extern const char Far  CompiledWith[];
+   extern const char  Zipnfo[];
+   extern const char  CompiledWith[];
 #  endif /* !SFX */
 
 

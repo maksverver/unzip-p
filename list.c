@@ -28,31 +28,31 @@
    static int  fn_is_dir      (__GPRO);
 #endif
 
-   static const char Far CompFactorStr[] = "%c%d%%";
-   static const char Far CompFactor100[] = "100%%";
+   static const char CompFactorStr[] = "%c%d%%";
+   static const char CompFactor100[] = "100%%";
 
-   static const char Far HeadersS[]  =
+   static const char HeadersS[]  =
      "  Length      Date    Time    Name";
-   static const char Far HeadersS1[] =
+   static const char HeadersS1[] =
      "---------  ---------- -----   ----";
 
-   static const char Far HeadersL[]  =
+   static const char HeadersL[]  =
      " Length   Method    Size  Cmpr    Date    Time   CRC-32   Name";
-   static const char Far HeadersL1[] =
+   static const char HeadersL1[] =
      "--------  ------  ------- ---- ---------- ----- --------  ----";
-   static const char Far *Headers[][2] =
+   static const char *Headers[][2] =
      { {HeadersS, HeadersS1}, {HeadersL, HeadersL1} };
 
-   static const char Far CaseConversion[] =
+   static const char CaseConversion[] =
      "%s (\"^\" ==> case\n%s   conversion)\n";
-   static const char Far LongHdrStats[] =
+   static const char LongHdrStats[] =
      "%s  %-7s%s %4s %02u%c%02u%c%02u %02u:%02u %08lx %c";
-   static const char Far LongFileTrailer[] =
+   static const char LongFileTrailer[] =
      "--------          -------  ---                       \
      -------\n%s         %s %4s                            %lu file%s\n";
-   static const char Far ShortHdrStats[] =
+   static const char ShortHdrStats[] =
      "%s  %02u%c%02u%c%02u %02u:%02u  %c";
-   static const char Far ShortFileTrailer[] =
+   static const char ShortFileTrailer[] =
      "---------                     -------\n%s\
                      %lu file%s\n";
 
@@ -84,7 +84,7 @@ int list_files(__G)    /* return PK-type error code */
     min_info info;
     char methbuf[8];
     static const char dtype[]="NXFS";   /* see zi_short() */
-    static const char Far method[NUM_METHODS+1][8] =
+    static const char method[NUM_METHODS+1][8] =
         {"Stored", "Shrunk", "Reduce1", "Reduce2", "Reduce3", "Reduce4",
          "Implode", "Token", "Defl:#", "Def64#", "ImplDCL", "BZip2",
          "LZMA", "Terse", "IBMLZ77", "WavPack", "PPMd", "Unk:###"};
@@ -114,13 +114,13 @@ int list_files(__G)    /* return PK-type error code */
 
     if (uO.qflag < 2) {
         if (uO.L_flag)
-            Info(slide, 0, ((char *)slide, LoadFarString(CaseConversion),
-              LoadFarStringSmall(Headers[longhdr][0]),
-              LoadFarStringSmall2(Headers[longhdr][1])));
+            Info(slide, 0, ((char *)slide, CaseConversion,
+              Headers[longhdr][0],
+              Headers[longhdr][1]));
         else
             Info(slide, 0, ((char *)slide, "%s\n%s\n",
-               LoadFarString(Headers[longhdr][0]),
-               LoadFarStringSmall(Headers[longhdr][1])));
+               Headers[longhdr][0],
+               Headers[longhdr][1]));
     }
 
     for (j = 1L;;j++) {
@@ -143,9 +143,9 @@ int list_files(__G)    /* return PK-type error code */
                 break;
             } else {
                 Info(slide, 0x401,
-                     ((char *)slide, LoadFarString(CentSigMsg), j));
+                     ((char *)slide, CentSigMsg, j));
                 Info(slide, 0x401,
-                     ((char *)slide,"%s", LoadFarString(ReportMsg)));
+                     ((char *)slide,"%s", ReportMsg));
                 return PK_BADERR;   /* sig not found */
             }
         }
@@ -264,7 +264,7 @@ int list_files(__G)    /* return PK-type error code */
             }
 
             methnum = find_compr_idx(G.crec.compression_method);
-            zfstrcpy(methbuf, method[methnum]);
+            strcpy(methbuf, method[methnum]);
             if (G.crec.compression_method == DEFLATED ||
                 G.crec.compression_method == ENHDEFLATED) {
                 methbuf[5] = dtype[(G.crec.general_purpose_bit_flag>>1) & 3];
@@ -292,17 +292,17 @@ int list_files(__G)    /* return PK-type error code */
 #endif /* 0 */
 
             if (cfactor == 100)
-                snprintf(cfactorstr, sizeof(cfactorstr), LoadFarString(CompFactor100));
+                snprintf(cfactorstr, sizeof(cfactorstr), CompFactor100);
             else
-                snprintf(cfactorstr, sizeof(cfactorstr), LoadFarString(CompFactorStr), sgn, cfactor);
+                snprintf(cfactorstr, sizeof(cfactorstr), CompFactorStr, sgn, cfactor);
             if (longhdr)
-                Info(slide, 0, ((char *)slide, LoadFarString(LongHdrStats),
+                Info(slide, 0, ((char *)slide, LongHdrStats,
                   FmZofft(G.crec.ucsize, "8", "u"), methbuf,
                   FmZofft(csiz, "8", "u"), cfactorstr,
                   mo, dt_sepchar, dy, dt_sepchar, yr, hh, mm,
                   G.crec.crc32, (G.pInfo->lcflag? '^':' ')));
             else
-                Info(slide, 0, ((char *)slide, LoadFarString(ShortHdrStats),
+                Info(slide, 0, ((char *)slide, ShortHdrStats,
                   FmZofft(G.crec.ucsize, "9", "u"),
                   mo, dt_sepchar, dy, dt_sepchar, yr, hh, mm,
                   (G.pInfo->lcflag? '^':' ')));
@@ -338,15 +338,15 @@ int list_files(__G)    /* return PK-type error code */
             cfactor = (cfactor + 5) / 10;
         }
         if (cfactor == 100)
-            snprintf(cfactorstr, sizeof(cfactorstr), LoadFarString(CompFactor100));
+            snprintf(cfactorstr, sizeof(cfactorstr), CompFactor100);
         else
-            snprintf(cfactorstr, sizeof(cfactorstr), LoadFarString(CompFactorStr), sgn, cfactor);
+            snprintf(cfactorstr, sizeof(cfactorstr), CompFactorStr, sgn, cfactor);
         if (longhdr) {
-            Info(slide, 0, ((char *)slide, LoadFarString(LongFileTrailer),
+            Info(slide, 0, ((char *)slide, LongFileTrailer,
               FmZofft(tot_ucsize, "8", "u"), FmZofft(tot_csize, "8", "u"),
               cfactorstr, members, members==1? "":"s"));
         } else
-            Info(slide, 0, ((char *)slide, LoadFarString(ShortFileTrailer),
+            Info(slide, 0, ((char *)slide, ShortFileTrailer,
               FmZofft(tot_ucsize, "9", "u"),
               members, members == 1 ? "" : "s"));
     }
@@ -366,7 +366,7 @@ int list_files(__G)    /* return PK-type error code */
             && (memcmp(G.sig, end_central_sig, 4) != 0)
            ) {          /* just to make sure again */
             Info(slide, 0x401,
-                 ((char *)slide,"%s", LoadFarString(EndSigMsg)));
+                 ((char *)slide,"%s", EndSigMsg));
             error_in_archive = PK_WARN;   /* didn't find sig */
         }
 
@@ -448,9 +448,9 @@ int get_time_stamp(__G__ last_modtime, nmember)  /* return PK-type error code */
                 break;
             } else {
                 Info(slide, 0x401,
-                     ((char *)slide, LoadFarString(CentSigMsg), j));
+                     ((char *)slide, CentSigMsg, j));
                 Info(slide, 0x401,
-                     ((char *)slide,"%s", LoadFarString(ReportMsg)));
+                     ((char *)slide,"%s", ReportMsg));
                 return PK_BADERR;   /* sig not found */
             }
         }
@@ -533,7 +533,7 @@ int get_time_stamp(__G__ last_modtime, nmember)  /* return PK-type error code */
   ---------------------------------------------------------------------------*/
 
     if (memcmp(G.sig, end_central_sig, 4)) {    /* just to make sure again */
-        Info(slide, 0x401, ((char *)slide,"%s", LoadFarString(EndSigMsg)));
+        Info(slide, 0x401, ((char *)slide,"%s", EndSigMsg));
         error_in_archive = PK_WARN;
     }
     if (*nmember == 0L && error_in_archive <= PK_WARN)

@@ -1360,7 +1360,7 @@ void version(__G)
 #  endif
 
     /* Pyramid, NeXT have problems with huge macro expansion, too:  no Info() */
-    sprintf((char *)slide, LoadFarString(CompiledWith),
+    sprintf((char *)slide, CompiledWith,
 
 #  ifdef __GNUC__
       "gcc ", __VERSION__,

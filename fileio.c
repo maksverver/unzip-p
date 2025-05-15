@@ -48,11 +48,6 @@
              uzmbclen()               (_MBCS && NEED_UZMBCLEN, only)
              uzmbschr()               (_MBCS && NEED_UZMBSCHR, only)
              uzmbsrchr()              (_MBCS && NEED_UZMBSRCHR, only)
-             fLoadFarString()         (SMALL_MEM only)
-             fLoadFarStringSmall()    (SMALL_MEM only)
-             fLoadFarStringSmall2()   (SMALL_MEM only)
-             zfstrcpy()               (SMALL_MEM only)
-             zfstrcmp()               (SMALL_MEM && !(SFX || FUNZIP) only)
 
   ---------------------------------------------------------------------------*/
 
@@ -123,52 +118,52 @@ static int disk_error(__GPRO);
 /* Strings used in fileio.c */
 /****************************/
 
-static const char Far CannotOpenZipfile[] =
+static const char CannotOpenZipfile[] =
   "error:  cannot open zipfile [ %s ]\n        %s\n";
 
 #if (defined(UNIX))
-   static const char Far CannotDeleteOldFile[] =
+   static const char CannotDeleteOldFile[] =
      "error:  cannot delete old %s\n        %s\n";
 #  ifdef UNIXBACKUP
-   static const char Far CannotRenameOldFile[] =
+   static const char CannotRenameOldFile[] =
      "error:  cannot rename old %s\n        %s\n";
-   static const char Far BackupSuffix[] = "~";
+   static const char BackupSuffix[] = "~";
 #  endif
 #endif /* UNIX */
-static const char Far CannotCreateFile[] =
+static const char CannotCreateFile[] =
     "error:  cannot create %s\n        %s\n";
-static const char Far ReadError[] = "error:  zipfile read error\n";
-static const char Far FilenameTooLongTrunc[] =
+static const char ReadError[] = "error:  zipfile read error\n";
+static const char FilenameTooLongTrunc[] =
   "warning:  filename too long--truncating.\n";
 #ifdef UNICODE_SUPPORT
-    static const char Far UFilenameCorrupt[] =
+    static const char UFilenameCorrupt[] =
         "error: Unicode filename corrupt.\n";
-    static const char Far UFilenameTooLongTrunc[] =
+    static const char UFilenameTooLongTrunc[] =
         "warning:  Converted Unicode filename too long--truncating.\n";
 #endif
-static const char Far ExtraFieldTooLong[] =
+static const char ExtraFieldTooLong[] =
   "warning:  extra field too long (%d).  Ignoring...\n";
-static const char Far ExtraFieldCorrupt[] =
+static const char ExtraFieldCorrupt[] =
   "warning:  extra field (type: 0x%04x) corrupt.  Continuing...\n";
-static const char Far DiskFullQuery[] =
+static const char DiskFullQuery[] =
     "%s:  write error (disk full?).  Continue? (y/n/^C) ";
-static const char Far ZipfileCorrupt[] =
+static const char ZipfileCorrupt[] =
     "error:  zipfile probably corrupt (%s)\n";
 #ifdef SYMLINKS
-     static const char Far FileIsSymLink[] =
+     static const char FileIsSymLink[] =
        "%s exists and is a symbolic link%s.\n";
 #endif
 #ifdef MORE
-     static const char Far MorePrompt[] = "--More--(%lu)";
+     static const char MorePrompt[] = "--More--(%lu)";
 #endif
-static const char Far QuitPrompt[] =
+static const char QuitPrompt[] =
     "--- Press `Q' to quit, or any other key to continue ---";
-static const char Far HidePrompt[] =  /* "\r                       \r"; */
+static const char HidePrompt[] =  /* "\r                       \r"; */
     "\r                                                         \r";
 #if CRYPT
-    static const char Far PasswPrompt[] = "[%s] %s password: ";
-    static const char Far PasswPrompt2[] = "Enter password: ";
-    static const char Far PasswRetry[] = "password incorrect--reenter: ";
+    static const char PasswPrompt[] = "[%s] %s password: ";
+    static const char PasswPrompt2[] = "Enter password: ";
+    static const char PasswRetry[] = "password incorrect--reenter: ";
 #endif /* CRYPT */
 
 
@@ -200,7 +195,7 @@ int open_input_file(__G)    /* return 1 if open failed */
     if (G.zipfd == -1)
 #endif
     {
-        Info(slide, 0x401, ((char *)slide, LoadFarString(CannotOpenZipfile),
+        Info(slide, 0x401, ((char *)slide, CannotOpenZipfile,
           G.zipfn, strerror(errno)));
         return 1;
     }
@@ -286,7 +281,7 @@ int open_outfile(__G)           /* return 1 if fail */
 
             if (rename(G.filename, tname) != 0) {   /* move file */
                 Info(slide, 0x401, ((char *)slide,
-                  LoadFarString(CannotRenameOldFile),
+                  CannotRenameOldFile,
                   FnFilter1(G.filename), strerror(errno)));
                 free(tname);
                 return 1;
@@ -299,7 +294,7 @@ int open_outfile(__G)           /* return 1 if fail */
         {
             if (unlink(G.filename) != 0) {
                 Info(slide, 0x401, ((char *)slide,
-                  LoadFarString(CannotDeleteOldFile),
+                  CannotDeleteOldFile,
                   FnFilter1(G.filename), strerror(errno)));
                 return 1;
             }
@@ -341,7 +336,7 @@ int open_outfile(__G)           /* return 1 if fail */
 #endif
     }
     if (G.outfile == (FILE *)NULL) {
-        Info(slide, 0x401, ((char *)slide, LoadFarString(CannotCreateFile),
+        Info(slide, 0x401, ((char *)slide, CannotCreateFile,
           FnFilter1(G.filename), strerror(errno)));
         return 1;
     }
@@ -446,8 +441,8 @@ unsigned readbuf(__G__ buf, size)   /* return number of bytes read into buf */
             else if (G.incnt < 0) {
                 /* another hack, but no real harm copying same thing twice */
                 (*G.message)((void *)&G,
-                  (uch *)LoadFarString(ReadError),  /* CANNOT use slide */
-                  (ulg)strlen(LoadFarString(ReadError)), 0x401);
+                  (uch *)ReadError,  /* CANNOT use slide */
+                  (ulg)strlen(ReadError), 0x401);
                 return 0;  /* discarding some data; better than lock-up */
             }
             /* buffer ALWAYS starts on a block boundary:  */
@@ -489,8 +484,8 @@ int readbyte(__G)   /* refill inbuf and return a byte if available, else EOF */
         } else if (G.incnt < 0) {  /* "fail" (abort, retry, ...) returns this */
             /* another hack, but no real harm copying same thing twice */
             (*G.message)((void *)&G,
-              (uch *)LoadFarString(ReadError),
-              (ulg)strlen(LoadFarString(ReadError)), 0x401);
+              (uch *)ReadError,
+              (ulg)strlen(ReadError), 0x401);
             echon();
             DESTROYGLOBALS();
             EXIT(PK_BADERR);    /* totally bailing; better than lock-up */
@@ -591,8 +586,8 @@ int seek_zipf(__G__ abs_offset)
     zoff_t bufstart = request - inbuf_offset;
 
     if (request < 0) {
-        Info(slide, 1, ((char *)slide, LoadFarStringSmall(SeekMsg),
-             G.zipfn, LoadFarString(ReportMsg)));
+        Info(slide, 1, ((char *)slide, SeekMsg,
+             G.zipfn, ReportMsg));
         return(PK_BADERR);
     } else if (bufstart != G.cur_zipfile_bufstart) {
         Trace((stderr,
@@ -984,7 +979,7 @@ static int disk_error(__G)
     __GDEF
 {
     /* OK to use slide[] here because this file is finished regardless */
-    Info(slide, 0x4a1, ((char *)slide, LoadFarString(DiskFullQuery),
+    Info(slide, 0x4a1, ((char *)slide, DiskFullQuery,
       FnFilter1(G.filename)));
 
     fgets(G.answerbuf, sizeof(G.answerbuf), stdin);
@@ -1016,7 +1011,7 @@ int UZ_EXP UzpMessagePrnt(pG, buf, size, flag)
      *    The name of the first parameter of UzpMessagePrnt(), which passes
      *    the "Uz_Globs" address, >>> MUST <<< be identical to the string
      *    expansion of the __G__ macro in the REENTRANT case (see globals.h).
-     *    This name identity is mandatory for the LoadFarString() macro
+     *    This name identity is mandatory for the  macro
      *    (in the SMALL_MEM case) !!!
      */
     int error;
@@ -1094,7 +1089,7 @@ int UZ_EXP UzpMessagePrnt(pG, buf, size, flag)
                 ++((Uz_Globs *)pG)->lines;
                 if (((Uz_Globs *)pG)->lines >= ((Uz_Globs *)pG)->height)
                     (*((Uz_Globs *)pG)->mpause)((void *)pG,
-                      LoadFarString(MorePrompt), 1);
+                      MorePrompt, 1);
             }
 #endif /* MORE */
             if (MSG_STDERR(flag) && ((Uz_Globs *)pG)->UzO.tflag &&
@@ -1146,7 +1141,7 @@ int UZ_EXP UzpMessagePrnt(pG, buf, size, flag)
                     ((Uz_Globs *)pG)->sol = TRUE;
                     q = p + 1;
                     (*((Uz_Globs *)pG)->mpause)((void *)pG,
-                      LoadFarString(MorePrompt), 1);
+                      MorePrompt, 1);
                 }
             }
             INCSTR(p);
@@ -1228,7 +1223,7 @@ void UZ_EXP UzpMorePause(pG, prompt, flag)
         c = (uch)FGETCH(0);
 
     /* newline was not echoed, so cover up prompt line */
-    fprintf(stderr, LoadFarString(HidePrompt));
+    fprintf(stderr, HidePrompt);
     fflush(stderr);
 
     if (ToLower(c) == 'q') {
@@ -1287,15 +1282,15 @@ int UZ_EXP UzpPassword (pG, rcnt, pwbuf, size, zfn, efn)
             isOverflow = FALSE;
         }
         if ((isOverflow == FALSE) && ((prompt = (char *)malloc(2*FILNAMSIZ + 15)) != (char *)NULL)) {
-            sprintf(prompt, LoadFarString(PasswPrompt),
+            sprintf(prompt, PasswPrompt,
                     FnFilter1(zfn), FnFilter2(efn));
             m = prompt;
         } else
-            m = (char *)LoadFarString(PasswPrompt2);
+            m = (char *)PasswPrompt2;
     } else {                    /* Retry call, previous password was wrong */
         (*rcnt)--;
         prompt = NULL;
-        m = (char *)LoadFarString(PasswRetry);
+        m = (char *)PasswRetry;
     }
 
     m = getp(__G__ m, pwbuf, size);
@@ -1340,7 +1335,7 @@ void handler(signal)   /* upon interrupt, turn on echo and exit cleanly */
 
 #ifdef SIGBUS
     if (signal == SIGBUS) {
-        Info(slide, 0x421, ((char *)slide, LoadFarString(ZipfileCorrupt),
+        Info(slide, 0x421, ((char *)slide, ZipfileCorrupt,
           "bus error"));
         DESTROYGLOBALS();
         EXIT(PK_BADERR);
@@ -1349,7 +1344,7 @@ void handler(signal)   /* upon interrupt, turn on echo and exit cleanly */
 
 #ifdef SIGILL
     if (signal == SIGILL) {
-        Info(slide, 0x421, ((char *)slide, LoadFarString(ZipfileCorrupt),
+        Info(slide, 0x421, ((char *)slide, ZipfileCorrupt,
           "illegal instruction"));
         DESTROYGLOBALS();
         EXIT(PK_BADERR);
@@ -1358,7 +1353,7 @@ void handler(signal)   /* upon interrupt, turn on echo and exit cleanly */
 
 #ifdef SIGSEGV
     if (signal == SIGSEGV) {
-        Info(slide, 0x421, ((char *)slide, LoadFarString(ZipfileCorrupt),
+        Info(slide, 0x421, ((char *)slide, ZipfileCorrupt,
           "segmentation violation"));
         DESTROYGLOBALS();
         EXIT(PK_BADERR);
@@ -1545,7 +1540,7 @@ int check_for_newer(__G__ filename)  /* return 1 if existing file is newer */
               "check_for_newer:  lstat(%s) returns 0:  symlink does exist\n",
               FnFilter1(filename)));
             if (QCOND2 && !IS_OVERWRT_ALL)
-                Info(slide, 0, ((char *)slide, LoadFarString(FileIsSymLink),
+                Info(slide, 0, ((char *)slide, FileIsSymLink,
                   FnFilter1(filename), " with no real file"));
             return EXISTS_AND_OLDER;   /* symlink dates are meaningless */
         }
@@ -1561,7 +1556,7 @@ int check_for_newer(__G__ filename)  /* return 1 if existing file is newer */
         Trace((stderr, "check_for_newer:  %s is a symbolic link\n",
           FnFilter1(filename)));
         if (QCOND2 && !IS_OVERWRT_ALL)
-            Info(slide, 0, ((char *)slide, LoadFarString(FileIsSymLink),
+            Info(slide, 0, ((char *)slide, FileIsSymLink,
               FnFilter1(filename), ""));
         return EXISTS_AND_OLDER;   /* symlink dates are meaningless */
     }
@@ -1772,7 +1767,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                     (*G.message)((void *)&G, slide, (ulg)(q-slide), 0);
                     q = slide;
                     if (pause && G.extract_flag) /* don't pause for list/test */
-                        (*G.mpause)((void *)&G, LoadFarString(QuitPrompt), 0);
+                        (*G.mpause)((void *)&G, QuitPrompt, 0);
                 }
             }
             (*G.message)((void *)&G, slide, (ulg)(q-slide), 0);
@@ -1811,7 +1806,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
         /* if needed, chop off end so standard filename is a valid length */
         if (length >= FILNAMSIZ) {
             Info(slide, 0x401, ((char *)slide,
-              LoadFarString(FilenameTooLongTrunc)));
+              FilenameTooLongTrunc));
             error = PK_WARN;
             length = FILNAMSIZ - 1;
         }
@@ -1822,7 +1817,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
 #else /* !UNICODE_SUPPORT */
         if (length >= FILNAMSIZ) {
             Info(slide, 0x401, ((char *)slide,
-              LoadFarString(FilenameTooLongTrunc)));
+              FilenameTooLongTrunc));
             error = PK_WARN;
             /* remember excess length in block_len */
             block_len = length - (FILNAMSIZ - 1);
@@ -1882,7 +1877,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
         if (G.extra_field != (uch *)NULL)
             free(G.extra_field);
         if ((G.extra_field = (uch *)malloc(length)) == (uch *)NULL) {
-            Info(slide, 0x401, ((char *)slide, LoadFarString(ExtraFieldTooLong),
+            Info(slide, 0x401, ((char *)slide, ExtraFieldTooLong,
               length));
             /* cur_zipfile_bufstart already takes account of extra_bytes,
              * so don't correct for it twice: */
@@ -1899,7 +1894,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
             if (getZip64Data(__G__ G.extra_field, length) != PK_COOL)
             {
                 Info(slide, 0x401, ((char *)slide,
-                 LoadFarString( ExtraFieldCorrupt), EF_PKSZ64));
+                  ExtraFieldCorrupt, EF_PKSZ64));
                 error = PK_WARN;
             }
 #ifdef UNICODE_SUPPORT
@@ -1931,7 +1926,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                   if (strlen(G.unipath_filename) >= FILNAMSIZ) {
                     G.filename[FILNAMSIZ - 1] = '\0';
                     Info(slide, 0x401, ((char *)slide,
-                      LoadFarString(UFilenameTooLongTrunc)));
+                      UFilenameTooLongTrunc));
                     error = PK_WARN;
                   }
                 }
@@ -1954,7 +1949,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                   if (fn == NULL)
                   {
                     Info(slide, 0x401, ((char *)slide,
-                     LoadFarString(UFilenameCorrupt)));
+                     UFilenameCorrupt));
                     error = PK_ERR;
                   }
                   else
@@ -1963,7 +1958,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                     if (strlen(fn) >= FILNAMSIZ) {
                       fn[FILNAMSIZ - 1] = '\0';
                       Info(slide, 0x401, ((char *)slide,
-                        LoadFarString(UFilenameTooLongTrunc)));
+                        UFilenameTooLongTrunc));
                       error = PK_WARN;
                     }
                     /* replace filename with converted UTF-8 */

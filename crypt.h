@@ -111,8 +111,8 @@ void init_keys(__GPRO__ const char *passwd);
 #    ifdef ZIP
    void crypthead(const char *, ulg, FILE *);
 #      ifdef UTIL
-     int zipcloak(struct zlist far *, FILE *, FILE *, const char *);
-     int zipbare(struct zlist far *, FILE *, FILE *, const char *);
+     int zipcloak(struct zlist *, FILE *, FILE *, const char *);
+     int zipbare(struct zlist *, FILE *, FILE *, const char *);
 #      else
      unsigned zfwrite(void *, extent, extent, FILE *);
      extern char *key;
