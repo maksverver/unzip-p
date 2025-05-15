@@ -364,9 +364,7 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
 #  ifdef VMS_TEXT_CONV
      static const char VmsTextConv[] = "VMS_TEXT_CONV";
 #  endif
-#  ifdef WILD_STOP_AT_DIR
      static const char WildStopAtDir[] = "WILD_STOP_AT_DIR";
-#  endif
 #  if CRYPT
 #    ifdef PASSWD_FROM_STDIN
        static const char PasswdStdin[] = "PASSWD_FROM_STDIN";
@@ -1326,14 +1324,12 @@ int uz_opts(__G__ pargc, pargv)
                     else
                         uO.V_flag = TRUE;
                     break;
-#ifdef WILD_STOP_AT_DIR
                 case ('W'):    /* Wildcard interpretation (stop at '/'?) */
                     if (negative)
                         uO.W_flag = FALSE, negative = 0;
                     else
                         uO.W_flag = TRUE;
                     break;
-#endif /* WILD_STOP_AT_DIR */
                 case ('x'):    /* extract:  default */
 #ifdef SFX
                     /* when 'x' is the only option in this argument, and the
@@ -2040,11 +2036,9 @@ static void show_version_info(__G)
           VmsTextConv));
         ++numopts;
 #  endif
-#  ifdef WILD_STOP_AT_DIR
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           WildStopAtDir));
         ++numopts;
-#  endif
 #  if CRYPT
 #    ifdef PASSWD_FROM_STDIN
         Info(slide, 0, ((char *)slide, CompileOptFormat,

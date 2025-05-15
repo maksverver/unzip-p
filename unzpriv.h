@@ -936,17 +936,7 @@ typedef size_t extent;
 #    define QCOND2    (!uO.qflag)
 #  endif
 
-#  ifdef WILD_STOP_AT_DIR
-#    define __WDLPRO  , int sepc
-#    define __WDL     , sepc
-#    define __WDLDEF  int sepc;
-#    define WISEP     , (uO.W_flag ? '/' : '\0')
-#  else
-#    define __WDLPRO
-#    define __WDL
-#    define __WDLDEF
-#    define WISEP
-#  endif
+#  define WISEP     , (uO.W_flag ? '/' : '\0')
 
 
 
@@ -1461,8 +1451,8 @@ int      envargs            (int *Pargc, char ***Pargv,
                                                                 /* envargs.c */
 void     mksargs            (int *argcp, char ***argvp);       /* envargs.c */
 
-int      match              (const char *s, const char *p,
-                             int ic __WDLPRO);                   /* match.c */
+int      match              (const char *string, const char *pattern,
+                             int ignore_case, int sepc);         /* match.c */
 int      iswild             (const char *p);                     /* match.c */
 
 /* declarations of public CRC-32 functions have been moved into crc32.h

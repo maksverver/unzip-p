@@ -66,7 +66,7 @@ https://src.fedoraproject.org/rpms/unzip/tree/rawhide
 Applied:
 
   - unzip-6.0-attribs-overflow.patch
-  - unzip-6.0-fix-recmatch.patch
+  - unzip-6.0-fix-recmatch.patch (partially reverted; see * below)
   - unzip-6.0-caseinsensitive.patch
   - unzip-6.0-format-secure.patch
   - unzip-6.0-valgrind.patch
@@ -118,6 +118,13 @@ Zip bomb patches (will be addressed differently):
   - unzip-zipbomb-part5.patch
   - unzip-zipbomb-part6.patch
   - unzip-zipbomb-switch.patch (I did port this one)
+
+* Fedora's fix-recmatch.patch changed the default behavior of recmatch()
+so that it would always stop at directories even without the -W flag.
+This was inconsistent with the documentation, and with other distros (Debian,
+Arch), that did not apply this patch. I restored the original behavior
+(wildcards match directory separators unless -W is given) while removing the
+WILD_STOP_AT_DIR preprocessor definitions.
 
 
 ## Arch Linux patches:

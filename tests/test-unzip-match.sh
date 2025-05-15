@@ -146,3 +146,32 @@ Archive:  testdata/cases.zip
         0                     8 files
 EOF
 $UNZIP -l -C -W testdata/cases.zip 'foo[/]BA[ZRX]/[^p]uux' | diff - $TMPFIL
+
+# Weird edge case: with -W, an even number of consectuive asterisks matches
+# an arbitrary string (as expected, this is equivalent to just "**"), but
+# an odd number of consecutive asterisks (three or more) cannot match any
+# substring containing '/', even though it should. This is probably due to the
+# peculiar implementation of recmatch() in match.c which can abort the search
+# early by returning 2, but I didn't investigate it in detail.
+
+cat >$TMPFIL <<EOF
+Archive:  testdata/cases.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  2025-05-15 17:49   foo/BAR/quux
+        0  2025-05-15 17:49   foo/bar/quux
+---------                     -------
+        0                     2 files
+EOF
+$UNZIP -l -W testdata/cases.zip 'f****x' | diff - $TMPFIL
+
+cat >$TMPFIL <<EOF
+Archive:  testdata/cases.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+---------                     -------
+        0                     0 files
+EOF
+if $UNZIP -l -W testdata/cases.zip 'f***x'; then
+  exit 1  # expected to fail, but did not!
+fi | diff - $TMPFIL

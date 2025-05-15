@@ -51,7 +51,7 @@
 
   A set is composed of characters or ranges; a range looks like ``character
   hyphen character'' (as in 0-9 or A-Z).  [0-9a-zA-Z_] is the minimal set of
-  characters ALlowed in the [..] pattern construct.  Other characters are
+  characters allowed in the [..] pattern construct.  Other characters are
   allowed (i.e., 8-bit characters) if your system will support them.
 
   To suppress the special syntactic significance of any of ``[]*?!^-\'', in-
@@ -84,19 +84,10 @@
 #endif
 #define Case(x)  (ic? ToLower(x) : (x))
 
-#define WILDCHAR   '?'
 #define BEG_RANGE  '['
 #define END_RANGE  ']'
 #define WILDCHR_SINGLE '?'
-#define DIRSEP_CHR '/'
 #define WILDCHR_MULTI '*'
-
-#ifdef WILD_STOP_AT_DIR
-   int wild_stop_at_dir = 1; /* default wildcards do not include / in matches */
-#else
-   int wild_stop_at_dir = 0; /* default wildcards do include / in matches */
-#endif
-
 
 
 /*
@@ -112,29 +103,19 @@
 #endif /* USE_CASE_MAP */
 
 
-#if 0                /* GRR:  add this to unzip.h someday... */
-#  ifdef WILD_STOP_AT_DIR
-#    define match(s,p,ic,sc) (recmatch((const uch *)p,(const uch *)s,ic,sc) == 1)
-#  else
-#    define match(s,p,ic)    (recmatch((const uch *)p,(const uch *)s,ic) == 1)
-#  endif
-int recmatch(const uch *pattern, const uch *string,
-                 int ignore_case __WDLPRO);
-#endif /* 0 */
-static int recmatch(const char *, const char *,
-                        int);
+static int recmatch(const char *, const char *, int, int);
 static char *isshexp(const char *p);
 static int namecmp(const char *s1, const char *s2);
 
 
 /* match() is a shell to recmatch() to return only Boolean values. */
 
-int match(string, pattern, ignore_case __WDL)
+int match(string, pattern, ignore_case, sepc)
     const char *string, *pattern;
     int ignore_case;
-    __WDLDEF
+    int sepc;
 {
-    return recmatch(pattern, string, ignore_case) == 1;
+    return recmatch(pattern, string, ignore_case, sepc) == 1;
 }
 
 #ifdef _MBCS
@@ -143,26 +124,23 @@ char *___tmp_ptr;
 
 #endif
 
-static int recmatch(p, s, ci)
+static int recmatch(p, s, ci, sepc)
 const char *p;          /* sh pattern to match */
 const char *s;          /* string to match it to */
 int ci;                 /* flag: force case-insensitive matching */
+int sepc;               /* directory sepchar for WildStopAtDir mode, or 0 */
 /* Recursively compare the sh pattern p with the string s and return 1 if
    they match, and 0 or 2 if they don't or if there is a syntax error in the
    pattern.  This routine recurses on itself no deeper than the number of
    characters in the pattern. */
 {
   int c;                /* pattern char or start of range in [-] loop */
-  /* Get first character, the pattern for new recmatch calls follows */
- /* borrowed from Zip's global.c */
- int no_wild = 0;
- int allow_regex=1;
+
   /* This fix provided by akt@m5.dion.ne.jp for Japanese.
      See 21 July 2006 mail.
      It only applies when p is pointing to a doublebyte character and
      things like / and wildcards are not doublebyte.  This probably
      should not be needed. */
-
 #ifdef _MBCS
   if (CLEN(p) == 2) {
     if (CLEN(s) == 2) {
@@ -174,6 +152,7 @@ int ci;                 /* flag: force case-insensitive matching */
   }
 #endif /* ?_MBCS */
 
+  /* Get first character, the pattern for new recmatch calls follows */
   c = *POSTINCSTR(p);
 
   /* If that was the end of the pattern, match if string empty too */
@@ -182,35 +161,30 @@ int ci;                 /* flag: force case-insensitive matching */
 
   /* '?' (or '%' or '#') matches any character (but not an empty string) */
   if (c == WILDCHR_SINGLE) {
-    if (wild_stop_at_dir)
-      return (*s && *s != DIRSEP_CHR) ? recmatch(p, s + CLEN(s), ci) : 0;
-    else
-      return *s ? recmatch(p, s + CLEN(s), ci) : 0;
+    return (*s && *s != sepc) ? recmatch(p, s + CLEN(s), ci, sepc) : 0;
   }
 
   /* WILDCHR_MULTI ('*') matches any number of characters, including zero */
-  if (!no_wild && c == WILDCHR_MULTI)
+  if (c == WILDCHR_MULTI)
   {
-    if (wild_stop_at_dir) {
+    if (sepc) {
       /* Check for an immediately following WILDCHR_MULTI */
       if (*p != WILDCHR_MULTI) {
         /* Single WILDCHR_MULTI ('*'): this doesn't match slashes */
-        for (; *s && *s != DIRSEP_CHR; INCSTR(s))
-          if ((c = recmatch(p, s, ci)) != 0)
+        for (; *s && *s != sepc; INCSTR(s))
+          if ((c = recmatch(p, s, ci, sepc)) != 0)
             return c;
         /* end of pattern: matched if at end of string, else continue */
         if (*p == 0)
           return (*s == 0);
-        /* continue to match if at DIRSEP_CHR in pattern, else give up */
-        return (*p == DIRSEP_CHR || (*p == '\\' && p[1] == DIRSEP_CHR))
-               ? recmatch(p, s, ci) : 2;
+        /* continue to match if at sepc in pattern, else give up */
+        return (*p == sepc || (*p == '\\' && p[1] == sepc))
+                ? recmatch(p, s, ci, sepc) : 2;
       }
-      /* Two consecutive WILDCHR_MULTI ("**"): this matches DIRSEP_CHR ('/') */
-      p++;        /* move p past the second WILDCHR_MULTI */
-      /* continue with the normal non-WILD_STOP_AT_DIR code */
-    } /* wild_stop_at_dir */
+      /* Two consecutive WILDCHR_MULTI ("**"): this matches sepc */
+      INCSTR(p);         /* move p past the second WILDCHR_MULTI */
+    }
 
-    /* Not wild_stop_at_dir */
     if (*p == 0)
       return 1;
     if (!isshexp((char *)p))
@@ -261,14 +235,14 @@ int ci;                 /* flag: force case-insensitive matching */
     {
       /* pattern contains more wildcards, continue with recursion... */
       for (; *s; INCSTR(s))
-        if ((c = recmatch(p, s, ci)) != 0)
+        if ((c = recmatch(p, s, ci, sepc)) != 0)
           return c;
       return 2;           /* 2 means give up--shmatch will return false */
     }
   }
 
   /* Parse and process the list of characters and ranges in brackets */
-  if (!no_wild && allow_regex && c == '[')
+  if (c == BEG_RANGE)
   {
     int e;              /* flag true if next char to be taken literally */
     const char *q;      /* pointer to end of [-] group */
@@ -277,17 +251,17 @@ int ci;                 /* flag: force case-insensitive matching */
     if (*s == 0)                        /* need a character to match */
       return 0;
     p += (r = (*p == '!' || *p == '^')); /* see if reverse */
-    for (q = p, e = 0; *q; q++)         /* find closing bracket */
+    for (q = p, e = 0; *q; INCSTR(q))         /* find closing bracket */
       if (e)
         e = 0;
       else
         if (*q == '\\')
           e = 1;
-        else if (*q == ']')
+        else if (*q == END_RANGE)
           break;
-    if (*q != ']')                      /* nothing matches if bad syntax */
+    if (*q != END_RANGE)                  /* nothing matches if bad syntax */
       return 0;
-    for (c = 0, e = *p == '-'; p < q; p++)      /* go through the list */
+    for (c = 0, e = *p == '-'; p < q; INCSTR(p))    /* go through the list */
     {
       if (e == 0 && *p == '\\')         /* set escape flag if \ */
         e = 1;
@@ -301,23 +275,23 @@ int ci;                 /* flag: force case-insensitive matching */
           for (uc = uc ? uc : (uch)*p; uc <= (uch)*p; uc++)
             /* compare range */
             if ((!ci ? uc : to_up(uc)) == cc)
-              return r ? 0 : recmatch(q + CLEN(q), s + CLEN(s), ci);
+              return r ? 0 : recmatch(q + CLEN(q), s + CLEN(s), ci, sepc);
         c = e = 0;                      /* clear range, escape flags */
       }
     }
-    return r ? recmatch(q + CLEN(q), s + CLEN(s), ci) : 0;
+    return r ? recmatch(q + CLEN(q), s + CLEN(s), ci, sepc) : 0;
                                         /* bracket match failed */
   }
 
   /* If escape ('\'), just compare next character */
-  if (!no_wild && c == '\\')
+  if (c == '\\')
     if ((c = *p++) == '\0')             /* if \ at end, then syntax error */
       return 0;
 
 
   /* Just a character--compare it */
   return (!ci ? c == *s : to_up((uch)c) == to_up((uch)*s)) ?
-          recmatch(p, s + CLEN(s), ci) : 0;
+          recmatch(p, s + CLEN(s), ci, sepc) : 0;
 }
 
 
@@ -332,7 +306,7 @@ const char *p;
     for (; *p; INCSTR(p))
         if (*p == '\\' && *(p+1))
             p++;
-        else if (*p == WILDCHAR || *p == '*' || *p == BEG_RANGE)
+        else if (*p == WILDCHR_SINGLE || *p == WILDCHR_MULTI || *p == BEG_RANGE)
             return (char *)p;
     return NULL;
 } /* end function isshexp() */
