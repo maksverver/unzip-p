@@ -424,17 +424,9 @@ typedef size_t extent;
  */
 #  define FILNAMSIZ  PATH_MAX
 
-/* 2007-09-18 SMS.
- * Include <locale.h> here if it will be needed later for Unicode.
- * Otherwise, SETLOCALE may be defined here, and then defined again
- * (differently) when <locale.h> is read later.
- */
 #  include <wchar.h>
 #  include <wctype.h>
 #  include <locale.h>
-#  ifndef SETLOCALE
-#    define SETLOCALE(category, locale) setlocale(category, locale)
-#  endif
 
 #  define CLEN(ptr) 1
 #  define PREINCSTR(ptr) (++(ptr))
@@ -443,9 +435,6 @@ typedef size_t extent;
 #  define lastchar(ptr, len) (ptr[(len)-1])
 #  define MBSCHR(str, c) strchr(str, c)
 #  define MBSRCHR(str, c) strrchr(str, c)
-#  ifndef SETLOCALE
-#    define SETLOCALE(category, locale)
-#  endif
 #  define INCSTR(ptr) PREINCSTR(ptr)
 
 

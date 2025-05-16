@@ -90,13 +90,9 @@ typedef struct stat z_stat;
 #    endif
 #  endif
 
-#  if (!defined(NO_SETLOCALE) && !defined(_MBCS))
-#  endif
-#  ifndef NO_SETLOCALE
-#    if (!defined(NO_WORKING_ISPRINT) && !defined(HAVE_WORKING_ISPRINT))
+#  if (!defined(NO_WORKING_ISPRINT) && !defined(HAVE_WORKING_ISPRINT))
    /* enable "enhanced" unprintable chars detection in fnfilter() */
-#      define HAVE_WORKING_ISPRINT
-#    endif
+#    define HAVE_WORKING_ISPRINT
 #  endif
 
 #  if (!defined(HAVE_STRNICMP) & !defined(NO_STRNICMP))
@@ -141,12 +137,6 @@ typedef struct stat z_stat;
 
 
 #  define MAX_CP_NAME (25 + 1)
-   
-#  ifdef SETLOCALE
-#    undef SETLOCALE
-#  endif
-#  define SETLOCALE(category, locale) setlocale(category, locale)
-#  include <locale.h>
    
 #  ifdef _ISO_INTERN
 #    undef _ISO_INTERN
