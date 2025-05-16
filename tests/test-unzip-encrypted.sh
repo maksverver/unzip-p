@@ -10,5 +10,5 @@ TMPDIR=$(mktemp -d)
 trap "rm -rf -- $TMPDIR" EXIT
 
 password='squeamish ossifrage'
-unzip -q -d "$TMPDIR" -P "$password" testdata/encrypted.zip
+$UNZIP -q -d "$TMPDIR" -P "$password" testdata/encrypted.zip
 diff "$TMPDIR"/hello.txt testdata/hello.txt

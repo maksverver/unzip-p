@@ -11,7 +11,7 @@ trap "rm -rf -- $TMPDIR" EXIT
 
 FILES="unzip60/beos/beos.c unzip60/README unzip60/zip.h"
 
-unzip -q -d "$TMPDIR" testdata/unzip60.zip $FILES
+$UNZIP -q -d "$TMPDIR" testdata/unzip60.zip $FILES
 for file in $FILES; do
     diff "$TMPDIR"/$file testdata/unzip60/$file
 done

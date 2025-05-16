@@ -12,5 +12,5 @@ UNZIP=${1:-../unzip}
 TMPDIR=$(mktemp -d)
 trap "rm -rf -- $TMPDIR" EXIT
 
-unzip -q -d "$TMPDIR" testdata/unzip60.zip
+$UNZIP -q -d "$TMPDIR" testdata/unzip60.zip
 diff -r "$TMPDIR" testdata/unzip60

@@ -14,9 +14,9 @@ trap "rm -rf -- $TMPDIR" EXIT
 
 cp testdata/hello.txt "$TMPDIR"/lore-ipsum.txt
 
-unzip -B -q -d "$TMPDIR" testdata/lore-ipsum.zip
-unzip -B -q -d "$TMPDIR" testdata/lore-ipsum.zip
-unzip -B -q -d "$TMPDIR" testdata/lore-ipsum.zip
+$UNZIP -B -q -d "$TMPDIR" testdata/lore-ipsum.zip
+$UNZIP -B -q -d "$TMPDIR" testdata/lore-ipsum.zip
+$UNZIP -B -q -d "$TMPDIR" testdata/lore-ipsum.zip
 
 diff "$TMPDIR"/lore-ipsum.txt   testdata/lore-ipsum.txt
 diff "$TMPDIR"/lore-ipsum.txt~  testdata/hello.txt
