@@ -12,14 +12,23 @@ cd "$basedir"
 
 passed=0
 failed=0
+skipped=0
 for test in test-*.sh; do
     if ./"$test"; then
         echo "$test passed"
         passed=$(expr $passed + 1)
     else
-        echo "$test FAILED"
-        failed=$(expr $failed + 1)
+        # Check exit status. 234 is the magic value that means 'skipped'
+        status=$?
+        if [ $status -eq 234 ]; then
+            echo "$test SKIPPED"
+            skipped=$(expr $failed + 1)
+        else
+            echo "$test FAILED ($status)"
+            failed=$(expr $failed + 1)
+        fi
     fi
 done
-echo "$(expr $passed + $failed) tests; $passed passed; $failed failed."
+total=$(expr $passed + $failed + $skipped)
+echo "$total tests; $passed passed; $failed failed; $skipped skipped."
 exit $failed
