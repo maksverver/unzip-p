@@ -1209,7 +1209,7 @@ void UZ_EXP UzpMorePause(pG, prompt, flag)
     fprintf(stderr, HidePrompt);
     fflush(stderr);
 
-    if (ToLower(c) == 'q') {
+    if (tolower(c) == 'q') {
         DESTROYGLOBALS();
         EXIT(PK_COOL);
     }
@@ -2160,9 +2160,9 @@ int zstrnicmp(s1, s2, n)
 {
     for (; n > 0;  --n, ++s1, ++s2) {
 
-        if (ToLower(*s1) != ToLower(*s2))
+        if (tolower((uch)*s1) != tolower((uch)*s2))
             /* test includes early termination of one string */
-            return ((uch)ToLower(*s1) < (uch)ToLower(*s2))? -1 : 1;
+            return ((uch)tolower(*s1) < (uch)tolower((uch)*s2))? -1 : 1;
 
         if (*s1 == '\0')   /* both strings terminate early */
             return 0;

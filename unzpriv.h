@@ -157,7 +157,7 @@
 #  endif
 
 #  include <stdio.h>
-#  include <ctype.h>       /* skip for VMS, to use tolower() function? */
+#  include <ctype.h>
 #  include <errno.h>       /* used in mapname() */
 #  include <string.h>    /* strcpy, strcmp, memcpy, strchr/strrchr, etc. */
 #  if (!defined(NO_LIMITS_H))
@@ -1422,12 +1422,6 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 #    define MTrace(x)  Trace(x)
 #  endif
 
-#  if (defined(UNIX)) /* generally old systems */
-#    define ToLower(x)   ((char)(isupper((int)x)? tolower((int)x) : x))
-#  else
-#    define ToLower      tolower          /* assumed "smart"; used in match() */
-#  endif
-
 
 /* The return value of the Info() "macro function" is never checked in
  * UnZip. Otherwise, to get the same behaviour as for (*G.message)(), the
@@ -1548,8 +1542,6 @@ char    *GetLoadPath        (__GPRO);                              /* local */
  */
 
 
-/* GRR:  should use StringLower for STRLOWER macro if possible */
-
 /*
  *  Copy the zero-terminated string in str1 into str2, converting any
  *  uppercase letters to lowercase as we go.  str2 gets zero-terminated
@@ -1561,7 +1553,7 @@ char    *GetLoadPath        (__GPRO);                              /* local */
        p = (char *)(str1) - 1; \
        q = (char *)(str2); \
        while (*++p) \
-           *q++ = (char)(isupper((int)(*p))? tolower((int)(*p)) : *p); \
+           *q++ = (char)tolower((uch)*p); \
        *q = '\0'; \
    }
 /*

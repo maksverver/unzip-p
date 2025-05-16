@@ -68,21 +68,8 @@
 
 #define __MATCH_C       /* identifies this source module */
 
-/* define ToLower() in here (for Unix, define ToLower to be macro (using
- * isupper()); otherwise just use tolower() */
 #define UNZIP_INTERNAL
 #include "unzip.h"
-
-
-#ifdef ANSI_CHARSET
-#  ifdef ToLower
-#    undef ToLower
-#  endif
-   /* uppercase letters are values 41 thru 5A, C0 thru D6, and D8 thru DE */
-#  define IsUpper(c) (c>=0xC0 ? c<=0xDE && c!=0xD7 : c>=0x41 && c<=0x5A)
-#  define ToLower(c) (IsUpper((uch) c) ? (unsigned) c | 0x20 : (unsigned) c)
-#endif
-#define Case(x)  (ic? ToLower(x) : (x))
 
 #define BEG_RANGE  '['
 #define END_RANGE  ']'
@@ -90,17 +77,9 @@
 #define WILDCHR_MULTI '*'
 
 
-/*
- * case mapping functions. case_map is used to ignore case in comparisons,
- * to_up is used to force upper case even on Unix (for dosify option).
- */
-#ifdef USE_CASE_MAP
-#  define case_map(c) upper[(c) & 0xff]
-#  define to_up(c)    upper[(c) & 0xff]
-#else
-#  define case_map(c) (c)
-#  define to_up(c)    ((c) >= 'a' && (c) <= 'z' ? (c)-'a'+'A' : (c))
-#endif /* USE_CASE_MAP */
+/* WARNING: this only works for ASCII or supersets of ASCII (e.g. UTF-8),
+   and only uppercases ASCII letters. toupper() would be better but slower. */
+#define to_up(c)    ((c) >= 'a' && (c) <= 'z' ? (c)-'a'+'A' : (c))
 
 
 static int recmatch(const char *, const char *, int, int);
@@ -276,8 +255,8 @@ static int namecmp(s1, s2)
     int d;
 
     for (;;) {
-        d = (int)ToLower((uch)*s1)
-          - (int)ToLower((uch)*s2);
+        d = (int)tolower((uch)*s1)
+          - (int)tolower((uch)*s2);
 
         if (d || *s1 == 0 || *s2 == 0)
             return d;
