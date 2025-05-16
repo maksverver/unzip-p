@@ -972,24 +972,14 @@ unsigned bl, bd;        /* number of bits decoded by tl[] and td[] */
 
         /* do the copy */
         do {
-            e = (unsigned)(wsize -
+          e = (unsigned)(wsize -
                            ((d &= (unsigned)(wsize-1)) > (unsigned)w ?
                             (UINT_D64)d : w));
           if ((UINT_D64)e > n) e = (unsigned)n;
           n -= e;
-#    ifndef NOMEMCPY
-          if ((unsigned)w - d >= e)
-          /* (this test assumes unsigned comparison) */
-          {
-            memcpy(redirSlide + (unsigned)w, redirSlide + d, e);
-            w += e;
-            d += e;
-          }
-          else                  /* do it slowly to avoid memcpy() overlap */
-#    endif /* !NOMEMCPY */
-            do {
-              redirSlide[w++] = redirSlide[d++];
-            } while (--e);
+          do {
+            redirSlide[w++] = redirSlide[d++];
+          } while (--e);
           if (w == wsize)
           {
             if ((retval = FLUSH(w)) != 0) goto cleanup_and_exit;
