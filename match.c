@@ -118,11 +118,6 @@ int match(string, pattern, ignore_case, sepc)
     return recmatch(pattern, string, ignore_case, sepc) == 1;
 }
 
-#ifdef _MBCS
-
-char *___tmp_ptr;
-
-#endif
 
 static int recmatch(p, s, ci, sepc)
 const char *p;          /* sh pattern to match */
@@ -135,22 +130,6 @@ int sepc;               /* directory sepchar for WildStopAtDir mode, or 0 */
    characters in the pattern. */
 {
   int c;                /* pattern char or start of range in [-] loop */
-
-  /* This fix provided by akt@m5.dion.ne.jp for Japanese.
-     See 21 July 2006 mail.
-     It only applies when p is pointing to a doublebyte character and
-     things like / and wildcards are not doublebyte.  This probably
-     should not be needed. */
-#ifdef _MBCS
-  if (CLEN(p) == 2) {
-    if (CLEN(s) == 2) {
-      return (*p == *s && *(p+1) == *(s+1)) ?
-        recmatch(p + 2, s + 2, ci) : 0;
-    } else {
-      return 0;
-    }
-  }
-#endif /* ?_MBCS */
 
   /* Get first character, the pattern for new recmatch calls follows */
   c = *POSTINCSTR(p);
@@ -207,29 +186,7 @@ int sepc;               /* directory sepchar for WildStopAtDir mode, or 0 */
       else
         /* compare the remaining literal pattern string with the last bytes
            of the test string to check for a match */
-#ifdef _MBCS
-      {
-        const char *q = s;
-
-        /* MBCS-aware code must not scan backwards into a string from
-         * the end.
-         * So, we have to move forward by character from our well-known
-         * character position s in the test string until we have advanced
-         * to the srest position.
-         */
-        while (q < srest)
-          INCSTR(q);
-        /* In case the byte *srest is a trailing byte of a multibyte
-         * character, we have actually advanced past the position (srest).
-         * For this case, the match has failed!
-         */
-        if (q != srest)
-          return 0;
-        return ((!ci ? strcmp(p, q) : namecmp(p, q)) == 0);
-      }
-#else /* !_MBCS */
         return ((!ci ? strcmp(p, srest) : namecmp(p, srest)) == 0);
-#endif /* ?_MBCS */
     }
     else
     {

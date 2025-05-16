@@ -95,10 +95,6 @@ typedef struct stat z_stat;
 #    undef UNICODE_SUPPORT
 #  endif
 
-#  if (defined(_MBCS) && defined(NO_MBCS))
-   /* disable MBCS support when requested */
-#    undef _MBCS
-#  endif
 
 #  if (!defined(NO_SETLOCALE) && !defined(_MBCS))
 #    if (!defined(UNICODE_SUPPORT) || !defined(UTF8_MAYBE_NATIVE))

@@ -332,10 +332,6 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
        "UNICODE_SUPPORT [wide-chars] (handle UTF-8 paths)";
 #    endif /* ?UTF8_MAYBE_NATIVE */
 #  endif /* UNICODE_SUPPORT */
-#  ifdef _MBCS
-     static const char Have_MBCS_Support[] =
-     "MBCS-support (multibyte character support, MB_CUR_MAX = %u)";
-#  endif
 #  ifdef MULT_VOLUME
      static const char Use_MultiVol[] =
      "MULT_VOLUME (multi-volume archives supported)";
@@ -1976,13 +1972,6 @@ static void show_version_info(__G)
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_Unicode));
 #    endif
-        ++numopts;
-#  endif
-#  ifdef _MBCS
-        sprintf((char *)(slide+256), Have_MBCS_Support,
-          (unsigned int)MB_CUR_MAX);
-        Info(slide, 0, ((char *)slide, CompileOptFormat,
-          (char *)(slide+256)));
         ++numopts;
 #  endif
 #  ifdef MULT_VOLUME

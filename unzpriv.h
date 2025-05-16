@@ -440,57 +440,27 @@ typedef size_t extent;
 #      include <wchar.h>
 #      include <wctype.h>
 #    endif
-#    ifndef _MBCS  /* no need to include <locale.h> twice, see below */
-#      include <locale.h>
-#      ifndef SETLOCALE
-#        define SETLOCALE(category, locale) setlocale(category, locale)
-#      endif
+#    include <locale.h>
+#    ifndef SETLOCALE
+#      define SETLOCALE(category, locale) setlocale(category, locale)
 #    endif
 #  endif /* UNICODE_SUPPORT */
 
 /* DBCS support for Info-ZIP  (mainly for japanese (-: )
  * by Yoshioka Tsuneo (QWF00133@nifty.ne.jp,tsuneo-y@is.aist-nara.ac.jp)
  */
-#  ifdef _MBCS
-#    include <locale.h>
-   /* Multi Byte Character Set */
-#    define ___MBS_TMP_DEF  char *___tmp_ptr;
-#    define ___TMP_PTR      ___tmp_ptr
-#    ifndef CLEN
-#      define NEED_UZMBCLEN
-#      define CLEN(ptr) (int)uzmbclen((const unsigned char *)(ptr))
-#    endif
-#    ifndef PREINCSTR
-#      define PREINCSTR(ptr) (ptr += CLEN(ptr))
-#    endif
-#    define POSTINCSTR(ptr) (___TMP_PTR=(char *)(ptr), PREINCSTR(ptr),___TMP_PTR)
-   char *plastchar(const char *ptr, extent len);
-#    define lastchar(ptr, len) ((int)(unsigned)*plastchar(ptr, len))
-#    ifndef MBSCHR
-#      define NEED_UZMBSCHR
-#      define MBSCHR(str,c) (char *)uzmbschr((const unsigned char *)(str), c)
-#    endif
-#    ifndef MBSRCHR
-#      define NEED_UZMBSRCHR
-#      define MBSRCHR(str,c) (char *)uzmbsrchr((const unsigned char *)(str), c)
-#    endif
-#    ifndef SETLOCALE
-#      define SETLOCALE(category, locale) setlocale(category, locale)
-#    endif
-#  else /* !_MBCS */
-#    define ___MBS_TMP_DEF
-#    define ___TMP_PTR
-#    define CLEN(ptr) 1
-#    define PREINCSTR(ptr) (++(ptr))
-#    define POSTINCSTR(ptr) ((ptr)++)
-#    define plastchar(ptr, len) (&ptr[(len)-1])
-#    define lastchar(ptr, len) (ptr[(len)-1])
-#    define MBSCHR(str, c) strchr(str, c)
-#    define MBSRCHR(str, c) strrchr(str, c)
-#    ifndef SETLOCALE
-#      define SETLOCALE(category, locale)
-#    endif
-#  endif /* ?_MBCS */
+#  define ___MBS_TMP_DEF
+#  define ___TMP_PTR
+#  define CLEN(ptr) 1
+#  define PREINCSTR(ptr) (++(ptr))
+#  define POSTINCSTR(ptr) ((ptr)++)
+#  define plastchar(ptr, len) (&ptr[(len)-1])
+#  define lastchar(ptr, len) (ptr[(len)-1])
+#  define MBSCHR(str, c) strchr(str, c)
+#  define MBSRCHR(str, c) strrchr(str, c)
+#  ifndef SETLOCALE
+#    define SETLOCALE(category, locale)
+#  endif
 #  define INCSTR(ptr) PREINCSTR(ptr)
 
 
@@ -1328,10 +1298,6 @@ int    memflush                     (__GPRO__ const uch *rawbuf, ulg size);
 char  *fnfilter                     (const char *raw, uch *space,
                                      extent size);
 
-#  if defined( UNICODE_SUPPORT) && defined( _MBCS)
-wchar_t *fnfilterw                  (const wchar_t *src, wchar_t *dst,
-                                     extent siz);
-#  endif
 
 
 /*---------------------------------------------------------------------------
@@ -1589,24 +1555,7 @@ char    *GetLoadPath        (__GPRO);                              /* local */
  *  uppercase letters to lowercase as we go.  str2 gets zero-terminated
  *  as well, of course.  str1 and str2 may be the same character array.
  */
-#  ifdef _MBCS
-#    define STRLOWER(str1, str2) \
-   { \
-       char  *p, *q, c; unsigned i; \
-       p = (char *)(str1); \
-       q = (char *)(str2); \
-       while ((c = *p) != '\0') { \
-           if ((i = CLEN(p)) > 1) { \
-               while (i--) *q++ = *p++; \
-           } else { \
-               *q++ = (char)(isupper((int)(c))? tolower((int)(c)) : c); \
-               p++; \
-           } \
-       } \
-       *q = '\0'; \
-   }
-#  else
-#    define STRLOWER(str1, str2) \
+#  define STRLOWER(str1, str2) \
    { \
        char  *p, *q; \
        p = (char *)(str1) - 1; \
@@ -1615,7 +1564,6 @@ char    *GetLoadPath        (__GPRO);                              /* local */
            *q++ = (char)(isupper((int)(*p))? tolower((int)(*p)) : *p); \
        *q = '\0'; \
    }
-#  endif
 /*
  *  NOTES:  This macro makes no assumptions about the characteristics of
  *    the tolower() function or macro (beyond its existence), nor does it

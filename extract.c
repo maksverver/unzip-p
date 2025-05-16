@@ -2385,110 +2385,12 @@ char *fnfilter(raw, space, size)   /* convert name to safely printable form */
     uch *se=NULL;
     int have_overflow = FALSE;
 
-#  if defined( UNICODE_SUPPORT) && defined( _MBCS)
-/* If Unicode support is enabled, and we have multi-byte characters,
- * then do the isprint() checks by first converting to wide characters
- * and checking those.  This avoids our having to parse multi-byte
- * characters for ourselves.  After the wide-char replacements have been
- * made, the wide string is converted back to the local character set.
- */
-    wchar_t *wstring;    /* wchar_t version of raw */
-    size_t wslen;        /* length of wstring */
-    wchar_t *wostring;   /* wchar_t version of output string */
-    size_t woslen;       /* length of wostring */
-    char *newraw;        /* new raw */
-
-    /* 2012-11-06 SMS.
-     * Changed to check the value returned by mbstowcs(), and bypass the
-     * Unicode processing if it fails.  This seems to fix a problem
-     * reported in the SourceForge forum, but it's not clear that we
-     * should be doing any Unicode processing without some evidence that
-     * the name actually is Unicode.  (Check bit 11 in the flags before
-     * coming here?)
-     * http://sourceforge.net/p/infozip/bugs/40/
-     */
-
-    if (MB_CUR_MAX <= 1)
-    {
-        /* There's no point to converting multi-byte chars if there are
-         * no multi-byte chars.
-         */
-        wslen = (size_t)-1;
-    }
-    else
-    {
-        /* Get Unicode wide character count (for storage allocation). */
-        wslen = mbstowcs( NULL, raw, 0);
-    }
-
-    if (wslen != (size_t)-1)
-    {
-        /* Apparently valid Unicode.  Allocate wide-char storage. */
-        wstring = (wchar_t *)malloc((wslen + 1) * sizeof(wchar_t));
-        if (wstring == NULL) {
-            strcpy( (char *)space, raw);
-            return (char *)space;
-        }
-        wostring = (wchar_t *)malloc(2 * (wslen + 1) * sizeof(wchar_t));
-        if (wostring == NULL) {
-            free(wstring);
-            strcpy( (char *)space, raw);
-            return (char *)space;
-        }
-
-        /* Convert the multi-byte Unicode to wide chars. */
-        wslen = mbstowcs(wstring, raw, wslen + 1);
-
-        /* Filter the wide-character string. */
-        fnfilterw( wstring, wostring, (2 * (wslen + 1) * sizeof(wchar_t)));
-
-        /* Convert filtered wide chars back to multi-byte. */
-        woslen = wcstombs( NULL, wostring, 0);
-        if ((newraw = malloc(woslen + 1)) == NULL) {
-            free(wstring);
-            free(wostring);
-            strcpy( (char *)space, raw);
-            return (char *)space;
-        }
-        woslen = wcstombs( newraw, wostring, woslen + 1);
-
-        if (size > 0) {
-            slim = space + size - 4;
-        }
-        r = (const uch *)newraw;
-        while (*r) {
-            if (size > 0 && s >= slim && se == NULL) {
-                se = s;
-            }
-            {
-                if (se != NULL && (s > (space + (size-3)))) {
-                    have_overflow = TRUE;
-                    break;
-                }
-                *s++ = *r++;
-            }
-        }
-        if (have_overflow) {
-            strcpy((char *)se, "...");
-        } else {
-            *s = '\0';
-        }
-
-        free(wstring);
-        free(wostring);
-        free(newraw);
-    }
-    else
-#  endif /* defined( UNICODE_SUPPORT) && defined( _MBCS) */
     {
         /* No Unicode support, or apparently invalid Unicode. */
         r = (const uch *)raw;
 
         if (size > 0) {
             slim = space + size
-#  ifdef _MBCS
-                         - (MB_CUR_MAX - 1)
-#  endif
                          - 4;
         }
         while (*r) {
@@ -2524,21 +2426,11 @@ char *fnfilter(raw, space, size)   /* convert name to safely printable form */
                 *s++ = '^', *s++ = (uch)(64 + *r++);
 #  endif /* ?HAVE_WORKING_ISPRINT */
             } else {
-#  ifdef _MBCS
-                unsigned i = CLEN(r);
-                if (se != NULL && (s > (space + (size-i-2)))) {
-                    have_overflow = TRUE;
-                    break;
-                }
-                for (; i > 0; i--)
-                    *s++ = *r++;
-#  else
                 if (se != NULL && (s > (space + (size-3)))) {
                     have_overflow = TRUE;
                     break;
                 }
                 *s++ = *r++;
-#  endif
              }
         }
         if (have_overflow) {
@@ -2558,53 +2450,6 @@ char *fnfilter(raw, space, size)   /* convert name to safely printable form */
 } /* end function fnfilter() */
 
 
-#if defined( UNICODE_SUPPORT) && defined( _MBCS)
-
-/****************************/
-/*  Function fnfilter[w]()  */  /* (Here instead of in list.c for SFX.) */
-/****************************/
-
-/* fnfilterw() - Convert wide name to safely printable form. */
-
-/* fnfilterw() - Convert wide-character name to safely printable form. */
-
-wchar_t *fnfilterw( src, dst, siz)
-    const wchar_t *src;         /* Pointer to source char (string). */
-    wchar_t *dst;               /* Pointer to destination char (string). */
-    extent siz;                 /* Not used (!). */
-{
-    wchar_t *dsx = dst;
-
-    /* Filter the wide chars. */
-    while (*src)
-    {
-        if (iswprint( *src))
-        {
-            /* Printable code.  Copy it. */
-            *dst++ = *src;
-        }
-        else
-        {
-            /* Unprintable code.  Substitute something printable for it. */
-            if (*src < 32)
-            {
-                /* Replace ASCII control code with "^{letter}". */
-                *dst++ = (wchar_t)'^';
-                *dst++ = (wchar_t)(64 + *src);
-            }
-            else
-            {
-                /* Replace other unprintable code with the placeholder. */
-                *dst++ = (wchar_t)UZ_FNFILTER_REPLACECHAR;
-            }
-        }
-        src++;
-    }
-    *dst = (wchar_t)0;  /* NUL-terminate the destination string. */
-    return dsx;
-} /* fnfilterw(). */
-
-#endif /* defined( UNICODE_SUPPORT) && defined( _MBCS) */
 
 
 #ifdef SET_DIR_ATTRIB
