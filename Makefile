@@ -72,9 +72,6 @@ CFLAGS_SECURITY = \
 
 # Commonly enabled features (I got these from the Arch linux PKGBUILD)
 CFLAGS_FEATURES = \
-    -DUNICODE_SUPPORT \
-    -DUNICODE_WCHAR \
-    -DUTF8_MAYBE_NATIVE \
     -DNO_LCHMOD \
     -DDATE_FORMAT=DF_YMD \
     -DNO_WORKING_ISPRINT

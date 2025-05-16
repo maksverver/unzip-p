@@ -32,9 +32,7 @@
 
 #define UNZIP_INTERNAL
 #include "unzip.h"
-#if defined(DYNALLOC_CRCTAB) || defined(UNICODE_SUPPORT)
-#  include "crc32.h"
-#endif
+#include "crc32.h"
 
 static int    do_seekable           (__GPRO__ int lastchance);
 static int    rec_find              (__GPRO__ zoff_t, char *, int);
@@ -190,14 +188,13 @@ static const char ZipfileCommTrunc1[] =
    static const char ZipfileCommTrunc2[] =
      "\n  The zipfile comment is truncated.\n";
 #endif /* !NO_ZIPINFO */
-#ifdef UNICODE_SUPPORT
-   static const char UnicodeVersionError[] =
-     "\nwarning:  Unicode Path version > 1\n";
-   static const char UnicodeMismatchError[] =
-     "\nwarning:  Unicode Path checksum invalid\n";
-   static const char UFilenameTooLongTrunc[] =
-     "warning:  filename too long (P1) -- truncating.\n";
-#endif
+static const char UnicodeVersionError[] =
+  "\nwarning:  Unicode Path version > 1\n";
+static const char UnicodeMismatchError[] =
+  "\nwarning:  Unicode Path checksum invalid\n";
+static const char UFilenameTooLongTrunc[] =
+  "warning:  filename too long (P1) -- truncating.\n";
+
 
 
 
@@ -556,13 +553,11 @@ void free_G_buffers(__G)     /* releases all memory allocated in global vars */
         free(G.inbuf);
     G.inbuf = G.outbuf = (uch *)NULL;
 
-#ifdef UNICODE_SUPPORT
     if (G.filename_full) {
         free(G.filename_full);
         G.filename_full = (char *)NULL;
         G.fnfull_bufsize = 0;
     }
-#endif /* UNICODE_SUPPORT */
 
 #ifndef SFX
     for (i = 0; i < DIR_BLKSIZ; i++) {
@@ -1524,12 +1519,10 @@ int process_cdir_file_hdr(__G)    /* return PK-type error code */
        strings (see do_string() function in fileio.c) */
     G.pInfo->HasUxAtt = (G.crec.external_file_attributes & 0xffff0000L) != 0L;
 
-#ifdef UNICODE_SUPPORT
     /* remember the state of GPB11 (General Purpuse Bit 11) which indicates
        that the standard path and comment are UTF-8. */
     G.pInfo->GPFIsUTF8
         = (G.crec.general_purpose_bit_flag & (1 << 11)) == (1 << 11);
-#endif
 
 #ifdef SYMLINKS
     /* Initialize the symlink flag, may be set by the platform-specific
@@ -1759,7 +1752,6 @@ int getZip64Data(__G__ ef_buf, ef_len)
 } /* end function getZip64Data() */
 
 
-#ifdef UNICODE_SUPPORT
 
 /*******************************/
 /* Function getUnicodeData() */
@@ -1875,7 +1867,6 @@ int getUnicodeData(__G__ ef_buf, ef_len)
 
 
 
-#  ifdef UNICODE_WCHAR
   /*---------------------------------------------
  * Unicode conversion functions
  *
@@ -1976,7 +1967,7 @@ static ulg ucs4_char_from_utf8(utf8)
 }
 
 
-#    if 0 /* currently unused */
+#if 0 /* currently unused */
 /* utf8_from_ucs4_char - Convert UCS char to UTF-8
  *
  * Returns the number of bytes put into utf8buf to represent ch, from 1 to 6,
@@ -2013,7 +2004,7 @@ static int utf8_from_ucs4_char(utf8buf, ch)
     *utf8buf++ = (char) (0x80 | ((ch >> (6 * trailing)) & 0x3F));
   return ret;
 }
-#    endif /* unused */
+#endif /* unused */
 
 
 /*===================================================================*/
@@ -2046,7 +2037,7 @@ static int utf8_to_ucs4_string(utf8, ucs4buf, buflen)
 }
 
 
-#    if 0 /* currently unused */
+#if 0 /* currently unused */
 /* ucs4_string_to_utf8
  *
  *
@@ -2090,7 +2081,7 @@ static int utf8_chars(utf8)
 {
   return utf8_to_ucs4_string(utf8, NULL, 0);
 }
-#    endif /* unused */
+#endif /* unused */
 
 /* --------------------------------------------------- */
 /* Unicode Support
@@ -2107,7 +2098,7 @@ static int utf8_chars(utf8)
  * different sizes of wchar_t.
  */
 
-#    if 0 /* currently unused */
+#if 0 /* currently unused */
 /* is_ascii_string
  * Checks if a string is all ascii
  */
@@ -2131,7 +2122,7 @@ char *local_to_utf8_string(local_string)
 {
   return wide_to_utf8_string(local_to_wide_string(local_string));
 }
-#    endif /* unused */
+#endif /* unused */
 
 /* wide_to_escape_string
    provides a string that represents a wide char not in local char set
@@ -2164,7 +2155,7 @@ char *local_to_utf8_string(local_string)
   */
 
  /* set this to the max bytes an escape can be */
-#    define MAX_ESCAPE_BYTES 8
+#define MAX_ESCAPE_BYTES 8
 
 char *wide_to_escape_string(wide_char)
   zwchar wide_char;
@@ -2203,7 +2194,7 @@ char *wide_to_escape_string(wide_char)
   return r;
 }
 
-#    if 0 /* currently unused */
+#if 0 /* currently unused */
 /* returns the wide character represented by the escape string */
 zwchar escape_string_to_wide(escape_string)
   const char *escape_string;
@@ -2251,7 +2242,7 @@ zwchar escape_string_to_wide(escape_string)
   }
   return w;
 }
-#    endif /* unused */
+#endif /* unused */
 
 /* convert wide character string to multi-byte character string */
 char *wide_to_local_string(wide_string, escape_all)
@@ -2345,7 +2336,7 @@ char *wide_to_local_string(wide_string, escape_all)
   return local_string;
 }
 
-#    if 0 /* currently unused */
+#if 0 /* currently unused */
 /* convert local string to display character set string */
 char *local_to_display_string(local_string)
   const char *local_string;
@@ -2362,7 +2353,7 @@ char *local_to_display_string(local_string)
 
   strcpy(display_string, local_string);
 
-#      ifdef EBCDIC
+#  ifdef EBCDIC
   {
     char *ebc;
 
@@ -2373,11 +2364,11 @@ char *local_to_display_string(local_string)
     free(display_string);
     display_string = ebc;
   }
-#      endif
+#  endif
 
   return display_string;
 }
-#    endif /* unused */
+#endif /* unused */
 
 /* UTF-8 to local */
 char *utf8_to_local_string(utf8_string, escape_all)
@@ -2399,7 +2390,7 @@ char *utf8_to_local_string(utf8_string, escape_all)
   return loc;
 }
 
-#    if 0 /* currently unused */
+#if 0 /* currently unused */
 /* convert multi-byte character string to wide character string */
 zwchar *local_to_wide_string(local_string)
   const char *local_string;
@@ -2454,7 +2445,7 @@ char *wide_to_utf8_string(wide_string)
 
   return utf8_string;
 }
-#    endif /* unused */
+#endif /* unused */
 
 /* convert UTF-8 string to wide string */
 zwchar *utf8_to_wide_string(utf8_string)
@@ -2475,8 +2466,6 @@ zwchar *utf8_to_wide_string(utf8_string)
   return wide_string;
 }
 
-#  endif /* UNICODE_WCHAR */
-#endif /* UNICODE_SUPPORT */
 
 
 

@@ -133,12 +133,10 @@ static const char CannotCreateFile[] =
 static const char ReadError[] = "error:  zipfile read error\n";
 static const char FilenameTooLongTrunc[] =
   "warning:  filename too long--truncating.\n";
-#ifdef UNICODE_SUPPORT
-    static const char UFilenameCorrupt[] =
-        "error: Unicode filename corrupt.\n";
-    static const char UFilenameTooLongTrunc[] =
-        "warning:  Converted Unicode filename too long--truncating.\n";
-#endif
+static const char UFilenameCorrupt[] =
+  "error: Unicode filename corrupt.\n";
+static const char UFilenameTooLongTrunc[] =
+  "warning:  Converted Unicode filename too long--truncating.\n";
 static const char ExtraFieldTooLong[] =
   "warning:  extra field too long (%d).  Ignoring...\n";
 static const char ExtraFieldCorrupt[] =
@@ -1768,7 +1766,6 @@ int do_string(__G__ length, option)   /* return PK-type error code */
 
     case DS_FN:
     case DS_FN_L:
-#ifdef UNICODE_SUPPORT
         /* get the whole filename as need it for Unicode checksum */
         if (G.fnfull_bufsize <= length) {
             extent fnbufsiz = FILNAMSIZ;
@@ -1797,21 +1794,6 @@ int do_string(__G__ length, option)   /* return PK-type error code */
         block_len = 0;
         strncpy(G.filename, G.filename_full, length);
         G.filename[length] = '\0';      /* terminate w/zero:  ASCIIZ */
-#else /* !UNICODE_SUPPORT */
-        if (length >= FILNAMSIZ) {
-            Info(slide, 0x401, ((char *)slide,
-              FilenameTooLongTrunc));
-            error = PK_WARN;
-            /* remember excess length in block_len */
-            block_len = length - (FILNAMSIZ - 1);
-            length = FILNAMSIZ - 1;
-        } else
-            /* no excess size */
-            block_len = 0;
-        if (readbuf(__G__ G.filename, length) == 0)
-            return PK_EOF;
-        G.filename[length] = '\0';      /* terminate w/zero:  ASCIIZ */
-#endif /* ?UNICODE_SUPPORT */
 
         /* translate the Zip entry filename coded in host-dependent "extended
            ASCII" into the compiler's (system's) internal text code page */
@@ -1880,7 +1862,6 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                   ExtraFieldCorrupt, EF_PKSZ64));
                 error = PK_WARN;
             }
-#ifdef UNICODE_SUPPORT
             G.unipath_filename = NULL;
             if (G.UzO.U_flag < 2) {
               /* check if GPB11 (General Purpuse Bit 11) is set indicating
@@ -1898,12 +1879,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                 }
               }
               if (G.unipath_filename) {
-#  ifdef UTF8_MAYBE_NATIVE
-                if (G.native_is_utf8
-#    ifdef UNICODE_WCHAR
-                    && (!G.unicode_escape_all)
-#    endif
-                   ) {
+                if (G.native_is_utf8 && !G.unicode_escape_all) {
                   strncpy(G.filename, G.unipath_filename, FILNAMSIZ - 1);
                   /* make sure filename is short enough */
                   if (strlen(G.unipath_filename) >= FILNAMSIZ) {
@@ -1912,13 +1888,7 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                       UFilenameTooLongTrunc));
                     error = PK_WARN;
                   }
-                }
-#    ifdef UNICODE_WCHAR
-                else
-#    endif
-#  endif /* UTF8_MAYBE_NATIVE */
-#  ifdef UNICODE_WCHAR
-                {
+                } else {
                   char *fn;
 
                   /* convert UTF-8 to local character set */
@@ -1949,13 +1919,11 @@ int do_string(__G__ length, option)   /* return PK-type error code */
                     free(fn);
                   }
                 }
-#  endif /* UNICODE_WCHAR */
                 if (G.unipath_filename != G.filename_full)
                   free(G.unipath_filename);
                 G.unipath_filename = NULL;
               }
             }
-#endif /* UNICODE_SUPPORT */
         }
         break;
 

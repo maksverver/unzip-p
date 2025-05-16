@@ -90,21 +90,7 @@ typedef struct stat z_stat;
 #    endif
 #  endif
 
-#  if defined(NO_UNICODE_SUPPORT) && defined(UNICODE_SUPPORT)
-   /* disable Unicode (UTF-8) support when requested */
-#    undef UNICODE_SUPPORT
-#  endif
-
-
 #  if (!defined(NO_SETLOCALE) && !defined(_MBCS))
-#    if (!defined(UNICODE_SUPPORT) || !defined(UTF8_MAYBE_NATIVE))
-   /* enable setlocale here, unless this happens later for UTF-8 and/or
-    * MBCS support */
-#      include <locale.h>
-#      ifndef SETLOCALE
-#        define SETLOCALE(category, locale) setlocale(category, locale)
-#      endif
-#    endif
 #  endif
 #  ifndef NO_SETLOCALE
 #    if (!defined(NO_WORKING_ISPRINT) && !defined(HAVE_WORKING_ISPRINT))

@@ -424,26 +424,17 @@ typedef size_t extent;
  */
 #  define FILNAMSIZ  PATH_MAX
 
-#  ifdef UNICODE_SUPPORT
-#    if !(defined(UTF8_MAYBE_NATIVE) || defined(UNICODE_WCHAR))
-#      undef UNICODE_SUPPORT
-#    endif
-#  endif
 /* 2007-09-18 SMS.
  * Include <locale.h> here if it will be needed later for Unicode.
  * Otherwise, SETLOCALE may be defined here, and then defined again
  * (differently) when <locale.h> is read later.
  */
-#  ifdef UNICODE_SUPPORT
-#    ifdef UNICODE_WCHAR
-#      include <wchar.h>
-#      include <wctype.h>
-#    endif
-#    include <locale.h>
-#    ifndef SETLOCALE
-#      define SETLOCALE(category, locale) setlocale(category, locale)
-#    endif
-#  endif /* UNICODE_SUPPORT */
+#  include <wchar.h>
+#  include <wctype.h>
+#  include <locale.h>
+#  ifndef SETLOCALE
+#    define SETLOCALE(category, locale) setlocale(category, locale)
+#  endif
 
 #  define CLEN(ptr) 1
 #  define PREINCSTR(ptr) (++(ptr))
@@ -936,9 +927,7 @@ typedef struct min_info {
     unsigned symlink : 1;    /* file is a symbolic link */
 #  endif
     unsigned HasUxAtt : 1;   /* crec ext_file_attr has Unix style mode bits */
-#  ifdef UNICODE_SUPPORT
     unsigned GPFIsUTF8: 1;   /* crec gen_purpose_flag UTF-8 bit 11 is set */
-#  endif
 #  ifndef SFX
     char *cfilname;          /* central header version of filename */
 #  endif
@@ -1154,10 +1143,8 @@ int      process_cdir_file_hdr      (__GPRO);
 int      process_local_file_hdr     (__GPRO);
 int      getZip64Data               (__GPRO__ const uch *ef_buf,
                                      unsigned ef_len);
-#  ifdef UNICODE_SUPPORT
   int    getUnicodeData             (__GPRO__ const uch *ef_buf,
                                      unsigned ef_len);
-#  endif
 unsigned ef_scan_for_izux           (const uch *ef_buf, unsigned ef_len,
                                      int ef_is_c, ulg dos_mdatetime,
                                      iztimes *z_utim, ulg *z_uidgid);
@@ -1743,23 +1730,22 @@ char    *GetLoadPath        (__GPRO);                              /* local */
     Unicode Support
     28 August 2005
   ---------------------------------------------------------------------*/
-#  if (defined(UNICODE_SUPPORT) && defined(UNICODE_WCHAR))
 
   /* Default character when a zwchar too big for wchar_t */
-#    define zwchar_to_wchar_t_default_char '_'
+#  define zwchar_to_wchar_t_default_char '_'
 
   /* Default character string when wchar_t does not convert to mb */
-#    define wide_to_mb_default_string "_"
+#  define wide_to_mb_default_string "_"
 
   /* wide character type */
   typedef unsigned long zwchar;
 
   /* UTF-8 related conversion functions, currently found in process.c */
 
-#    if 0 /* currently unused */
+#  if 0 /* currently unused */
   /* check if string is all ASCII */
   int is_ascii_string(const char *mbstring);
-#    endif /* unused */
+#  endif /* unused */
 
   /* convert UTF-8 string to multi-byte string */
   char *utf8_to_local_string(const char *utf8_string, int escape_all);
@@ -1770,18 +1756,18 @@ char    *GetLoadPath        (__GPRO);                              /* local */
   /* convert wide string to multi-byte string */
   char *wide_to_local_string(const zwchar *wide_string, int escape_all);
 
-#    if 0 /* currently unused */
+#  if 0 /* currently unused */
   /* convert local string to multi-byte display string */
   char *local_to_display_string(const char *local_string);
-#    endif /* unused */
+#  endif /* unused */
 
   /* convert wide character to escape string */
   char *wide_to_escape_string(unsigned long);
 
-#    define utf8_to_escaped_string(utf8_string) \
+#  define utf8_to_escaped_string(utf8_string) \
          utf8_to_local_string(utf8_string, TRUE)
 
-#    if 0 /* currently unused */
+#  if 0 /* currently unused */
   /* convert escape string to wide character */
   unsigned long escape_string_to_wide(const char *escape_string);
 
@@ -1793,8 +1779,7 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 
   /* convert wide string to UTF-8 */
   char *wide_to_utf8_string(const zwchar *wide_string);
-#    endif /* unused */
+#  endif /* unused */
 
-#  endif /* UNICODE_SUPPORT && UNICODE_WCHAR */
 
 #endif /* !__unzpriv_h */

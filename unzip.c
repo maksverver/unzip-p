@@ -130,10 +130,6 @@ static void  show_version_info     (__GPRO);
    static const char OnlyOneExdir[] =
      "error:  -d option used more than once (only one exdir allowed)\n";
 #endif
-#if (defined(UNICODE_SUPPORT) && !defined(UNICODE_WCHAR))
-  static const char UTF8EscapeUnSupp[] =
-    "warning:  -U \"escape all non-ASCII UTF-8 chars\" is not supported\n";
-#endif
 
 #if CRYPT
    static const char MustGivePasswd[] =
@@ -313,25 +309,11 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
      static const char Use_Deflate64[] =
      "USE_DEFLATE64 (PKZIP 4.x Deflate64(tm) supported)";
 #  endif
-#  ifdef UNICODE_SUPPORT
-#    ifdef UTF8_MAYBE_NATIVE
-#      ifdef UNICODE_WCHAR
-       /* direct native UTF-8 check AND charset transform via wchar_t */
-       static const char Use_Unicode[] =
-       "UNICODE_SUPPORT [wide-chars, char coding: %s] (handle UTF-8 paths)";
-#      else
-       /* direct native UTF-8 check, only */
-       static const char Use_Unicode[] =
-       "UNICODE_SUPPORT [char coding: %s] (handle UTF-8 paths)";
-#      endif
-       static const char SysChUTF8[] = "UTF-8";
-       static const char SysChOther[] = "other";
-#    else /* !UTF8_MAYBE_NATIVE */
-       /* charset transform via wchar_t, no native UTF-8 support */
-       static const char Use_Unicode[] =
-       "UNICODE_SUPPORT [wide-chars] (handle UTF-8 paths)";
-#    endif /* ?UTF8_MAYBE_NATIVE */
-#  endif /* UNICODE_SUPPORT */
+     /* direct native UTF-8 check AND charset transform via wchar_t */
+     static const char Use_Unicode[] =
+     "UNICODE_SUPPORT [wide-chars, char coding: %s] (handle UTF-8 paths)";
+     static const char SysChUTF8[] = "UTF-8";
+     static const char SysChOther[] = "other";
 #  ifdef MULT_VOLUME
      static const char Use_MultiVol[] =
      "MULT_VOLUME (multi-volume archives supported)";
@@ -413,8 +395,7 @@ static const char UnzipUsageLine3[] = "\n\
  * Likely, other advanced options should be moved to an extended help page and
  * the option to list that page put here.  [E. Gordon, 2008-3-16]
  */
-#  if (defined(UNICODE_SUPPORT))
-#    if   (defined UNIX)
+#  if   (defined UNIX)
 static const char UnzipUsageLine4[] = "\
 modifiers:\n\
   -n  never overwrite existing files         -q  quiet mode (-qq => quieter)\n\
@@ -425,7 +406,7 @@ modifiers:\n\
 lowercase\n %-42s  -V  retain VMS version numbers\n%s\
   -O  CHARSET  specify a character encoding for DOS, Windows and OS/2 archives\n\
   -I  CHARSET  specify a character encoding for UNIX and other archives\n\n";
-#    else /* !VMS */
+#  else /* !VMS */
 static const char UnzipUsageLine4[] = "\
 modifiers:\n\
   -n  never overwrite existing files         -q  quiet mode (-qq => quieter)\n\
@@ -434,16 +415,7 @@ modifiers:\n\
   -U  use escapes for all non-ASCII Unicode  -UU ignore any Unicode fields\n\
   -C  match filenames case-insensitively     -L  make (some) names \
 lowercase\n %-42s  -V  retain VMS version numbers\n%s";
-#    endif /* ?VMS */
-#  else /* !UNICODE_SUPPORT */
-static const char UnzipUsageLine4[] = "\
-modifiers:\n\
-  -n  never overwrite existing files         -q  quiet mode (-qq => quieter)\n\
-  -o  overwrite files WITHOUT prompting      -a  auto-convert any text files\n\
-  -j  junk paths (do not make directories)   -aa treat ALL files as text\n\
-  -C  match filenames case-insensitively     -L  make (some) names \
-lowercase\n %-42s  -V  retain VMS version numbers\n%s";
-#  endif /* ?UNICODE_SUPPORT */
+#  endif /* ?VMS */
 
 static const char UnzipUsageLine5[] = "\
 See \"unzip -hh\" or unzip.txt for more help.  Examples:\n\
@@ -507,17 +479,15 @@ int unzip(__G__ argc, argv)
     /* initialize international char support to the current environment */
     SETLOCALE(LC_CTYPE, "");
 
-#ifdef UNICODE_SUPPORT
     /* see if can use UTF-8 Unicode locale */
-#  ifdef UTF8_MAYBE_NATIVE
     {
         char *codeset;
-#    if !(defined(NO_NL_LANGINFO) || defined(NO_LANGINFO_H))
+#if !(defined(NO_NL_LANGINFO) || defined(NO_LANGINFO_H))
         /* get the codeset (character set encoding) currently used */
-#      include <langinfo.h>
+#  include <langinfo.h>
 
         codeset = nl_langinfo(CODESET);
-#    else /* NO_NL_LANGINFO || NO_LANGINFO_H */
+#else /* NO_NL_LANGINFO || NO_LANGINFO_H */
         /* query the current locale setting for character classification */
         codeset = setlocale(LC_CTYPE, NULL);
         if (codeset != NULL) {
@@ -525,7 +495,7 @@ int unzip(__G__ argc, argv)
             codeset = strchr(codeset, '.');
             if (codeset != NULL) ++codeset;
         }
-#    endif /* ?(NO_NL_LANGINFO || NO_LANGINFO_H) */
+#endif /* ?(NO_NL_LANGINFO || NO_LANGINFO_H) */
         /* is the current codeset UTF-8 ? */
         if ((codeset != NULL) && (strcmp(codeset, "UTF-8") == 0)) {
             /* successfully found UTF-8 char coding */
@@ -540,7 +510,6 @@ int unzip(__G__ argc, argv)
          *       resulted in garbage display of all non-basic ASCII characters.
          */
     }
-#  endif /* UTF8_MAYBE_NATIVE */
 
     /* initialize Unicode */
     G.unicode_escape_all = 0;
@@ -549,7 +518,6 @@ int unzip(__G__ argc, argv)
     G.unipath_version = 0;
     G.unipath_checksum = 0;
     G.unipath_filename = NULL;
-#endif /* UNICODE_SUPPORT */
 
 
 #ifdef UNIX
@@ -857,15 +825,9 @@ int unzip(__G__ argc, argv)
         Info(slide, 0x401, ((char *)slide, NotExtracting));
 #endif /* ?(SFX && !SFX_EXDIR) */
 
-#ifdef UNICODE_SUPPORT
     /* set Unicode-escape-all if option -U used */
     if (uO.U_flag == 1)
-#  ifdef UNICODE_WCHAR
         G.unicode_escape_all = TRUE;
-#  else
-        Info(slide, 0x401, ((char *)slide, UTF8EscapeUnSupp));
-#  endif
-#endif
 
 
 /*---------------------------------------------------------------------------
@@ -1277,7 +1239,6 @@ int uz_opts(__G__ pargc, pargv)
                     else
                         uO.uflag = TRUE;
                     break;
-#ifdef UNICODE_SUPPORT
                 case ('U'):    /* escape UTF-8, or disable UTF-8 support */
                     if (negative) {
                         uO.U_flag = MAX(uO.U_flag-negative,0);
@@ -1285,14 +1246,6 @@ int uz_opts(__G__ pargc, pargv)
                     } else
                         uO.U_flag++;
                     break;
-#else /* !UNICODE_SUPPORT */
-                case ('U'):    /* obsolete; to be removed in version 6.0 */
-                    if (negative)
-                        uO.L_flag = TRUE, negative = 0;
-                    else
-                        uO.L_flag = FALSE;
-                    break;
-#endif /* ?UNICODE_SUPPORT */
 #ifndef SFX
                 case ('v'):    /* verbose */
                     if (negative) {
@@ -1962,18 +1915,11 @@ static void show_version_info(__G)
           Use_Deflate64));
         ++numopts;
 #  endif
-#  ifdef UNICODE_SUPPORT
-#    ifdef UTF8_MAYBE_NATIVE
         sprintf((char *)(slide+256), Use_Unicode,
           G.native_is_utf8 ? SysChUTF8 : SysChOther);
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           (char *)(slide+256)));
-#    else
-        Info(slide, 0, ((char *)slide, CompileOptFormat,
-          Use_Unicode));
-#    endif
         ++numopts;
-#  endif
 #  ifdef MULT_VOLUME
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_MultiVol));

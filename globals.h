@@ -258,19 +258,15 @@ typedef struct Globals {
     ulg      outcnt;               /* number of chars stored in outbuf */
 #  ifndef FUNZIP
     char     filename[FILNAMSIZ];  /* also used by NT for temporary SFX path */
-#    ifdef UNICODE_SUPPORT
     char     *filename_full;       /* the full path so Unicode checks work */
     extent   fnfull_bufsize;       /* size of allocated filename buffer */
     int      unicode_escape_all;
     int      unicode_mismatch;
-#      ifdef UTF8_MAYBE_NATIVE
     int      native_is_utf8;       /* bool, TRUE => native charset == UTF-8 */
-#      endif
 
     int      unipath_version;      /* version of Unicode field */
     ulg      unipath_checksum;     /* Unicode field checksum */
     char     *unipath_filename;    /* UTF-8 path */
-#    endif /* UNICODE_SUPPORT */
 
 
     char *key;         /* crypt static: decryption password or NULL */
