@@ -446,11 +446,6 @@ typedef size_t extent;
 #    endif
 #  endif /* UNICODE_SUPPORT */
 
-/* DBCS support for Info-ZIP  (mainly for japanese (-: )
- * by Yoshioka Tsuneo (QWF00133@nifty.ne.jp,tsuneo-y@is.aist-nara.ac.jp)
- */
-#  define ___MBS_TMP_DEF
-#  define ___TMP_PTR
 #  define CLEN(ptr) 1
 #  define PREINCSTR(ptr) (++(ptr))
 #  define POSTINCSTR(ptr) ((ptr)++)
