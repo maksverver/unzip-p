@@ -158,14 +158,13 @@
 
 #  include <stdio.h>
 #  include <ctype.h>
-#  include <errno.h>       /* used in mapname() */
+#  include <errno.h>     /* used in mapname() */
 #  include <string.h>    /* strcpy, strcmp, memcpy, strchr/strrchr, etc. */
-#  if (!defined(NO_LIMITS_H))
-#    include <limits.h>    /* MAX/MIN constant symbols for system types... */
-#  endif
-#  include <signal.h>      /* used in unzip.c, fileio.c */
+#  include <limits.h>    /* MAX/MIN constant symbols for system types... */
+#  include <signal.h>    /* used in unzip.c, fileio.c */
 #  include <stddef.h>
-#  include <stdlib.h>  /* standard library prototypes, malloc(), etc. */
+#  include <stdlib.h>    /* standard library prototypes, malloc(), etc. */
+#  include <stdint.h>    /* int64_t, etc. */
 typedef size_t extent;
 
 
@@ -848,36 +847,8 @@ typedef size_t extent;
 /*  Typedefs  */
 /**************/
 
-#  ifndef Z_UINT8_DEFINED
-#    if (defined(__GNUC__))
-  typedef unsigned long long    z_uint8;
-#    else
-  typedef unsigned __int64      z_uint8;
-#    endif
-#    define Z_UINT8_DEFINED
-#  endif
-#  ifndef Z_UINT4_DEFINED
-#    if (!defined(NO_LIMITS_H))
-#      if (defined(UINT_MAX) && (UINT_MAX == 0xffffffffUL))
-     typedef unsigned int       z_uint4;
-#        define Z_UINT4_DEFINED
-#      else
-#        if (defined(ULONG_MAX) && (ULONG_MAX == 0xffffffffUL))
-     typedef unsigned long      z_uint4;
-#          define Z_UINT4_DEFINED
-#        else
-#          if (defined(USHRT_MAX) && (USHRT_MAX == 0xffffffffUL))
-     typedef unsigned short     z_uint4;
-#            define Z_UINT4_DEFINED
-#          endif
-#        endif
-#      endif
-#    endif /* !NO_LIMITS_H */
-#  endif /* !Z_UINT4_DEFINED */
-#  ifndef Z_UINT4_DEFINED
-  typedef ulg                   z_uint4;
-#    define Z_UINT4_DEFINED
-#  endif
+typedef uint64_t    z_uint8;
+typedef uint32_t    z_uint4;
 
 /* The following three user-defined unsigned integer types are used for
    holding zipfile entities (required widths without / with Zip64 support):
