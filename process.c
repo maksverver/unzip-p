@@ -2469,8 +2469,6 @@ zwchar *utf8_to_wide_string(utf8_string)
 
 
 
-#ifdef USE_EF_UT_TIME
-
 static int read_ux3_value(dbuf, uidgid_sz, p_uidgid)
     const uch *dbuf;    /* buffer a uid or gid value */
     unsigned uidgid_sz; /* size of uid/gid value */
@@ -2556,11 +2554,11 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
     unsigned eb_len;
     int have_new_type_eb = 0;
     long i_time;        /* buffer for Unix style 32-bit integer time value */
-#  ifdef TIME_T_TYPE_DOUBLE
+#ifdef TIME_T_TYPE_DOUBLE
     int ut_in_archive_sgn = 0;
-#  else
+#else
     int ut_zip_unzip_compatible = FALSE;
-#  endif
+#endif
 
 /*---------------------------------------------------------------------------
     This function scans the extra field for EF_TIME, EF_IZUNIX2, EF_IZUNIX, or
@@ -2613,7 +2611,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         TTrace((stderr,"  UT e.f. modification time = %ld\n",
                                 i_time));
 
-#  ifdef TIME_T_TYPE_DOUBLE
+#ifdef TIME_T_TYPE_DOUBLE
                         if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                             if (dos_mdatetime == DOSTIME_MINIMUM) {
                               ut_in_archive_sgn = -1;
@@ -2637,7 +2635,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                             ut_in_archive_sgn = 0;
                             z_utim->mtime = (time_t)i_time;
                         }
-#  else /* !TIME_T_TYPE_DOUBLE */
+#else /* !TIME_T_TYPE_DOUBLE */
                         if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                             ut_zip_unzip_compatible =
                               ((time_t)0x80000000L < (time_t)0L)
@@ -2656,7 +2654,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                             ut_zip_unzip_compatible = FALSE;
                         }
                         z_utim->mtime = (time_t)i_time;
-#  endif /* ?TIME_T_TYPE_DOUBLE */
+#endif /* ?TIME_T_TYPE_DOUBLE */
                     } else {
                         flags &= ~EB_UT_FL_MTIME;
                         TTrace((stderr,"  UT e.f. truncated; no modtime\n"));
@@ -2672,7 +2670,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         eb_idx += 4;
                         TTrace((stderr,"  UT e.f. access time = %ld\n",
                                 i_time));
-#  ifdef TIME_T_TYPE_DOUBLE
+#ifdef TIME_T_TYPE_DOUBLE
                         if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                             if (ut_in_archive_sgn == -1)
                               z_utim->atime =
@@ -2689,7 +2687,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         } else {
                             z_utim->atime = (time_t)i_time;
                         }
-#  else /* !TIME_T_TYPE_DOUBLE */
+#else /* !TIME_T_TYPE_DOUBLE */
                         if (((ulg)(i_time) & (ulg)(0x80000000L)) &&
                             !ut_zip_unzip_compatible) {
                             flags &= ~EB_UT_FL_ATIME;
@@ -2698,7 +2696,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         } else {
                             z_utim->atime = (time_t)i_time;
                         }
-#  endif /* ?TIME_T_TYPE_DOUBLE */
+#endif /* ?TIME_T_TYPE_DOUBLE */
                     } else {
                         flags &= ~EB_UT_FL_ATIME;
                     }
@@ -2708,7 +2706,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         i_time = (long)makelong((EB_HEADSIZE+eb_idx) + ef_buf);
                         TTrace((stderr,"  UT e.f. creation time = %ld\n",
                                 i_time));
-#  ifdef TIME_T_TYPE_DOUBLE
+#ifdef TIME_T_TYPE_DOUBLE
                         if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                             if (ut_in_archive_sgn == -1)
                               z_utim->ctime =
@@ -2725,7 +2723,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         } else {
                             z_utim->ctime = (time_t)i_time;
                         }
-#  else /* !TIME_T_TYPE_DOUBLE */
+#else /* !TIME_T_TYPE_DOUBLE */
                         if (((ulg)(i_time) & (ulg)(0x80000000L)) &&
                             !ut_zip_unzip_compatible) {
                             flags &= ~EB_UT_FL_CTIME;
@@ -2734,7 +2732,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         } else {
                             z_utim->ctime = (time_t)i_time;
                         }
-#  endif /* ?TIME_T_TYPE_DOUBLE */
+#endif /* ?TIME_T_TYPE_DOUBLE */
                     } else {
                         flags &= ~EB_UT_FL_CTIME;
                     }
@@ -2784,7 +2782,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                     flags |= (EB_UT_FL_MTIME | EB_UT_FL_ATIME);
                     i_time = (long)makelong((EB_HEADSIZE+EB_UX_MTIME)+ef_buf);
                     TTrace((stderr,"  Unix EF modtime = %ld\n", i_time));
-#  ifdef TIME_T_TYPE_DOUBLE
+#ifdef TIME_T_TYPE_DOUBLE
                     if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                         if (dos_mdatetime == DOSTIME_MINIMUM) {
                             ut_in_archive_sgn = -1;
@@ -2807,7 +2805,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         ut_in_archive_sgn = 0;
                         z_utim->mtime = (time_t)i_time;
                     }
-#  else /* !TIME_T_TYPE_DOUBLE */
+#else /* !TIME_T_TYPE_DOUBLE */
                     if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                         ut_zip_unzip_compatible =
                           ((time_t)0x80000000L < (time_t)0L)
@@ -2825,10 +2823,10 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                         ut_zip_unzip_compatible = FALSE;
                     }
                     z_utim->mtime = (time_t)i_time;
-#  endif /* ?TIME_T_TYPE_DOUBLE */
+#endif /* ?TIME_T_TYPE_DOUBLE */
                     i_time = (long)makelong((EB_HEADSIZE+EB_UX_ATIME)+ef_buf);
                     TTrace((stderr,"  Unix EF actime = %ld\n", i_time));
-#  ifdef TIME_T_TYPE_DOUBLE
+#ifdef TIME_T_TYPE_DOUBLE
                     if ((ulg)(i_time) & (ulg)(0x80000000L)) {
                         if (ut_in_archive_sgn == -1)
                             z_utim->atime =
@@ -2845,7 +2843,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                     } else {
                         z_utim->atime = (time_t)i_time;
                     }
-#  else /* !TIME_T_TYPE_DOUBLE */
+#else /* !TIME_T_TYPE_DOUBLE */
                     if (((ulg)(i_time) & (ulg)(0x80000000L)) &&
                         !ut_zip_unzip_compatible && (flags & 0x0ff)) {
                         /* atime not in range of UnZip's time_t */
@@ -2855,7 +2853,7 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
                     } else {
                         z_utim->atime = (time_t)i_time;
                     }
-#  endif /* ?TIME_T_TYPE_DOUBLE */
+#endif /* ?TIME_T_TYPE_DOUBLE */
                 }
                 if (eb_len >= EB_UX_FULLSIZE && z_uidgid != NULL) {
                     z_uidgid[0] = makeword((EB_HEADSIZE+EB_UX_UID) + ef_buf);
@@ -2876,8 +2874,6 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
 
     return flags;
 }
-
-#endif /* USE_EF_UT_TIME */
 
 
 #define SPARKID_2 0x30435241    /* = "ARC0" */

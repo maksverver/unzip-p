@@ -294,9 +294,7 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
      static const char TimeStamp[] = "TIMESTAMP";
 #  endif
      static const char UnixBackup[] = "UNIXBACKUP";
-#  ifdef USE_EF_UT_TIME
      static const char Use_EF_UT_time[] = "USE_EF_UT_TIME";
-#  endif
 #  ifndef LZW_CLEAN
      static const char Use_Unshrink[] =
      "USE_UNSHRINK (PKZIP/Zip 1.x unshrinking method supported)";
@@ -1885,11 +1883,9 @@ static void show_version_info(__G)
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           UnixBackup));
         ++numopts;
-#  ifdef USE_EF_UT_TIME
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_EF_UT_time));
         ++numopts;
-#  endif
 #  ifndef COPYRIGHT_CLEAN
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_Smith_Code));
