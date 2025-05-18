@@ -2484,18 +2484,60 @@ static int read_ux3_value(dbuf, uidgid_sz, p_uidgid)
     switch (uidgid_sz) {
       case 2:
         *p_uidgid = (ulg)makeword(dbuf);
-        break;
+        return TRUE;
       case 4:
         *p_uidgid = (ulg)makelong(dbuf);
-        break;
+        return TRUE;
       case 8:
         uidgid64 = makeint64(dbuf);
         *p_uidgid = (ulg)uidgid64;
-        if ((zusz_t)(*p_uidgid) != uidgid64)
-            return FALSE;
-        break;
+        return ((zusz_t)(*p_uidgid) == uidgid64);  /* check overflow */
     }
-    return TRUE;
+    return FALSE;  /* unsupported size */
+}
+
+/* Reads a UX3 varint that consists of a size byte (sz) followed by the
+ * little-endian integer value encoded in sz bytes.
+ *
+ * On success, returns TRUE. In that case, *buf and *len are updated to reflect
+ * the remaining data, and the integer is written to *p_val.
+ */
+static int read_ux3_varint(buf, len, p_val)
+    const uch **buf;    /* pointer to current position in extra data */
+    unsigned *len;      /* pointer to remaining size of extra data */
+    ulg *p_val;         /* return storage: integer value read */
+{
+  unsigned sz;
+
+  if (*len < 1) return FALSE;
+  sz = **buf;
+  if (*len < 1 + sz || !read_ux3_value(*buf + 1, sz, p_val)) return FALSE;
+  *buf += 1 + sz;
+  *len -= 1 + sz;
+  return TRUE;
+}
+
+/* Parses the EF_IZUNIX3 extra field, with the following layout:
+ *
+ *  Version       1 byte      version of this extra field, currently 1
+ *  UIDSize       1 byte      Size of UID field
+ *  UID           Variable    UID for this entry (2, 4, 8)
+ *  GIDSize       1 byte      Size of GID field
+ *  GID           Variable    GID for this entry (2, 4, 8)
+*/
+static int parse_ux3_buf(buf, len, z_uidgid)
+    const uch *buf;   /* pointer to data (exluding header) */
+    unsigned len;     /* size of data (excluding header) */
+    ulg *z_uidgid;    /* return storage; must be 2 elements! */
+{
+  if (len < 3) return FALSE;
+
+  /* only know about version 1 */
+  if (*buf++ != 1) return FALSE;
+  --len;
+
+  return read_ux3_varint(&buf, &len, z_uidgid + 0)
+      && read_ux3_varint(&buf, &len, z_uidgid + 1);
 }
 #  endif /* IZ_HAVE_UXUIDGID */
 
@@ -2729,34 +2771,11 @@ unsigned ef_scan_for_izux(ef_buf, ef_len, ef_is_c, dos_mdatetime,
 
             /* Ignore any prior EF_IZUNIX/EF_PKUNIX/EF_IZUNIX2 UID/GID. */
             flags &= 0x0ff;
-        /*
-          Version       1 byte      version of this extra field, currently 1
-          UIDSize       1 byte      Size of UID field
-          UID           Variable    UID for this entry
-          GIDSize       1 byte      Size of GID field
-          GID           Variable    GID for this entry
-        */
-
 #  ifdef IZ_HAVE_UXUIDGID
-            if (eb_len >= EB_UX3_MINLEN
-                && z_uidgid != NULL
-                && (*((EB_HEADSIZE + 0) + ef_buf) == 1))
-                    /* only know about version 1 */
+            if (z_uidgid != NULL &&
+                parse_ux3_buf(ef_buf + EB_HEADSIZE, eb_len, z_uidgid))
             {
-                uch uid_size;
-                uch gid_size;
-
-                uid_size = *((EB_HEADSIZE + 1) + ef_buf);
-                gid_size = *((EB_HEADSIZE + uid_size + 2) + ef_buf);
-
-                if ( read_ux3_value((EB_HEADSIZE + 2) + ef_buf,
-                                    uid_size, &z_uidgid[0])
-                    &&
-                     read_ux3_value((EB_HEADSIZE + uid_size + 3) + ef_buf,
-                                    gid_size, &z_uidgid[1]) )
-                {
-                    flags |= EB_UX2_VALID;   /* signal success */
-                }
+                flags |= EB_UX2_VALID;   /* signal success */
             }
 #  endif /* IZ_HAVE_UXUIDGID */
             break;

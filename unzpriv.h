@@ -724,8 +724,6 @@ typedef size_t extent;
 #  define EB_UX2_GID        2    /* byte offset of GID in "Ux" field data */
 #  define EB_UX2_VALID      (1 << 8)      /* UID/GID present */
 
-#  define EB_UX3_MINLEN     7    /* minimal "ux" field size (2-byte UID/GID) */
-
 #  define EB_UT_MINLEN      1    /* minimal UT field contains Flags byte */
 #  define EB_UT_FLAGS       0    /* byte offset of Flags field */
 #  define EB_UT_TIME1       1    /* byte offset of 1st time value */
