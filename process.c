@@ -2250,7 +2250,6 @@ char *wide_to_local_string(wide_string, escape_all)
   int i;
   wchar_t wc;
   int b;
-  int state_dependent;
   int wsize = 0;
   int max_bytes = MB_CUR_MAX;
   char buf[ MB_CUR_MAX+ 1];             /* ("+1" not really needed?) */
@@ -2270,12 +2269,7 @@ char *wide_to_local_string(wide_string, escape_all)
   /* convert it */
   buffer[0] = '\0';
   /* set initial state if state-dependent encoding */
-  wc = (wchar_t)'a';
-  b = wctomb(NULL, wc);
-  if (b == 0)
-    state_dependent = 0;
-  else
-    state_dependent = 1;
+  b = wctomb(NULL, L'a');
   for (i = 0; i < wsize; i++) {
     if (sizeof(wchar_t) < 4 && wide_string[i] > 0xFFFF) {
       /* wchar_t probably 2 bytes */
