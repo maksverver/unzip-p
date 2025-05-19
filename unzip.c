@@ -286,10 +286,8 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
 #  ifdef SET_DIR_ATTRIB
      static const char SetDirAttrib[] = "SET_DIR_ATTRIB";
 #  endif
-#  ifdef SYMLINKS
      static const char SymLinkSupport[] =
      "SYMLINKS (symbolic links supported, if RTL and file system permit)";
-#  endif
 #  ifdef TIMESTAMP
      static const char TimeStamp[] = "TIMESTAMP";
 #  endif
@@ -1870,11 +1868,9 @@ static void show_version_info(__G)
           SetDirAttrib));
         ++numopts;
 #  endif
-#  ifdef SYMLINKS
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           SymLinkSupport));
         ++numopts;
-#  endif
 #  ifdef TIMESTAMP
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           TimeStamp));

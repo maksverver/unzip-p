@@ -468,17 +468,6 @@ typedef size_t extent;
 #    define S_IEXEC   S_IXUSR
 #  endif
 
-#  if (defined(UNIX) && defined(S_IFLNK))
-#    define SYMLINKS
-#    ifndef S_ISLNK
-#      define S_ISLNK(m)  (((m) & S_IFMT) == S_IFLNK)
-#    endif
-#  endif /* UNIX && S_IFLNK */
-
-#  ifndef S_ISDIR
-#    define S_ISDIR(m)  (((m) & S_IFMT) == S_IFDIR)
-#  endif
-
 #  ifndef IS_VOLID
 #    define IS_VOLID(m)  ((m) & 0x08)
 #  endif
@@ -884,16 +873,14 @@ typedef struct iztimes {
    } direntry;
 #  endif /* SET_DIR_ATTRIB */
 
-#  ifdef SYMLINKS
-   typedef struct slinkentry {  /* info for deferred symlink creation */
-       struct slinkentry *next; /* pointer to next entry in chain */
-       extent targetlen;        /* length of target filespec */
-       extent attriblen;        /* length of system-specific attrib data */
-       char *target;            /* pointer to target filespec */
-       char *fname;             /* pointer to name of link */
-       char buf[1];             /* data/name/link buffer */
-   } slinkentry;
-#  endif /* SYMLINKS */
+typedef struct slinkentry {  /* info for deferred symlink creation */
+    struct slinkentry *next; /* pointer to next entry in chain */
+    extent targetlen;        /* length of target filespec */
+    extent attriblen;        /* length of system-specific attrib data */
+    char *target;            /* pointer to target filespec */
+    char *fname;             /* pointer to name of link */
+    char buf[1];             /* data/name/link buffer */
+} slinkentry;
 
 typedef struct min_info {
     zoff_t offset;
@@ -910,9 +897,7 @@ typedef struct min_info {
     unsigned textmode : 1;   /* file is to be extracted as text */
     unsigned lcflag : 1;     /* convert filename to lowercase */
     unsigned vollabel : 1;   /* "file" is an MS-DOS volume (disk) label */
-#  ifdef SYMLINKS
     unsigned symlink : 1;    /* file is a symbolic link */
-#  endif
     unsigned HasUxAtt : 1;   /* crec ext_file_attr has Unix style mode bits */
     unsigned GPFIsUTF8: 1;   /* crec gen_purpose_flag UTF-8 bit 11 is set */
 #  ifndef SFX
@@ -1413,12 +1398,10 @@ char    *GetLoadPath        (__GPRO);                              /* local */
 #    define CRCVAL_INITIAL  0L
 #  endif
 
-#  ifdef SYMLINKS
    /* This macro defines the Zip "made by" hosts that are considered
       to support storing symbolic link entries. */
-#    define SYMLINK_HOST(hn) ((hn) == UNIX_ || (hn) == ATARI_ || \
+#  define SYMLINK_HOST(hn) ((hn) == UNIX_ || (hn) == ATARI_ || \
       (hn) == ATHEOS_ || (hn) == BEOS_ || (hn) == VMS_)
-#  endif
 
 #  ifndef TEST_NTSD               /* "NTSD valid?" checking function */
 #    define TEST_NTSD     NULL    /*   ... is not available */

@@ -356,14 +356,12 @@ int mapattr(__G)
                 }
             }
             if (!r) {
-#ifdef SYMLINKS
                 /* Check if the file is a (POSIX-compatible) symbolic link.
                  * We restrict symlink support to those "made-by" hosts that
                  * are known to support symbolic links.
                  */
                 G.pInfo->symlink = S_ISLNK(G.pInfo->file_attr) &&
                                    SYMLINK_HOST(G.pInfo->hostnum);
-#endif
                 return 0;
             }
             /* fall through! */
@@ -397,13 +395,11 @@ int mapattr(__G)
                 /* keep previous G.pInfo->file_attr setting, when its "owner"
                  * part appears to be consistent with DOS attribute flags!
                  */
-#ifdef SYMLINKS
                 /* Entries "made by FS_FAT_" could have been zipped on a
                  * system that supports POSIX-style symbolic links.
                  */
                 G.pInfo->symlink = S_ISLNK(G.pInfo->file_attr) &&
                                    (G.pInfo->hostnum == FS_FAT_);
-#endif
                 return 0;
             }
             G.pInfo->file_attr = (unsigned)(0444 | tmp<<6 | tmp<<3 | tmp);
@@ -1042,15 +1038,14 @@ int close_outfile(__G)
     unsigned ints with unsigned longs.
   ---------------------------------------------------------------------------*/
 
-#ifdef SYMLINKS
     if (G.symlnk) {
         extent ucsize = (extent)G.lrec.ucsize;
-#  ifdef SET_SYMLINK_ATTRIBS
+#ifdef SET_SYMLINK_ATTRIBS
         extent attribsize = sizeof(unsigned) +
                             (have_uidgid_flg ? sizeof(z_uidgid) : 0);
-#  else
+#else
         extent attribsize = 0;
-#  endif
+#endif
         /* size of the symlink entry is the sum of
          *  (struct size (includes 1st '\0') + 1 additional trailing '\0'),
          *  system specific attribute data size (might be 0),
@@ -1078,12 +1073,12 @@ int close_outfile(__G)
         slnk_entry->next = NULL;
         slnk_entry->targetlen = ucsize;
         slnk_entry->attriblen = attribsize;
-#  ifdef SET_SYMLINK_ATTRIBS
+#ifdef SET_SYMLINK_ATTRIBS
         memcpy(slnk_entry->buf, &(G.pInfo->file_attr),
                sizeof(unsigned));
         if (have_uidgid_flg)
             memcpy(slnk_entry->buf + 4, z_uidgid, sizeof(z_uidgid));
-#  endif
+#endif
         slnk_entry->target = slnk_entry->buf + slnk_entry->attriblen;
         slnk_entry->fname = slnk_entry->target + ucsize + 1;
         strcpy(slnk_entry->fname, G.filename);
@@ -1113,7 +1108,6 @@ int close_outfile(__G)
         G.slink_last = slnk_entry;
         return errval;
     }
-#endif /* SYMLINKS */
 
 #if (defined(NO_FCHOWN))
     errval = CloseError(G.outfile, G.filename);
@@ -1186,7 +1180,7 @@ int close_outfile(__G)
 } /* end function close_outfile() */
 
 
-#if (defined(SYMLINKS) && defined(SET_SYMLINK_ATTRIBS))
+#if defined(SET_SYMLINK_ATTRIBS)
 int set_symlnk_attribs(__G__ slnk_entry)
     __GDEF
     slinkentry *slnk_entry;
@@ -1224,7 +1218,7 @@ int set_symlnk_attribs(__G__ slnk_entry)
     /* currently, no error propagation... */
     return PK_OK;
 } /* end function set_symlnk_attribs() */
-#endif /* SYMLINKS && SET_SYMLINK_ATTRIBS */
+#endif /* SET_SYMLINK_ATTRIBS */
 
 
 #ifdef SET_DIR_ATTRIB

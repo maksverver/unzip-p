@@ -100,9 +100,7 @@ static int extract_or_test_member(__GPRO);
    static void decompress_bits(uch *outptr, unsigned needlen,
                                    const uch *bitptr);
 #endif
-#ifdef SYMLINKS
-   static void set_deferred_symlink(__GPRO__ slinkentry *slnk_entry);
-#endif
+static void set_deferred_symlink(__GPRO__ slinkentry *slnk_entry);
 #ifdef SET_DIR_ATTRIB
    static int dircomp(const void *a, const void *b);
 #endif
@@ -200,7 +198,6 @@ static const char SkipVolumeLabel[] =
      "     failed setting times/attribs for %lu dir entries";
 #endif
 
-#ifdef SYMLINKS         /* messages of the deferred symlinks handler */
    static const char SymLnkWarnNoMem[] =
      "warning:  deferred symlink (%s) failed:\n\
           out of memory\n";
@@ -211,7 +208,6 @@ static const char SkipVolumeLabel[] =
      "finishing deferred symbolic links:\n";
    static const char SymLnkFinish[] =
      "  %-22s -> %s\n";
-#endif
 
    static const char ReplaceQuery[] =
      "replace %s? [y]es, [n]o, [A]ll, [N]one, [r]ename: ";
@@ -627,7 +623,6 @@ int extract_or_test_files(__G)    /* return PK-type error code */
     the symbolic links.
   ---------------------------------------------------------------------------*/
 
-#ifdef SYMLINKS
     if (G.slink_last != NULL) {
         if (QCOND2)
             Info(slide, 0, ((char *)slide, SymLnkDeferred));
@@ -640,7 +635,6 @@ int extract_or_test_files(__G)    /* return PK-type error code */
        }
        G.slink_last = NULL;
     }
-#endif /* SYMLINKS */
 
 /*---------------------------------------------------------------------------
     Go back through saved list of directories, sort and set times/perms/UIDs
@@ -1502,12 +1496,10 @@ static int extract_or_test_member(__G)    /* return PK-type error code */
     G.newfile = TRUE;
     G.crc32val = CRCVAL_INITIAL;
 
-#ifdef SYMLINKS
     /* If file is a (POSIX-compatible) symbolic link and we are extracting
      * to disk, prepare to restore the link. */
     G.symlnk = (G.pInfo->symlink &&
                 !uO.tflag && !uO.cflag && (G.lrec.ucsize > 0));
-#endif /* SYMLINKS */
 
     if (uO.tflag) {
         if (!uO.qflag)
@@ -1530,12 +1522,10 @@ static int extract_or_test_member(__G)    /* return PK-type error code */
     switch (G.lrec.compression_method) {
         case STORED:
             if (!uO.tflag && QCOND2) {
-#ifdef SYMLINKS
                 if (G.symlnk)   /* can also be deflated, but rarer... */
                     Info(slide, 0, ((char *)slide, ExtractMsg,
                       "link", FnFilter1(G.filename), "", ""));
                 else
-#endif /* SYMLINKS */
                 Info(slide, 0, ((char *)slide, ExtractMsg,
                   "extract", FnFilter1(G.filename),
                   (uO.aflag != 1 /* && G.pInfo->textfile==G.pInfo->textmode */)?
@@ -2298,7 +2288,6 @@ static void decompress_bits(outptr, needlen, bitptr)
 
 
 
-#ifdef SYMLINKS
 /***********************************/
 /* Function set_deferred_symlink() */
 /***********************************/
@@ -2345,13 +2334,12 @@ static void set_deferred_symlink(__G__ slnk_entry)
     if (symlink(linktarget, linkfname))  /* create the real link */
         perror("symlink error");
     free(linktarget);
-#  ifdef SET_SYMLINK_ATTRIBS
+#ifdef SET_SYMLINK_ATTRIBS
     set_symlnk_attribs(__G__ slnk_entry);
-#  endif
+#endif
     return;                             /* can't set time on symlinks */
 
 } /* end function set_deferred_symlink() */
-#endif /* SYMLINKS */
 
 /*
  * If Unicode is supported, assume we have what we need to do this

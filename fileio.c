@@ -145,10 +145,8 @@ static const char DiskFullQuery[] =
     "%s:  write error (disk full?).  Continue? (y/n/^C) ";
 static const char ZipfileCorrupt[] =
     "error:  zipfile probably corrupt (%s)\n";
-#ifdef SYMLINKS
      static const char FileIsSymLink[] =
        "%s exists and is a symbolic link%s.\n";
-#endif
 #ifdef MORE
      static const char MorePrompt[] = "--More--(%lu)";
 #endif
@@ -203,12 +201,8 @@ int open_outfile(__G)           /* return 1 if fail */
     __GDEF
 {
 #if (defined(UNIX))
-#  ifdef SYMLINKS
     if (SSTAT(G.filename, &G.statbuf) == 0 ||
         lstat(G.filename, &G.statbuf) == 0)
-#  else
-    if (SSTAT(G.filename, &G.statbuf) == 0)
-#  endif /* ?SYMLINKS */
     {
         Trace((stderr, "open_outfile:  stat(%s) returns 0:  file exists\n",
           FnFilter1(G.filename)));
@@ -309,14 +303,10 @@ int open_outfile(__G)           /* return 1 if fail */
 #if defined(UNIX)
         mode_t umask_sav = umask(0077);
 #endif
-#if defined(SYMLINKS)
         /* These features require the ability to re-read extracted data from
            the output files. Output files are created with Read&Write access.
          */
         G.outfile = zfopen(G.filename, FOPWR);
-#else
-        G.outfile = zfopen(G.filename, FOPW);
-#endif
 #if defined(UNIX)
         umask(umask_sav);
 #endif
@@ -1510,7 +1500,6 @@ int check_for_newer(__G__ filename)  /* return 1 if existing file is newer */
         Trace((stderr,
           "check_for_newer:  stat(%s) returns %d:  file does not exist\n",
           FnFilter1(filename), SSTAT(filename, &G.statbuf)));
-#ifdef SYMLINKS
         Trace((stderr, "check_for_newer:  doing lstat(%s)\n",
           FnFilter1(filename)));
         /* GRR OPTION:  could instead do this test ONLY if G.symlnk is true */
@@ -1523,13 +1512,11 @@ int check_for_newer(__G__ filename)  /* return 1 if existing file is newer */
                   FnFilter1(filename), " with no real file"));
             return EXISTS_AND_OLDER;   /* symlink dates are meaningless */
         }
-#endif /* SYMLINKS */
         return DOES_NOT_EXIST;
     }
     Trace((stderr, "check_for_newer:  stat(%s) returns 0:  file exists\n",
       FnFilter1(filename)));
 
-#ifdef SYMLINKS
     /* GRR OPTION:  could instead do this test ONLY if G.symlnk is true */
     if (lstat(filename, &G.statbuf) == 0 && S_ISLNK(G.statbuf.st_mode)) {
         Trace((stderr, "check_for_newer:  %s is a symbolic link\n",
@@ -1539,7 +1526,6 @@ int check_for_newer(__G__ filename)  /* return 1 if existing file is newer */
               FnFilter1(filename), ""));
         return EXISTS_AND_OLDER;   /* symlink dates are meaningless */
     }
-#endif /* SYMLINKS */
 
     NATIVE_TO_TIMET(G.statbuf.st_mtime)   /* NOP unless MSC 7.0 or Macintosh */
 

@@ -1522,11 +1522,9 @@ int process_cdir_file_hdr(__G)    /* return PK-type error code */
     G.pInfo->GPFIsUTF8
         = (G.crec.general_purpose_bit_flag & (1 << 11)) == (1 << 11);
 
-#ifdef SYMLINKS
     /* Initialize the symlink flag, may be set by the platform-specific
        mapattr function.  */
     G.pInfo->symlink = 0;
-#endif
 
     return PK_COOL;
 
