@@ -327,8 +327,8 @@ int process_zipfiles(__G)    /* return PK-type error code */
     if (G.autorun_command[0] && !uO.qflag) { /* NO autorun without prompt! */
         Info(slide, 0x81, ((char *)slide, AutorunPrompt,
                       FnFilter1(G.autorun_command)));
-        if (fgets(G.answerbuf, 9, stdin) != (char *)NULL
-            && toupper(*G.answerbuf) == 'Y')
+        if ( fgets(G.answerbuf, 9, stdin) &&
+             toupper(*G.answerbuf) == 'Y' )
             system(G.autorun_command);
         else
             Info(slide, 1, ((char *)slide, NotAutoRunning));

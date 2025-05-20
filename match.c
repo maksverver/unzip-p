@@ -302,14 +302,10 @@ int main(int argc, char **argv)
 
     for (;;) {
         put("Pattern (return to exit): ");
-        fgets(pat, sizeof(pat), stdin);
-        if (!pat[0])
-            break;
+        if (!fgets(pat, sizeof(pat), stdin) || !pat[0]) break;
         for (;;) {
             put("String (return for new pattern): ");
-            fgets(str, sizeof(str), stdin);
-            if (!str[0])
-                break;
+            if (!fgets(str, sizeof(str), stdin) || !str[0]) break;
             printf(
                 "Match forward slash:  case sensitive: %3s  insensitive (-C): %3s\n"
                 "Don't match (-W):     case sensitive: %3s  insensitive (-C): %3s\n",

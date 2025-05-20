@@ -904,8 +904,8 @@ static int store_info(__G)   /* return 0 if skipping, 1 if OK */
         else if (!uO.tflag && !IS_OVERWRT_ALL) { /* if -o, extract anyway */
             Info(slide, 0x481, ((char *)slide, VMSFormatQuery,
               FnFilter1(G.filename)));
-            fgets(G.answerbuf, sizeof(G.answerbuf), stdin);
-            if ((*G.answerbuf != 'y') && (*G.answerbuf != 'Y'))
+            if ( !fgets(G.answerbuf, sizeof(G.answerbuf), stdin) ||
+                 (*G.answerbuf != 'y' && *G.answerbuf != 'Y') )
                 return 0;
         }
     /* usual file type:  don't need VMS to extract */
@@ -1381,12 +1381,9 @@ startover:
                 extent fnlen;
 reprompt:
                 Info(slide, 0x81, ((char *)slide,
-                  ReplaceQuery,
-                  FnFilter1(G.filename)));
-                if (fgets(G.answerbuf, sizeof(G.answerbuf), stdin)
-                    == (char *)NULL) {
-                    Info(slide, 1, ((char *)slide,
-                      AssumeNone));
+                  ReplaceQuery, FnFilter1(G.filename)));
+                if (!fgets(G.answerbuf, sizeof(G.answerbuf), stdin)) {
+                    Info(slide, 1, ((char *)slide, AssumeNone));
                     *G.answerbuf = 'N';
                     if (!error_in_archive)
                         error_in_archive = 1;  /* not extracted:  warning */
@@ -1397,7 +1394,8 @@ reprompt:
                         do {
                             Info(slide, 0x81, ((char *)slide,
                               NewNameQuery));
-                            fgets(G.filename, FILNAMSIZ, stdin);
+                            if (!fgets(G.filename, FILNAMSIZ, stdin))
+                                goto reprompt;
                             /* usually get \n here:  better check for it */
                             fnlen = strlen(G.filename);
                             if (lastchar(G.filename, fnlen) == '\n')
