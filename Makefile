@@ -55,31 +55,44 @@ INSTALL = install
 RM = rm
 LN = ln
 
+# Optimization flags.
+# -O2 is a good tradeoff between compilation speed and performance.
 CFLAGS_OPTIMIZATIONS = -O2
 
+# Compiler diagnostics to enable.
 CFLAGS_DIAGNOSTICS = -Wall -Wno-old-style-definition
 
 # These correspond roughly to GCC's -fhardened, but they're spelled out here
 # for compatibility with clang which currently doesn't support that option.
 CFLAGS_SECURITY = \
-    -fstack-protector-strong \
-    -D_FORTIFY_SOURCE=2 \
-    -O2 \
-    -fPIE -pie \
-    -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack \
-    -fstack-clash-protection \
-    -fcf-protection=full
+	-D_FORTIFY_SOURCE=3 \
+	-Wl,-z,relro,-z,now,-z,nodlopen,-z,noexecstack \
+	-fPIE -pie \
+	-fstack-protector-strong \
+	-fstack-clash-protection
 
-# Commonly enabled features (I got these from the Arch linux PKGBUILD)
+# Commonly enabled features:
+#
+#  -DNO_LCHMOD: POSIX/Linux does not have lchmod(), though BSD/OS X does
+#  -DDATE_FORMAT=DF_YMD: switch dates from American d/m/y to ISO y/m/d
+#
 CFLAGS_FEATURES = \
     -DNO_LCHMOD \
     -DDATE_FORMAT=DF_YMD
 
+# Convenience variable to append additional CFLAGS on the command line.
 CFLAGS_EXTRA =
 
 CFLAGS = $(CFLAGS_OPTIMIZATIONS) $(CFLAGS_DIAGNOSTICS) $(CFLAGS_SECURITY) $(CFLAGS_FEATURES) $(CFLAGS_EXTRA)
 
+# Convenience variable to append additional LDFLAGS on the command line.
+LDFLAGS_EXTRA =
+
+LDFLAGS = $(LDFLAGS_EXTRA)
+
+# Convenience variable to append additional LDFLAGS on the command line.
 LDLIBS_EXTRA =
+
 LDLIBS = $(LDLIBS_EXTRA)
 
 BINDIR = $(prefix)/bin
