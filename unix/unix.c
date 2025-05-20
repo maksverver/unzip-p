@@ -984,10 +984,8 @@ static int get_extattribs(__G__ pzt, z_uidgid)
 /* Function CloseError()    */
 /***************************/
 
-int CloseError(__G__ outfile, filename)
+int CloseError(__G)
     __GDEF
-    FILE *outfile;
-    char *filename;
 {
     int errval = PK_OK;
 
@@ -1059,7 +1057,7 @@ int close_outfile(__G)
             Info(slide, 0x201, ((char *)slide,
               "warning:  symbolic link (%s) failed: mem alloc overflow\n",
               FnFilter1(G.filename)));
-            errval = CloseError(G.outfile, G.filename);
+            errval = CloseError();
             return errval ? errval : PK_WARN;
         }
 
@@ -1067,7 +1065,7 @@ int close_outfile(__G)
             Info(slide, 0x201, ((char *)slide,
               "warning:  symbolic link (%s) failed: no mem\n",
               FnFilter1(G.filename)));
-            errval = CloseError(G.outfile, G.filename);
+            errval = CloseError();
             return errval ? errval : PK_WARN;
         }
         slnk_entry->next = NULL;
@@ -1092,10 +1090,10 @@ int close_outfile(__G)
               "warning:  symbolic link (%s) failed\n",
               FnFilter1(G.filename)));
             free(slnk_entry);
-            errval = CloseError(G.outfile, G.filename);
+            errval = CloseError();
             return errval ? errval : PK_WARN;
         }
-        errval = CloseError(G.outfile, G.filename); /* close "link" file for good... */
+        errval = CloseError(); /* close "link" file for good... */
         slnk_entry->target[ucsize] = '\0';
         if (QCOND2)
             Info(slide, 0, ((char *)slide, "-> %s ",
@@ -1110,7 +1108,7 @@ int close_outfile(__G)
     }
 
 #if (defined(NO_FCHOWN))
-    errval = CloseError(G.outfile, G.filename);
+    errval = CloseError();
 #endif
 
     /* if -X option was specified and we have UID/GID info, restore it */
@@ -1136,7 +1134,7 @@ int close_outfile(__G)
     }
 
 #if (!defined(NO_FCHOWN) && defined(NO_FCHMOD))
-    errval = CloseError(G.outfile, G.filename);
+    errval = CloseError();
 #endif
 
 #if (!defined(NO_FCHOWN) && !defined(NO_FCHMOD))
@@ -1148,7 +1146,7 @@ int close_outfile(__G)
     if (fchmod(fileno(G.outfile), filtattr(__G__ G.pInfo->file_attr)))
         perror("fchmod (file attributes) error");
 
-    errval = CloseError(G.outfile, G.filename);
+    errval = CloseError();
 #endif /* !NO_FCHOWN && !NO_FCHMOD */
 
     /* skip restoring time stamps on user's request */
