@@ -15,6 +15,9 @@ export LC_CTYPE=en_US.UTF-8
 # Verify listing is correct
 $UNZIP -l testdata/unicode.zip | diff testdata/unicode-listing-U.txt -
 
+# Without Unicode processing, same result since it's already UTF-8
+$UNZIP -UU -l testdata/unicode.zip | diff testdata/unicode-listing-U.txt -
+
 # Verify files get extracted to ASCII filenames
 $UNZIP -q -d "$TMPDIR" testdata/unicode.zip
 

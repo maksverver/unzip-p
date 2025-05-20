@@ -12,8 +12,11 @@ trap "rm -rf -- $TMPDIR" EXIT
 
 export LC_CTYPE=C
 
-# Verify listing is correct
+# Verify listing is correct: UTF-8 sequences are replaced with #U00f8 etc.
 $UNZIP -l testdata/unicode.zip | diff testdata/unicode-listing-C.txt -
+
+# Without Unicode processing: UTF-8 bytes are replaced with '?'
+$UNZIP -UU -l testdata/unicode.zip | diff testdata/unicode-listing-C-UU.txt -
 
 # Verify files get extracted to ASCII filenames
 $UNZIP -q -d "$TMPDIR" testdata/unicode.zip
