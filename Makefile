@@ -73,8 +73,7 @@ CFLAGS_SECURITY = \
 # Commonly enabled features (I got these from the Arch linux PKGBUILD)
 CFLAGS_FEATURES = \
     -DNO_LCHMOD \
-    -DDATE_FORMAT=DF_YMD \
-    -DNO_WORKING_ISPRINT
+    -DDATE_FORMAT=DF_YMD
 
 CFLAGS_EXTRA =
 

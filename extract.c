@@ -2341,11 +2341,6 @@ static void set_deferred_symlink(__G__ slnk_entry)
 
 } /* end function set_deferred_symlink() */
 
-/*
- * If Unicode is supported, assume we have what we need to do this
- * check using wide characters, avoiding MBCS issues.
- */
-
 #ifndef UZ_FNFILTER_REPLACECHAR
         /* A convenient choice for the replacement of unprintable char codes is
          * the "single char wildcard", as this character is quite unlikely to
@@ -2361,73 +2356,72 @@ static void set_deferred_symlink(__G__ slnk_entry)
 /*  Function fnfilter()  */        /* here instead of in list.c for SFX */
 /*************************/
 
+/* fnfilter() filters unprintable characters out of a filename.
+ *
+ * Arguments:
+ *
+ *   raw:    the input string
+ *   space:  output buffer pointer
+ *   size:   output buffer size
+ *
+ * The result is a pointer to the filtered string (usually `space`, or
+ * `raw` if no filtering was necessary).
+ *
+ * Unprintable characters are replaced with UZ_FNFILTER_REPLACECHAR.
+ * If the input is too long, the output is truncated, with three dots at the
+ * end to indicate elision (e.g. if raw="foobar" and size=8, the result is
+ * "foob..."). The result is zero-terminated, except when size = 0.
+ *
+ * Note that when this function is called, the raw string has already been
+ * converted to the local encoding by do_string() in fileio.c, which may also
+ * replace unrepresentable characters with escapes like #U0000, so the only
+ * thing this function has to do is replace unprintable characters.
+ */
 char *fnfilter(raw, space, size)   /* convert name to safely printable form */
     const char *raw;
     uch *space;
     extent size;
 {
 #ifndef NATIVE   /* ASCII:  filter ANSI escape codes, etc. */
-    const uch *r; // =(const uch *)raw;
-    uch *s=space;
-    uch *slim=NULL;
-    uch *se=NULL;
-    int have_overflow = FALSE;
 
-    {
-        /* No Unicode support, or apparently invalid Unicode. */
-        r = (const uch *)raw;
+    const char *in_ptr  = raw;
+    size_t      in_len  = strlen(in_ptr);
+    uch        *out_ptr = space;
+    size_t      out_len = size;
+    mbstate_t   mbs;
 
-        if (size > 0) {
-            slim = space + size
-                         - 4;
-        }
-        while (*r) {
-            if (size > 0 && s >= slim && se == NULL) {
-                se = s;
-            }
-#  ifdef HAVE_WORKING_ISPRINT
-            if (!isprint(*r)) {
-                if (*r < 32) {
-                    /* ASCII control codes are escaped as "^{letter}". */
-                    if (se != NULL && (s > (space + (size-4)))) {
-                        have_overflow = TRUE;
-                        break;
-                    }
-                    *s++ = '^', *s++ = (uch)(64 + *r++);
-                } else {
-                    /* Other unprintable codes are replaced by the
-                     * placeholder character. */
-                    if (se != NULL && (s > (space + (size-3)))) {
-                        have_overflow = TRUE;
-                        break;
-                    }
-                    *s++ = UZ_FNFILTER_REPLACECHAR;
-                    INCSTR(r);
-                }
-#  else /* !HAVE_WORKING_ISPRINT */
-            if (*r < 32) {
-                /* ASCII control codes are escaped as "^{letter}". */
-                if (se != NULL && (s > (space + (size-4)))) {
-                    have_overflow = TRUE;
-                    break;
-                }
-                *s++ = '^', *s++ = (uch)(64 + *r++);
-#  endif /* ?HAVE_WORKING_ISPRINT */
-            } else {
-                if (se != NULL && (s > (space + (size-3)))) {
-                    have_overflow = TRUE;
-                    break;
-                }
-                *s++ = *r++;
-             }
-        }
-        if (have_overflow) {
-            strcpy((char *)se, "...");
+    memset(&mbs, 0, sizeof(mbs));
+
+    /* Convert input to output character-by-character, but reserve the final
+       4 bytes for an ASCII ellipsis ("...") plus terminating NUL byte. */
+    while (in_len > 0 && out_len > 4) {
+        wchar_t wc = 0;
+        size_t n = mbrtowc(&wc, in_ptr, in_len, &mbs);
+        if (n < 1 || n > in_len || !iswprint(wc)) {
+            /* invalid sequence; skip next character */
+            ++in_ptr;
+            --in_len;
+            *out_ptr++ = UZ_FNFILTER_REPLACECHAR;
+            --out_len;
+        } else if (n <= out_len - 4) {
+            /* valid multibyte sequence; copy n bytes from in to out */
+            in_len -= n;
+            out_len -= n;
+            for (; n > 0; --n) *out_ptr++ = *in_ptr++;
         } else {
-            *s = '\0';
+            /* valid sequence, but not enough space to store it! */
+            break;
         }
     }
-
+    if (in_len > 0) {
+        /* did not convert entire input; append ellipsis ("...") if possible,
+           but leave space for terminating NUL byte (in case size < 4). */
+        for (size_t n = 3; n > 0 && out_len > 1; --n) {
+            *out_ptr++ = '.';
+            --out_len;
+        }
+    }
+    if (out_len > 0) *out_ptr = '\0';
 
     return (char *)space;
 
