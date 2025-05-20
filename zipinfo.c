@@ -1752,7 +1752,7 @@ static int zi_long(__G__ pEndprev, error_in_archive)
                         Info(slide, 0, ((char *)slide, MD5data,
                           md5));
                         break;
-                    }   /* else: fall through !! */
+                    }   /* else, fall through */
                 default:
 ef_default_display:
                     if (eb_datalen > 0) {
@@ -2012,7 +2012,7 @@ static int zi_short(__G)   /* return PK-type error code */
                         attribs[3] = 'x';
                 }
                 break;
-            } /* else: fall through! */
+            } /* else, fall through */
 
         default:   /* assume Unix-like */
             switch ((unsigned)(xattr & UNX_IFMT)) {

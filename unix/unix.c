@@ -344,7 +344,7 @@ int mapattr(__G)
                             ef_len = (ebLen + EB_HEADSIZE);
                             break;
                         }
-                        /* else: fall through! */
+                        /* else, fall through! */
                       case EF_PKVMS:
                         /* "found nondecypherable e.f. with perm. attr" */
                         r = TRUE;

@@ -1391,6 +1391,7 @@ reprompt:
                 switch (*G.answerbuf) {
                     case 'r':
                     case 'R':
+                        /* rename file */
                         do {
                             Info(slide, 0x81, ((char *)slide,
                               NewNameQuery));
@@ -1405,15 +1406,16 @@ reprompt:
                         goto startover;   /* sorry for a goto */
                     case 'A':   /* dangerous option:  force caps */
                         G.overwrite_mode = OVERWRT_ALWAYS;
-                        /* FALL THROUGH, extract */
+                        /* FALL THROUGH */
                     case 'y':
                     case 'Y':
+                        /* yes, extract */
                         break;
                     case 'N':
                         G.overwrite_mode = OVERWRT_NEVER;
-                        /* FALL THROUGH, skip */
+                        /* FALL THROUGH */
                     case 'n':
-                        /* skip file */
+                        /* no, skip file */
                         skip_entry = SKIP_Y_EXISTING;
                         break;
                     case '\n':
