@@ -987,28 +987,7 @@ static int get_extattribs(__G__ pzt, z_uidgid)
 int CloseError(__G)
     __GDEF
 {
-    int errval = PK_OK;
-
-    if (fclose(G.outfile) < 0) {
-          switch (errno) {
-                case ENOSPC:
-                    /* Do we need this on fileio.c? */
-                    Info(slide, 0x4a1, ((char *)slide, "%s: write error (disk full?).   Continue? (y/n/^C) ",
-                          FnFilter1(G.filename)));
-                    fgets(G.answerbuf, 9, stdin);
-                    if (*G.answerbuf == 'y')     /* stop writing to this file */
-                        G.disk_full = 1;         /* pass to next */
-                    else
-                        G.disk_full = 2;         /* no: exit program */
-
-                    errval = PK_DISK;
-                    break;
-
-                default:
-                    errval = PK_WARN;
-          }
-     }
-     return errval;
+    return fclose(G.outfile) == 0 ? PK_OK : disk_error(__G);
 } /* End of CloseError() */
 
 /****************************/

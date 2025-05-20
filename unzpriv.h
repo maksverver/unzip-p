@@ -1179,6 +1179,7 @@ ulg      makelong                (const uch *sig);
 zusz_t   makeint64               (const uch *sig);
 char    *fzofft                  (__GPRO__ zoff_t val,
                                   const char *pre, const char *post);
+int      disk_error              (__GPRO);
 #  if (!defined(STR_TO_ISO) || defined(NEED_STR2ISO))
    char *str2iso                 (char *dst, const char *src);
 #  endif

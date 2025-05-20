@@ -111,7 +111,6 @@
 #ifdef VMS_TEXT_CONV
 static int is_vms_varlen_txt(__GPRO__ uch *ef_buf, unsigned ef_len);
 #endif
-static int disk_error(__GPRO);
 
 
 /****************************/
@@ -946,7 +945,7 @@ static int is_vms_varlen_txt(__G__ ef_buf, ef_len)
 /* Function disk_error() */
 /*************************/
 
-static int disk_error(__G)
+int disk_error(__G)
     __GDEF
 {
     /* OK to use slide[] here because this file is finished regardless */
