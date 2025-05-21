@@ -131,20 +131,6 @@
    Common includes
    ---------------------------------------------------------------------------- */
 
-/* Some ports apply specific adjustments which must be in effect before
-   reading the "standard" include headers.
- */
-
-#  if (defined(_FILE_OFFSET_BITS) && (_FILE_OFFSET_BITS == 64))
-#    define Z_OFF_T off_t /* 64bit offsets to support 2GB < zipfile size < 4GB */
-#  else
-#    define Z_OFF_T long
-#  endif
-
-#  ifndef ZOFF_T_DEFINED
-   typedef Z_OFF_T zoff_t;
-#    define ZOFF_T_DEFINED
-#  endif
 #  ifndef Z_STAT_DEFINED
    typedef struct stat z_stat;
 #    define Z_STAT_DEFINED

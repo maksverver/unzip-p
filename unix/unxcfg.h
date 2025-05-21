@@ -13,29 +13,19 @@
 #ifndef __unxcfg_h
 #  define __unxcfg_h
 
-  /* The following Large File Support (LFS) defines turn on large file support
-     on Linux (probably 2.4 or later kernel) and many other unixen */
+/* Enable large file support. These variables must be defined before any
+   system headers are included! */
 
-  /* These have to be before any include that sets types so the large file
-     versions of the types are set in the includes */
-
-#  define _LARGEFILE_SOURCE      /* some OSes need this for fseeko */
-#  define _LARGEFILE64_SOURCE
 #  define _FILE_OFFSET_BITS 64   /* select default interface as 64 bit */
-#  define _LARGE_FILES           /* some OSes need this for 64-bit off_t */
-#  define __USE_LARGEFILE64
+#  define _LARGE_FILES           /* only for AIX? */
 
 
 #  include <sys/types.h>          /* off_t, time_t, dev_t, ... */
 #  include <sys/stat.h>
 #  include <unistd.h>
 
-#  ifdef NO_OFF_T
-  typedef long zoff_t;
-#  else
-  typedef off_t zoff_t;
-#  endif
-#  define ZOFF_T_DEFINED
+typedef off_t zoff_t;
+
 typedef struct stat z_stat;
 #  define Z_STAT_DEFINED
 
