@@ -513,7 +513,7 @@ int unzip(__G__ argc, argv)
 #  ifdef SIGTERM                 /* some systems really have no SIGTERM */
     SET_SIGHANDLER(SIGTERM, handler);
 #  endif
-#  if defined(SIGABRT) && !(defined(AMIGA) && defined(__SASC))
+#  ifdef SIGABRT
     SET_SIGHANDLER(SIGABRT, handler);
 #  endif
 #  ifdef SIGBREAK
