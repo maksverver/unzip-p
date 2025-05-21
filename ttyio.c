@@ -93,7 +93,7 @@
 #    endif
 #  endif
 
-#  if (defined(UNZIP) && !defined(FUNZIP) && defined(UNIX) && defined(MORE))
+#  if (defined(UNZIP) && !defined(FUNZIP) && defined(MORE))
 #    include <sys/ioctl.h>
 #    define GOT_IOCTL_H
    /* int ioctl(int, int, void *);   GRR: may need for some systems */
@@ -195,8 +195,7 @@ void Echon(__G)
 
 #    if (defined(UNZIP) && !defined(FUNZIP))
 
-#      ifdef UNIX
-#        ifdef MORE
+#      ifdef MORE
 
 /*
  * Get the number of lines on the output terminal.  SCO Unix apparently
@@ -206,20 +205,20 @@ void Echon(__G)
  *       line-wrapping.
  */
 
-#          if (defined(TIOCGWINSZ))
+#        if (defined(TIOCGWINSZ))
 
 int screensize(tt_rows, tt_cols)
     int *tt_rows;
     int *tt_cols;
 {
     struct winsize wsz;
-#            ifdef DEBUG_WINSZ
+#          ifdef DEBUG_WINSZ
     static int firsttime = TRUE;
-#            endif
+#          endif
 
     /* see termio(4) under, e.g., SunOS */
     if (ioctl(1, TIOCGWINSZ, &wsz) == 0) {
-#            ifdef DEBUG_WINSZ
+#          ifdef DEBUG_WINSZ
         if (firsttime) {
             firsttime = FALSE;
             fprintf(stderr, "ttyio.c screensize():  ws_row = %d\n",
@@ -227,7 +226,7 @@ int screensize(tt_rows, tt_cols)
             fprintf(stderr, "ttyio.c screensize():  ws_col = %d\n",
               wsz.ws_col);
         }
-#            endif
+#          endif
         /* number of rows */
         if (tt_rows != NULL)
             *tt_rows = (int)((wsz.ws_row > 0) ? wsz.ws_row : 24);
@@ -236,13 +235,13 @@ int screensize(tt_rows, tt_cols)
             *tt_cols = (int)((wsz.ws_col > 0) ? wsz.ws_col : 80);
         return 0;    /* signal success */
     } else {         /* this happens when piping to more(1), for example */
-#            ifdef DEBUG_WINSZ
+#          ifdef DEBUG_WINSZ
         if (firsttime) {
             firsttime = FALSE;
             fprintf(stderr,
               "ttyio.c screensize():  ioctl(TIOCGWINSZ) failed\n"));
         }
-#            endif
+#          endif
         /* VT-100 assumed to be minimal hardware */
         if (tt_rows != NULL)
             *tt_rows = 24;
@@ -252,7 +251,7 @@ int screensize(tt_rows, tt_cols)
     }
 }
 
-#          else /* !TIOCGWINSZ: service not available, fall back to semi-bogus method */
+#        else /* !TIOCGWINSZ: service not available, fall back to semi-bogus method */
 
 int screensize(tt_rows, tt_cols)
     int *tt_rows;
@@ -287,8 +286,8 @@ int screensize(tt_rows, tt_cols)
     return errstat;
 }
 
-#          endif /* ?(TIOCGWINSZ) */
-#        endif /* MORE */
+#        endif /* ?(TIOCGWINSZ) */
+#      endif /* MORE */
 
 
 /*
@@ -298,35 +297,35 @@ int zgetch(__G__ f)
     __GDEF
     int f;                      /* file descriptor from which to read */
 {
-#        if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
+#      if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
     char oldmin, oldtim;
-#        endif
+#      endif
     char c;
     struct sgttyb sg;           /* tty device structure */
 
     GTTY(f, &sg);               /* get settings */
-#        if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
+#      if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
     oldmin = sg.c_cc[VMIN];     /* save old values */
     oldtim = sg.c_cc[VTIME];
     sg.c_cc[VMIN] = 1;          /* need only one char to return read() */
     sg.c_cc[VTIME] = 0;         /* no timeout */
     sg.sg_flags &= ~ICANON;     /* canonical mode off */
-#        else
+#      else
     sg.sg_flags |= CBREAK;      /* cbreak mode on */
-#        endif
+#      endif
     sg.sg_flags &= ~ECHO;       /* turn echo off, too */
     STTY(f, &sg);               /* set cbreak mode */
     GLOBAL(echofd) = f;         /* in case ^C hit (not perfect: still CBREAK) */
 
     read(f, &c, 1);             /* read our character */
 
-#        if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
+#      if (defined(USE_SYSV_TERMIO) || defined(USE_POSIX_TERMIOS))
     sg.c_cc[VMIN] = oldmin;     /* restore old values */
     sg.c_cc[VTIME] = oldtim;
     sg.sg_flags |= ICANON;      /* canonical mode on */
-#        else
+#      else
     sg.sg_flags &= ~CBREAK;     /* cbreak mode off */
-#        endif
+#      endif
     sg.sg_flags |= ECHO;        /* turn echo on */
     STTY(f, &sg);               /* restore canonical mode */
     GLOBAL(echofd) = -1;
@@ -335,32 +334,6 @@ int zgetch(__G__ f)
 }
 
 
-#      else /* !UNIX */
-
-
-int zgetch(__G__ f)
-    __GDEF
-    int f;    /* file descriptor from which to read (must be open already) */
-{
-    char c, c2;
-
-/*---------------------------------------------------------------------------
-    Get a character from the given file descriptor without echo; can't fake
-    CBREAK mode (i.e., newline required), but can get rid of all chars up to
-    and including newline.
-  ---------------------------------------------------------------------------*/
-
-    echoff(f);
-    read(f, &c, 1);
-    if (c != '\n')
-        do {
-            read(f, &c2, 1);   /* throw away all other chars up thru newline */
-        } while (c2 != '\n');
-    echon();
-    return (int)c;
-}
-
-#      endif /* ?UNIX */
 
 #    endif /* UNZIP && !FUNZIP */
 #  endif /* !HAVE_WORKING_GETCH */
@@ -441,11 +414,10 @@ char *getp(__G__ m, p, n)
 #    else /* !HAVE_WORKING_GETCH */
 
 
-#      if (defined(UNIX))
 
-#        ifndef _PATH_TTY
-#          define _PATH_TTY "/dev/tty"
-#        endif
+#      ifndef _PATH_TTY
+#        define _PATH_TTY "/dev/tty"
+#      endif
 
 char *getp(__G__ m, p, n)
     __GDEF
@@ -458,15 +430,15 @@ char *getp(__G__ m, p, n)
     char *w;                    /* warning on retry */
     int f;                      /* file descriptor for tty device */
 
-#        ifdef PASSWD_FROM_STDIN
+#      ifdef PASSWD_FROM_STDIN
     /* Read from stdin. This is unsafe if the password is stored on disk. */
     f = 0;
-#        else
+#      else
     /* turn off echo on tty */
 
     if ((f = open(_PATH_TTY, 0)) == -1)
         return NULL;
-#        endif
+#      endif
     /* get password */
     w = "";
     do {
@@ -486,15 +458,14 @@ char *getp(__G__ m, p, n)
     } while (p[i-1] != '\n');
     p[i-1] = 0;                 /* terminate at newline */
 
-#        ifndef PASSWD_FROM_STDIN
+#      ifndef PASSWD_FROM_STDIN
     close(f);
-#        endif
+#      endif
 
     return p;                   /* return pointer to password */
 
 } /* end function getp() */
 
-#      endif /* UNIX */
 #    endif /* ?HAVE_WORKING_GETCH */
 #  endif /* CRYPT */
 #endif /* CRYPT || (UNZIP && !FUNZIP) */

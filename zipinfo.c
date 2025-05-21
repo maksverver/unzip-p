@@ -433,10 +433,8 @@ int zi_opts(__G__ pargc, pargv)
     int    tflag_slm=TRUE, tflag_2v=FALSE;
     int    explicit_h=FALSE, explicit_t=FALSE;
 
-#  ifdef UNIX
     extern char OEM_CP[MAX_CP_NAME];
     extern char ISO_CP[MAX_CP_NAME];
-#  endif
 
     G.extract_flag = FALSE;   /* zipinfo does not extract to disk */
     argc = *pargc;
@@ -476,7 +474,6 @@ int zi_opts(__G__ pargc, pargv)
                             uO.lflag = 0;
                     }
                     break;
-#  ifdef UNIX
                 case ('I'):
                     if (negative) {
                         Info(slide, 0x401, ((char *)slide,
@@ -506,7 +503,6 @@ int zi_opts(__G__ pargc, pargv)
                         while(*(++s)); /* No params straight after charset name */
                     }
                     break;
-#  endif /* ?UNIX */
                 case 'l':      /* longer form of "ls -l" type listing */
                     if (negative)
                         uO.lflag = -2, negative = 0;
@@ -527,7 +523,6 @@ int zi_opts(__G__ pargc, pargv)
                         G.M_flag = TRUE;
                     break;
 #  endif
-#  ifdef UNIX
                 case ('O'):
                     if (negative) {
                         Info(slide, 0x401, ((char *)slide,
@@ -557,7 +552,6 @@ int zi_opts(__G__ pargc, pargv)
                         while(*(++s)); /* No params straight after charset name */
                     }
                     break;
-#  endif /* ?UNIX */
                 case 's':      /* default:  shorter "ls -l" type listing */
                     if (negative)
                         uO.lflag = -2, negative = 0;

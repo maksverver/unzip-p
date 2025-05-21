@@ -82,7 +82,6 @@ int envargs(Pargc, Pargv, envstr, envstr2)
 
     /* copy the environment args next, may be changed */
     do {
-#if defined(UNIX)
         if (*bufptr == '"') {
             char *argstart = ++bufptr;
 
@@ -107,13 +106,6 @@ int envargs(Pargc, Pargv, envstr, envstr2)
             if (ch != '\0')
                 *(bufptr++) = '\0';
         }
-#else
-        *(argv++) = bufptr;
-        while ((ch = *bufptr) != '\0' && !ISspace(ch))
-            INCSTR(bufptr);
-        if (ch != '\0')
-            *(bufptr++) = '\0';
-#endif /* ?(UNIX) */
         while ((ch = *bufptr) != '\0' && ISspace(ch))
             INCSTR(bufptr);
     } while (ch);
@@ -144,7 +136,6 @@ static int count_args(s)
     do {
         /* count and skip args */
         ++count;
-#if defined(UNIX)
         if (*s == '\"') {
             for (ch = *PREINCSTR(s);  ch != '\0' && ch != '\"';
                  ch = *PREINCSTR(s))
@@ -153,8 +144,6 @@ static int count_args(s)
             if (*s)
                 ++s;        /* trailing quote */
         } else
-#else
-#endif /* ?(UNIX) */
         while ((ch = *s) != '\0' && !ISspace(ch))  /* note else-clauses above */
             INCSTR(s);
         while ((ch = *s) != '\0' && ISspace(ch))

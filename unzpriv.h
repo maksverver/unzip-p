@@ -118,9 +118,7 @@
     Unix section:
   ---------------------------------------------------------------------------*/
 
-#  ifdef UNIX
-#    include "unix/unxcfg.h"
-#  endif /* UNIX */
+#  include "unix/unxcfg.h"
 
 /* ----------------------------------------------------------------------------
    MUST BE AFTER LARGE FILE INCLUDES
@@ -140,7 +138,7 @@
 #  ifdef EFT
 #    define Z_OFF_T off_t  /* Amdahl UTS nonsense ("extended file types") */
 #  else
-#    if (defined(UNIX) && defined(_FILE_OFFSET_BITS) && (_FILE_OFFSET_BITS == 64))
+#    if (defined(_FILE_OFFSET_BITS) && (_FILE_OFFSET_BITS == 64))
 #      define Z_OFF_T off_t /* 64bit offsets to support 2GB < zipfile size < 4GB */
 #    else
 #      define Z_OFF_T long
@@ -220,10 +218,8 @@ typedef size_t extent;
 #    endif
 #  endif
 
-#  if (defined(UNIX))
-#    ifndef HAVE_UNLINK
-#      define HAVE_UNLINK
-#    endif
+#  ifndef HAVE_UNLINK
+#    define HAVE_UNLINK
 #  endif
 
 /* OS-specific exceptions to the "ANSI <--> INT_SPRINTF" rule */
@@ -474,24 +470,22 @@ typedef size_t extent;
 
 /* ---------------------------- */
 
-#  if defined(UNIX)
 
     /* 64-bit stat functions */
-#    define zstat stat
-#    define zfstat fstat
+#  define zstat stat
+#  define zfstat fstat
 
     /* 64-bit fseeko */
-#    define zlseek lseek
-#    define zfseeko fseeko
+#  define zlseek lseek
+#  define zfseeko fseeko
 
     /* 64-bit ftello */
-#    define zftello ftello
+#  define zftello ftello
 
     /* 64-bit fopen */
-#    define zfopen fopen
-#    define zfdopen fdopen
+#  define zfopen fopen
+#  define zfdopen fdopen
 
-#  endif /* UNIX */
 
 /* ---------------------------- */
 
@@ -1287,9 +1281,9 @@ int      mapname            (__GPRO__ int renamed);                /* local */
 int      checkdir           (__GPRO__ char *pathcomp, int flag);   /* local */
 char    *do_wild            (__GPRO__ const char *wildzipfn);      /* local */
 char    *GetLoadPath        (__GPRO);                              /* local */
-#  if (defined(MORE) && (defined(UNIX)))
+#  if defined(MORE)
    int screensize           (int *tt_rows, int *tt_cols);          /* local */
-#  endif /* MORE && (UNIX) */
+#  endif /* MORE */
    int  close_outfile      (__GPRO);                              /* local */
 #  ifdef SET_SYMLINK_ATTRIBS
    int  set_symlnk_attribs     (__GPRO__ slinkentry *slnk_entry);  /* local */

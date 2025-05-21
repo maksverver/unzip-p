@@ -120,13 +120,11 @@ static int is_vms_varlen_txt(__GPRO__ uch *ef_buf, unsigned ef_len);
 static const char CannotOpenZipfile[] =
   "error:  cannot open zipfile [ %s ]\n        %s\n";
 
-#if (defined(UNIX))
-   static const char CannotDeleteOldFile[] =
-     "error:  cannot delete old %s\n        %s\n";
-   static const char CannotRenameOldFile[] =
-     "error:  cannot rename old %s\n        %s\n";
-   static const char BackupSuffix[] = "~";
-#endif /* UNIX */
+static const char CannotDeleteOldFile[] =
+  "error:  cannot delete old %s\n        %s\n";
+static const char CannotRenameOldFile[] =
+  "error:  cannot rename old %s\n        %s\n";
+static const char BackupSuffix[] = "~";
 static const char CannotCreateFile[] =
     "error:  cannot create %s\n        %s\n";
 static const char ReadError[] = "error:  zipfile read error\n";
@@ -199,7 +197,6 @@ int open_input_file(__G)    /* return 1 if open failed */
 int open_outfile(__G)           /* return 1 if fail */
     __GDEF
 {
-#if (defined(UNIX))
     if (SSTAT(G.filename, &G.statbuf) == 0 ||
         lstat(G.filename, &G.statbuf) == 0)
     {
@@ -281,7 +278,6 @@ int open_outfile(__G)           /* return 1 if fail */
               FnFilter1(G.filename)));
         }
     }
-#endif /* UNIX */
 #ifdef DEBUG
     Info(slide, 1, ((char *)slide,
       "open_outfile:  doing fopen(%s) for reading\n", FnFilter1(G.filename)));
@@ -299,16 +295,12 @@ int open_outfile(__G)           /* return 1 if fail */
     Trace((stderr, "open_outfile:  doing fopen(%s) for writing\n",
       FnFilter1(G.filename)));
     {
-#if defined(UNIX)
         mode_t umask_sav = umask(0077);
-#endif
         /* These features require the ability to re-read extracted data from
            the output files. Output files are created with Read&Write access.
          */
         G.outfile = zfopen(G.filename, FOPWR);
-#if defined(UNIX)
         umask(umask_sav);
-#endif
     }
     if (G.outfile == (FILE *)NULL) {
         Info(slide, 0x401, ((char *)slide, CannotCreateFile,

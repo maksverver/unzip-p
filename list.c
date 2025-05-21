@@ -279,11 +279,9 @@ int list_files(__G)    /* return PK-type error code */
             }
 
 #if 0       /* GRR/Euro:  add this? */
-#  if defined(UNIX)
             for (p = G.filename;  *p;  ++p)
                 if (!isprint(*p))
                     *p = '?';  /* change non-printable chars to '?' */
-#  endif /* UNIX */
 #endif /* 0 */
 
             if (cfactor == 100)

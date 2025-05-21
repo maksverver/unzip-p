@@ -160,24 +160,14 @@ static const char IgnoreOOptionMsg[] =
 #  endif /* ?TIMESTAMP */
 
 /* local2[] and local3[]:  modifier options */
-#  ifdef UNIX
    static const char local2[] = " -X  restore UID/GID info";
-#    ifdef MORE
+#  ifdef MORE
    static const char local3[] = "\
   -K  keep setuid/setgid/tacky permissions   -M  pipe through \"more\" pager\n";
-#    else
+#  else
    static const char local3[] = "\
   -K  keep setuid/setgid/tacky permissions\n";
-#    endif
-#  else /* !UNIX */
-#    ifdef MORE
-   static const char local2[] = " -M  pipe through \"more\" pager";
-   static const char local3[] = "\n";
-#    else
-   static const char local2[] = "";    /* Atari, Mac, CMS/MVS etc. */
-   static const char local3[] = "";
-#    endif
-#  endif /* ?UNIX */
+#  endif
 #endif /* !SFX */
 
 #ifndef NO_ZIPINFO
@@ -198,13 +188,6 @@ static const char ZipInfoUsageLine2[] = "\nmain\
   -2  just filenames but allow -h/-t/-z  -l  long Unix \"ls -l\" format\n\
                                          -v  verbose, multi-page format\n";
 
-#  ifndef UNIX
-static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
-  -h  print header line       -t  print totals for listed files or for all\n\
-  -z  print zipfile comment   -T  print file times in sortable decimal format\
-\n  -C  be case-insensitive   %s\
-  -x  exclude filenames that follow from listing\n";
-#  else /* UNIX */
 static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
   -h  print header line       -t  print totals for listed files or for all\n\
   -z  print zipfile comment   -T  print file times in sortable decimal format\
@@ -212,7 +195,6 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
   -x  exclude filenames that follow from listing\n\
   -O  CHARSET  specify a character encoding for DOS, Windows and OS/2 archives\n\
   -I  CHARSET  specify a character encoding for UNIX and other archives\n";
-#  endif /* !UNIX */
 #  ifdef MORE
    static const char ZipInfoUsageLine4[] =
      "  -M  page output through built-in \"more\"\n";
@@ -391,7 +373,6 @@ static const char UnzipUsageLine3[] = "\n\
  * Likely, other advanced options should be moved to an extended help page and
  * the option to list that page put here.  [E. Gordon, 2008-3-16]
  */
-#  if   (defined UNIX)
 static const char UnzipUsageLine4[] = "\
 modifiers:\n\
   -n  never overwrite existing files         -q  quiet mode (-qq => quieter)\n\
@@ -402,16 +383,6 @@ modifiers:\n\
 lowercase\n %-42s  -V  retain VMS version numbers\n%s\
   -O  CHARSET  specify a character encoding for DOS, Windows and OS/2 archives\n\
   -I  CHARSET  specify a character encoding for UNIX and other archives\n\n";
-#  else /* !VMS */
-static const char UnzipUsageLine4[] = "\
-modifiers:\n\
-  -n  never overwrite existing files         -q  quiet mode (-qq => quieter)\n\
-  -o  overwrite files WITHOUT prompting      -a  auto-convert any text files\n\
-  -j  junk paths (do not make directories)   -aa treat ALL files as text\n\
-  -U  use escapes for all non-ASCII Unicode  -UU ignore any Unicode fields\n\
-  -C  match filenames case-insensitively     -L  make (some) names \
-lowercase\n %-42s  -V  retain VMS version numbers\n%s";
-#  endif /* ?VMS */
 
 static const char UnzipUsageLine5[] = "\
 See \"unzip -hh\" or unzip.txt for more help.  Examples:\n\
@@ -506,9 +477,7 @@ int unzip(__G__ argc, argv)
     G.unipath_filename = NULL;
 
 
-#ifdef UNIX
     init_conversion_charsets();
-#endif
 
 
 #ifdef MALLOC_WORK
@@ -901,10 +870,8 @@ int uz_opts(__G__ pargc, pargv)
     argc = *pargc;
     argv = *pargv;
 
-#ifdef UNIX
     extern char OEM_CP[MAX_CP_NAME];
     extern char ISO_CP[MAX_CP_NAME];
-#endif
 
     while (++argv, (--argc > 0 && *argv != NULL && **argv == '-')) {
         s = *argv + 1;
@@ -1028,7 +995,6 @@ int uz_opts(__G__ pargc, pargv)
                         }
                     }
                     break;
-#ifdef UNIX
                 case ('I'):
                     if (negative) {
                         Info(slide, 0x401, ((char *)slide,
@@ -1058,14 +1024,12 @@ int uz_opts(__G__ pargc, pargv)
                         while(*(++s)); /* No params straight after charset name */
                     }
                     break;
-#endif /* ?UNIX */
                 case ('j'):    /* junk pathnames/directory structure */
                     if (negative)
                         uO.jflag = FALSE, negative = 0;
                     else
                         uO.jflag = TRUE;
                     break;
-#ifdef UNIX
                 case ('K'):
                     if (negative) {
                         uO.K_flag = FALSE, negative = 0;
@@ -1073,7 +1037,6 @@ int uz_opts(__G__ pargc, pargv)
                         uO.K_flag = TRUE;
                     }
                     break;
-#endif /* UNIX */
 #ifndef SFX
                 case ('l'):
                     if (negative) {
@@ -1112,7 +1075,6 @@ int uz_opts(__G__ pargc, pargv)
                     } else
                         ++uO.overwrite_all;
                     break;
-#ifdef UNIX
                 case ('O'):
                     if (negative) {
                         Info(slide, 0x401, ((char *)slide,
@@ -1142,7 +1104,6 @@ int uz_opts(__G__ pargc, pargv)
                         while(*(++s)); /* No params straight after charset name */
                     }
                     break;
-#endif /* ?UNIX */
                 case ('p'):    /* pipes:  extract to stdout, no messages */
                     if (negative) {
                         uO.cflag = FALSE;
@@ -1299,7 +1260,6 @@ int uz_opts(__G__ pargc, pargv)
                     } else
                         ++uO.ddotflag;
                     break;
-#ifdef UNIX
                 case ('^'):    /* allow control chars in filenames */
                     if (negative) {
                         uO.cflxflag = MAX(uO.cflxflag-negative,0);
@@ -1307,7 +1267,6 @@ int uz_opts(__G__ pargc, pargv)
                     } else
                         ++uO.cflxflag;
                     break;
-#endif /* UNIX */
                 default:
                     error = TRUE;
                     break;
@@ -1421,9 +1380,7 @@ opts_done:  /* yes, very ugly...but only used by UnZipSFX with -x xlist */
 /********************/
 
 #ifdef SFX
-#  ifdef UNIX
-#    define LOCAL "X"
-#  endif
+#  define LOCAL "X"
    /* Default for all other systems: */
 #  ifndef LOCAL
 #    define LOCAL ""

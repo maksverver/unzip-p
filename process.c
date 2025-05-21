@@ -63,10 +63,6 @@ static const char CannotAllocateBuffers[] =
      static const char WarnInvalidTZ[] =
        "Warning: TZ environment variable not found, cannot use UTC times!!\n";
 #  endif
-#  if !(defined(UNIX))
-   static const char CannotFindWildcardMatch[] =
-     "%s:  cannot find any matches for wildcard specification \"%s\".\n";
-#  endif /* !(UNIX) */
    static const char FilesProcessOK[] =
      "%d archive%s successfully processed.\n";
    static const char ArchiveWarning[] =
@@ -81,19 +77,11 @@ static const char CannotAllocateBuffers[] =
    static const char NoZipfileFound[] = "No zipfiles found.\n";
 
    /* do_seekable() strings */
-#  ifdef UNIX
    static const char CannotFindZipfileDirMsg[] =
      "%s:  cannot find zipfile directory in one of %s or\n\
         %s%s.zip, and cannot find %s, period.\n";
    static const char CannotFindEitherZipfile[] =
      "%s:  cannot find or open %s, %s.zip or %s.\n";
-#  else /* !UNIX */
-   static const char CannotFindZipfileDirMsg[] =
-     "%s:  cannot find zipfile directory in %s,\n\
-        %sand cannot find %s, period.\n";
-   static const char CannotFindEitherZipfile[] =
-     "%s:  cannot find either %s or %s.\n";
-#  endif /* ?UNIX */
    extern const char Zipnfo[];        /* in unzip.c */
    static const char Unzip[] = "unzip";
    static const char MaybeExe[] =
@@ -372,81 +360,48 @@ int process_zipfiles(__G)    /* return PK-type error code */
     if ((NumWinFiles + NumWarnFiles + NumLoseFiles) == 0  &&
         (NumMissDirs + NumMissFiles) == 1  &&  lastzipfn != (char *)NULL)
     {
-#  if (!defined(UNIX)) /* filenames with wildcard characters */
-        if (iswild(G.wildzipfn)) {
-            if (iswild(lastzipfn)) {
-                NumMissDirs = NumMissFiles = 0;
-                error_in_archive = PK_COOL;
-                if (uO.qflag < 3)
-                    Info(slide, 0x401, ((char *)slide,
-                      CannotFindWildcardMatch,
-                      (uO.zipinfo_mode ? Zipnfo : Unzip),
-                      G.wildzipfn));
-            }
-        } else
-#  endif
-        {
-            /* 2004-11-24 SMS.
-             * VMS has already tried a default file type of ".zip" in
-             * do_wild(), so adding ZSUFX here only causes confusion by
-             * corrupting some valid (though nonexistent) file names.
-             * Complaining below about "fred;4.zip" is unlikely to be
-             * helpful to the victim.
-             */
-            /* 2005-08-14 Chr. Spieler
-             * Although we already "know" the failure result, we call
-             * do_seekable() again with the same zipfile name (and the
-             * lastchance flag set), just to trigger the error report...
-             */
-#  if defined(UNIX)
-            char *p =
-#  endif
-              strcpy(lastzipfn + strlen(lastzipfn), ZSUFX);
+        /* 2005-08-14 Chr. Spieler
+          * Although we already "know" the failure result, we call
+          * do_seekable() again with the same zipfile name (and the
+          * lastchance flag set), just to trigger the error report...
+          */
+        char *p = strcpy(lastzipfn + strlen(lastzipfn), ZSUFX);
 
-            G.zipfn = lastzipfn;
+        G.zipfn = lastzipfn;
 
-            NumMissDirs = NumMissFiles = 0;
-            error_in_archive = PK_COOL;
+        NumMissDirs = NumMissFiles = 0;
+        error_in_archive = PK_COOL;
 
-#  if defined(UNIX)
-   /* only Unix has case-sensitive filesystems */
-   /* Well FlexOS (sometimes) also has them,  but support is per media */
-   /* and a pig to code for,  so treat as case insensitive for now */
-   /* we do this under QDOS to check for .zip as well as _zip */
-            if ((error = do_seekable(__G__ 0)) == PK_NOZIP || error == IZ_DIR) {
-                if (error == IZ_DIR)
-                    ++NumMissDirs;
-                strcpy(p, ALT_ZSUFX);
-                error = do_seekable(__G__ 1);
-            }
-#  else
-            error = do_seekable(__G__ 1);
-#  endif
-            Trace((stderr, "do_seekable(1) returns %d\n", error));
-            switch (error) {
-              case PK_WARN:
-                ++NumWarnFiles;
-                break;
-              case IZ_DIR:
+        if ((error = do_seekable(__G__ 0)) == PK_NOZIP || error == IZ_DIR) {
+            if (error == IZ_DIR)
                 ++NumMissDirs;
-                error = PK_NOZIP;
-                break;
-              case PK_NOZIP:
-                /* increment again => bug:
-                   "1 file had no zipfile directory." */
-                /* ++NumMissFiles */ ;
-                break;
-              default:
-                if (error)
-                    ++NumLoseFiles;
-                else
-                    ++NumWinFiles;
-                break;
-            }
-
-            if (error > error_in_archive)
-                error_in_archive = error;
+            strcpy(p, ALT_ZSUFX);
+            error = do_seekable(__G__ 1);
         }
+        Trace((stderr, "do_seekable(1) returns %d\n", error));
+        switch (error) {
+          case PK_WARN:
+            ++NumWarnFiles;
+            break;
+          case IZ_DIR:
+            ++NumMissDirs;
+            error = PK_NOZIP;
+            break;
+          case PK_NOZIP:
+            /* increment again => bug:
+                "1 file had no zipfile directory." */
+            /* ++NumMissFiles */ ;
+            break;
+          default:
+            if (error)
+                ++NumLoseFiles;
+            else
+                ++NumWinFiles;
+            break;
+        }
+
+        if (error > error_in_archive)
+            error_in_archive = error;
     }
 #endif /* ?SFX */
 
@@ -609,7 +564,6 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
     {
 #ifndef SFX
         if (lastchance && (uO.qflag < 3)) {
-#  if defined(UNIX)
             if (G.no_ecrec)
                 Info(slide, 1, ((char *)slide,
                   CannotFindZipfileDirMsg,
@@ -621,18 +575,6 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
                   CannotFindEitherZipfile,
                   (uO.zipinfo_mode ? Zipnfo : Unzip),
                   G.wildzipfn, G.wildzipfn, G.zipfn));
-#  else /* !(UNIX) */
-            if (G.no_ecrec)
-                Info(slide, 0x401, ((char *)slide,
-                  CannotFindZipfileDirMsg,
-                  (uO.zipinfo_mode ? Zipnfo : Unzip),
-                  G.wildzipfn, uO.zipinfo_mode? "  " : "", G.zipfn));
-            else
-                Info(slide, 0x401, ((char *)slide,
-                  CannotFindEitherZipfile,
-                  (uO.zipinfo_mode ? Zipnfo : Unzip),
-                  G.wildzipfn, G.zipfn));
-#  endif /* ?(UNIX) */
         }
 #endif /* !SFX */
         return error? IZ_DIR : PK_NOZIP;
@@ -640,10 +582,8 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
     G.ziplen = G.statbuf.st_size;
 
 #ifndef SFX
-#  if defined(UNIX)
     if (G.statbuf.st_mode & S_IEXEC)   /* no extension on Unix exes:  might */
         maybe_exe = TRUE;               /*  find unzip, not unzip.zip; etc. */
-#  endif
 #endif /* !SFX */
 
 

@@ -82,17 +82,6 @@ freely, subject to the above disclaimer and the following restrictions:
     Predefined, machine-specific macros.
   ---------------------------------------------------------------------------*/
 
-#  if (defined(unix) || defined(_unix) || defined(__unix) || defined(__unix__))
-#    ifndef UNIX
-#      define UNIX
-#    endif
-#  endif /* unix || _unix || __unix || __unix__ */
-#  if (defined(__NetBSD__) || defined(__FreeBSD__))
-#    ifndef UNIX
-#      define UNIX
-#    endif
-#  endif /* __NetBSD__ || __FreeBSD__ */
-
 #  ifdef __COMPILER_KCC__
 #    include <c-env.h>
 #  endif /* __COMPILER_KCC__ */
@@ -192,9 +181,7 @@ typedef struct _UzpOpts {
     int acorn_nfs_ext;  /* -F: RISC OS types & NFS filetype extensions */
     int hflag;          /* -h: header line (zipinfo) */
     int jflag;          /* -j: junk pathnames (unzip) */
-#    if defined(UNIX)
     int K_flag;         /* -K: keep setuid/setgid/tacky permissions */
-#    endif
     int lflag;          /* -12slmv: listing format (zipinfo) */
     int L_flag;         /* -L: convert filenames from some OSes to lowercase */
     int overwrite_none; /* -n: never overwrite files (no prompting) */
@@ -205,21 +192,14 @@ typedef struct _UzpOpts {
     int tflag;          /* -t: test (unzip) or totals line (zipinfo) */
     int T_flag;         /* -T: timestamps (unzip) or dec. time fmt (zipinfo) */
     int uflag;          /* -u: "update" (extract only newer/brand-new files) */
-#    if defined(UNIX)
     int U_flag;         /* -U: escape non-ASCII, -UU No Unicode paths */
-#    endif
     int vflag;          /* -v: (verbosely) list directory */
     int V_flag;         /* -V: don't strip VMS version numbers */
     int W_flag;         /* -W: wildcard '*' won't match '/' dir separator */
-#    if defined(UNIX)
     int X_flag;         /* -X: restore owner/protection or UID/GID or ACLs */
-#    else
-#    endif
     int zflag;          /* -z: display the zipfile comment (only, for unzip) */
     int ddotflag;       /* -:: don't skip over "../" path elements */
-#    ifdef UNIX
     int cflxflag;       /* -^: allow control chars in extracted filenames */
-#    endif
     int zipbomb;
 #  endif /* !FUNZIP */
 } UzpOpts;
