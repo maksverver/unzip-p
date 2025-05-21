@@ -32,7 +32,7 @@
 #define UNZIP_INTERNAL
 #include "unzip.h"
 
-#define ISspace(c) isspace((unsigned)c)
+#define ISspace(c) isspace((unsigned char)c)
 
 static int count_args(const char *);
 
