@@ -135,14 +135,10 @@
    reading the "standard" include headers.
  */
 
-#  ifdef EFT
-#    define Z_OFF_T off_t  /* Amdahl UTS nonsense ("extended file types") */
+#  if (defined(_FILE_OFFSET_BITS) && (_FILE_OFFSET_BITS == 64))
+#    define Z_OFF_T off_t /* 64bit offsets to support 2GB < zipfile size < 4GB */
 #  else
-#    if (defined(_FILE_OFFSET_BITS) && (_FILE_OFFSET_BITS == 64))
-#      define Z_OFF_T off_t /* 64bit offsets to support 2GB < zipfile size < 4GB */
-#    else
-#      define Z_OFF_T long
-#    endif
+#    define Z_OFF_T long
 #  endif
 
 #  ifndef ZOFF_T_DEFINED
