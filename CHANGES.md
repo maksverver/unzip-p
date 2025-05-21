@@ -5,9 +5,10 @@ A nonexhaustive list of things I've changed:
   - Simplified Makefile (4d6a7e9)
   - Automated tests (5118111)
   - zipgrep: change egrep to grep -E (f2fe7ce)
-    (this prevents printing of deprecation warnings on Arch Linux)
   - Deleted code for obsolete operating systems and compilers.
   - Replaced macros like OF, zvoid, ZCONST, etc. with ANSI C equivalents.
   - Fixed a bug related to umask() (commit e8a8430)
   - Fixed bugs in parsing of UNIX extra fields (commit 4e45a6c)
   - Removed special macros to deal with near and far pointers.
+  - Check return value of `fgets()` for robustness (commit e30ce3a)
+  - Make fnfilter() work correctly on all locales (commit 681ff5c)

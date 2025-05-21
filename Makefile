@@ -1,8 +1,7 @@
 # Makefile to build and install unzip and related tools.
 #
 # This was cribbed from unix/Makefile, but with a lot of complexity removed
-# to make it easier to override compiler and linker flags (CFLAGS, LDFLAGS
-# and LDLIBS should be set on the command line).
+# to make it easier to override compiler and linker flags.
 #
 #
 # BUILDING
