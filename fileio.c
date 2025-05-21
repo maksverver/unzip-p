@@ -1497,7 +1497,7 @@ int check_for_newer(__G__ filename)  /* return 1 if existing file is newer */
             Trace((stderr,
               "check_for_newer:  lstat(%s) returns 0:  symlink does exist\n",
               FnFilter1(filename)));
-            if (QCOND2 && !IS_OVERWRT_ALL)
+            if (!uO.qflag && !IS_OVERWRT_ALL)
                 Info(slide, 0, ((char *)slide, FileIsSymLink,
                   FnFilter1(filename), " with no real file"));
             return EXISTS_AND_OLDER;   /* symlink dates are meaningless */
@@ -1511,7 +1511,7 @@ int check_for_newer(__G__ filename)  /* return 1 if existing file is newer */
     if (lstat(filename, &G.statbuf) == 0 && S_ISLNK(G.statbuf.st_mode)) {
         Trace((stderr, "check_for_newer:  %s is a symbolic link\n",
           FnFilter1(filename)));
-        if (QCOND2 && !IS_OVERWRT_ALL)
+        if (!uO.qflag && !IS_OVERWRT_ALL)
             Info(slide, 0, ((char *)slide, FileIsSymLink,
               FnFilter1(filename), ""));
         return EXISTS_AND_OLDER;   /* symlink dates are meaningless */

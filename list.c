@@ -296,7 +296,7 @@ int list_files(__G)    /* return PK-type error code */
             fnprint(__G);
 
             if ((error = do_string(__G__ G.crec.file_comment_length,
-                                   QCOND? DISPL_8 : SKIP)) != 0)
+                                   !uO.qflag ? DISPL_8 : SKIP)) != 0)
             {
                 error_in_archive = error;  /* might be just warning */
                 if (error > PK_WARN)       /* fatal */

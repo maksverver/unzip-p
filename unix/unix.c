@@ -534,7 +534,7 @@ int mapname(__G__ renamed)
     } /* end while loop */
 
     /* Show warning when stripping insecure "parent dir" path components */
-    if (killed_ddot && QCOND2) {
+    if (killed_ddot && !uO.qflag) {
         Info(slide, 0, ((char *)slide,
           "warning:  skipped \"../\" path component(s) in %s\n",
           FnFilter1(G.filename)));
@@ -551,7 +551,7 @@ int mapname(__G__ renamed)
     if (G.filename[strlen(G.filename) - 1] == '/') {
         checkdir(__G__ G.filename, GETPATH);
         if (G.created_dir) {
-            if (QCOND2) {
+            if (!uO.qflag) {
                 Info(slide, 0, ((char *)slide, "   creating: %s\n",
                   FnFilter1(G.filename)));
             }
@@ -1074,7 +1074,7 @@ int close_outfile(__G)
         }
         errval = CloseError(); /* close "link" file for good... */
         slnk_entry->target[ucsize] = '\0';
-        if (QCOND2)
+        if (!uO.qflag)
             Info(slide, 0, ((char *)slide, "-> %s ",
               FnFilter1(slnk_entry->target)));
         /* add this symlink record to the list of deferred symlinks */
