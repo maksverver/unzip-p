@@ -559,7 +559,7 @@ static int do_seekable(__G__ lastchance)        /* return PK-type error code */
     which would corrupt the bit streams.
   ---------------------------------------------------------------------------*/
 
-    if (SSTAT(G.zipfn, &G.statbuf) ||
+    if (zstat(G.zipfn, &G.statbuf) ||
         (error = S_ISDIR(G.statbuf.st_mode)) != 0)
     {
 #ifndef SFX

@@ -27,7 +27,6 @@
 typedef off_t zoff_t;
 
 typedef struct stat z_stat;
-#  define Z_STAT_DEFINED
 
 #  include <fcntl.h>            /* O_BINARY for open() w/o CR/LF translation */
 

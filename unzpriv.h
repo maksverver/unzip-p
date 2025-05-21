@@ -131,11 +131,6 @@
    Common includes
    ---------------------------------------------------------------------------- */
 
-#  ifndef Z_STAT_DEFINED
-   typedef struct stat z_stat;
-#    define Z_STAT_DEFINED
-#  endif
-
 #  include <stdio.h>
 #  include <ctype.h>
 #  include <errno.h>     /* used in mapname() */
@@ -466,16 +461,6 @@ typedef size_t extent;
 
 
 /* ---------------------------- */
-
-
-#  ifndef SSTAT
-#    ifdef WILD_STAT_BUG
-#      define SSTAT(path,pbuf) (iswild(path) || zstat(path,pbuf))
-#    else
-#      define SSTAT    zstat
-#    endif
-#  endif
-
 
 /* Default fzofft() format selection. */
 

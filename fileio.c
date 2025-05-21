@@ -197,7 +197,7 @@ int open_input_file(__G)    /* return 1 if open failed */
 int open_outfile(__G)           /* return 1 if fail */
     __GDEF
 {
-    if (SSTAT(G.filename, &G.statbuf) == 0 ||
+    if (zstat(G.filename, &G.statbuf) == 0 ||
         lstat(G.filename, &G.statbuf) == 0)
     {
         Trace((stderr, "open_outfile:  stat(%s) returns 0:  file exists\n",
@@ -231,7 +231,7 @@ int open_outfile(__G)           /* return 1 if fail */
                 /* If there is a previous backup file, delete it,
                  * otherwise the following rename operation may fail.
                  */
-                if (SSTAT(tname, &tmpstat) == 0)
+                if (zstat(tname, &tmpstat) == 0)
                     unlink(tname);
             } else {
                 /* Check if backupname exists, and, if it's true, try
@@ -252,7 +252,7 @@ int open_outfile(__G)           /* return 1 if fail */
                     case 0: maxtail = 0; break;
                 }
                 /* while filename exists */
-                for (i = 0; (i < maxtail) && (SSTAT(tname, &tmpstat) == 0);)
+                for (i = 0; (i < maxtail) && (zstat(tname, &tmpstat) == 0);)
                     sprintf(numtail,"%u", ++i);
             }
 
@@ -1486,10 +1486,10 @@ int check_for_newer(__G__ filename)  /* return 1 if existing file is newer */
     iztimes z_utime;
 
     Trace((stderr, "check_for_newer:  doing stat(%s)\n", FnFilter1(filename)));
-    if (SSTAT(filename, &G.statbuf)) {
+    if (zstat(filename, &G.statbuf)) {
         Trace((stderr,
           "check_for_newer:  stat(%s) returns %d:  file does not exist\n",
-          FnFilter1(filename), SSTAT(filename, &G.statbuf)));
+          FnFilter1(filename), zstat(filename, &G.statbuf)));
         Trace((stderr, "check_for_newer:  doing lstat(%s)\n",
           FnFilter1(filename)));
         /* GRR OPTION:  could instead do this test ONLY if G.symlnk is true */
