@@ -218,10 +218,6 @@ typedef size_t extent;
 #    endif
 #  endif
 
-#  ifndef HAVE_UNLINK
-#    define HAVE_UNLINK
-#  endif
-
 /* OS-specific exceptions to the "ANSI <--> INT_SPRINTF" rule */
 
 #  if (!defined(PCHAR_SPRINTF) && !defined(INT_SPRINTF))

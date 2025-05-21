@@ -262,7 +262,7 @@ static const char Inflate[] = "inflate";
 #  endif
 #endif
 
-#if (!defined(DELETE_IF_FULL) || !defined(HAVE_UNLINK))
+#if (!defined(DELETE_IF_FULL))
    static const char FileTruncated[] =
      "warning:  %s is probably truncated\n";
 #endif
@@ -1737,7 +1737,7 @@ static int extract_or_test_member(__G)    /* return PK-type error code */
 
     if (G.disk_full) {            /* set by flush() */
         if (G.disk_full > 1) {
-#if (defined(DELETE_IF_FULL) && defined(HAVE_UNLINK))
+#if (defined(DELETE_IF_FULL))
             /* delete the incomplete file if we can */
             if (unlink(G.filename) != 0)
                 Trace((stderr, "extract.c:  could not delete %s\n",
