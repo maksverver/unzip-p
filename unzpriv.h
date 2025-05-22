@@ -331,9 +331,6 @@ typedef size_t extent;
 #    undef TIMESTAMP
 #  endif
 
-#  if (!defined(COPYRIGHT_CLEAN) && !defined(USE_SMITH_CODE))
-#    define COPYRIGHT_CLEAN
-#  endif
 
 /* The LZW patent is expired worldwide since 2004-Jul-07, so USE_UNSHRINK
  * is now enabled by default.  See unshrink.c.
@@ -1186,11 +1183,6 @@ int    huft_build                   (__GPRO__ const unsigned *b, unsigned n,
    int    inflate_free              (__GPRO);                  /* inflate.c */
 #  endif /* ?USE_ZLIB */
 #  if (!defined(SFX) && !defined(FUNZIP))
-#    ifndef COPYRIGHT_CLEAN
-   int    unreduce                  (__GPRO);                 /* unreduce.c */
-/* static void  LoadFollowers       (__GPRO__ f_array *follower, uch *Slen);
-                                                                * unreduce.c */
-#    endif /* !COPYRIGHT_CLEAN */
 #    ifndef LZW_CLEAN
    int    unshrink                  (__GPRO);                 /* unshrink.c */
 /* static void  partial_clear       (__GPRO);                  * unshrink.c */

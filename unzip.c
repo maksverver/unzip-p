@@ -236,10 +236,8 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
 #  ifdef CHECK_VERSIONS
      static const char Check_Versions[] = "CHECK_VERSIONS";
 #  endif
-#  ifdef COPYRIGHT_CLEAN
      static const char Copyright_Clean[] =
      "COPYRIGHT_CLEAN (PKZIP 0.9x unreducing method not supported)";
-#  endif
 #  ifdef DEBUG
      static const char UDebug[] = "DEBUG";
 #  endif
@@ -278,10 +276,6 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
 #  ifndef LZW_CLEAN
      static const char Use_Unshrink[] =
      "USE_UNSHRINK (PKZIP/Zip 1.x unshrinking method supported)";
-#  endif
-#  ifndef COPYRIGHT_CLEAN
-     static const char Use_Smith_Code[] =
-     "USE_SMITH_CODE (PKZIP 0.9x unreducing method supported)";
 #  endif
 #  ifdef USE_DEFLATE64
      static const char Use_Deflate64[] =
@@ -324,17 +318,10 @@ static const char ZipInfoUsageLine3[] = "miscellaneous options:\n\
      static const char CryptDate[] = CR_VERSION_DATE;
 #  endif
 
-#  ifdef COPYRIGHT_CLEAN
    static const char UnzipUsageLine1[] = "\
 UnZip %d.%d%d%s of %s, by Info-ZIP.  Maintained by C. Spieler.  Send\n\
 bug reports using http://www.info-zip.org/zip-bug.html; see README for details.\
 \n\n";
-#  else
-   static const char UnzipUsageLine1[] = "\
-UnZip %d.%d%d%s of %s, by Info-ZIP.  UnReduce (c) 1989 by S. H. Smith.\n\
-Send bug reports using //www.info-zip.org/zip-bug.html; see README for details.\
-\n\n";
-#  endif /* ?COPYRIGHT_CLEAN */
 #  define UnzipUsageLine1v       UnzipUsageLine1
 
 static const char UnzipUsageLine2v[] = "\
@@ -1775,11 +1762,9 @@ static void show_version_info(__G)
           Check_Versions));
         ++numopts;
 #  endif
-#  ifdef COPYRIGHT_CLEAN
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Copyright_Clean));
         ++numopts;
-#  endif
 #  ifdef DEBUG
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           UDebug));
@@ -1839,11 +1824,6 @@ static void show_version_info(__G)
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_EF_UT_time));
         ++numopts;
-#  ifndef COPYRIGHT_CLEAN
-        Info(slide, 0, ((char *)slide, CompileOptFormat,
-          Use_Smith_Code));
-        ++numopts;
-#  endif
 #  ifndef LZW_CLEAN
         Info(slide, 0, ((char *)slide, CompileOptFormat,
           Use_Unshrink));

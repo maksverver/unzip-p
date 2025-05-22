@@ -111,7 +111,7 @@ DOCS = funzip.txt unzip.txt unzipsfx.txt zipgrep.txt zipinfo.txt
 
 OBJS1 = unzip$O crc32$O crypt$O envargs$O explode$O
 OBJS2 = extract$O fileio$O globals$O inflate$O list$O match$O
-OBJS3 = process$O ttyio$O ubz2err$O unreduce$O unshrink$O zipinfo$O
+OBJS3 = process$O ttyio$O ubz2err$O unshrink$O zipinfo$O
 OBJS = $(OBJS1) $(OBJS2) $(OBJS3) $M$O
 
 OBJX = unzipsfx$O crc32_$O crypt_$O extract_$O fileio_$O \
@@ -177,7 +177,6 @@ match$O:	match.c $(UNZIP_H)
 process$O:	process.c $(UNZIP_H) crc32.h
 ttyio$O:	ttyio.c $(UNZIP_H) zip.h crypt.h ttyio.h
 ubz2err$O:	ubz2err.c $(UNZIP_H)
-unreduce$O:	unreduce.c $(UNZIP_H)
 unshrink$O:	unshrink.c $(UNZIP_H)
 unzip$O:	unzip.c $(UNZIP_H) crypt.h unzvers.h consts.h
 zipinfo$O:	zipinfo.c $(UNZIP_H)
