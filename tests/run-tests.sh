@@ -13,8 +13,12 @@ cd "$basedir"
 passed=0
 failed=0
 skipped=0
+disabled=0
 for test in test-*.sh; do
-    if ./"$test"; then
+    if [ ! -x "$test" ]; then
+        echo "$test DISABLED (enable with: chmod a+x $test)"
+        disabled=$(expr $disabled + 1)
+    elif ./"$test"; then
         echo "$test passed"
         passed=$(expr $passed + 1)
     else
@@ -22,13 +26,15 @@ for test in test-*.sh; do
         status=$?
         if [ $status -eq 234 ]; then
             echo "$test SKIPPED"
-            skipped=$(expr $failed + 1)
+            skipped=$(expr $skipped + 1)
         else
-            echo "$test FAILED ($status)"
+            echo "$test FAILED ($status) (disable with: chmod a-x $test)"
             failed=$(expr $failed + 1)
         fi
     fi
 done
+
 total=$(expr $passed + $failed + $skipped)
-echo "$total tests; $passed passed; $failed failed; $skipped skipped."
+echo "$total tests; $passed passed; $failed failed; $skipped skipped; $disabled disabled."
+
 exit $failed
