@@ -16,7 +16,6 @@
  *            localtime()
  *            mktime()
  *            mkgmtime()
- *            GetPlatformLocalTimezone()  [different versions]
  */
 
 /* HISTORY/CHANGES

@@ -318,23 +318,7 @@ typedef struct _Uzp_cdir_Rec {
 
 #  define  UzpMatch match
 
-int      UZ_EXP UzpMain               (int argc, char **argv);
-int      UZ_EXP UzpAltMain            (int argc, char **argv, UzpInit *init);
-const UzpVer * UZ_EXP UzpVersion      (void);
-void     UZ_EXP UzpFreeMemBuffer      (UzpBuffer *retstr);
-int      UZ_EXP UzpUnzipToMemory      (char *zip, char *file, UzpOpts *optflgs,
-                                       UzpCB *UsrFunc, UzpBuffer *retstr);
-int      UZ_EXP UzpGrep               (char *archive, char *file,
-                                       char *pattern, int cmd, int SkipBin,
-                                       UzpCB *UsrFunc);
-unsigned UZ_EXP UzpVersion2           (UzpVer2 *version);
-int      UZ_EXP UzpValidate           (char *archive, int AllCodes);
-
-
-/* default I/O functions (can be swapped out via UzpAltMain() entry point): */
-
 int      UZ_EXP UzpMessagePrnt      (void *pG, uch *buf, ulg size, int flag);
-int      UZ_EXP UzpMessageNull      (void *pG, uch *buf, ulg size, int flag);
 int      UZ_EXP UzpInput            (void *pG, uch *buf, int *size, int flag);
 void     UZ_EXP UzpMorePause        (void *pG, const char *prompt, int flag);
 int      UZ_EXP UzpPassword         (void *pG, int *rcnt, char *pwbuf,

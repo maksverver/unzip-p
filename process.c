@@ -15,8 +15,8 @@
   Contains:  process_zipfiles()
              free_G_buffers()
              do_seekable()
-             file_size()
              rec_find()
+             check_ecrec_zip64()
              find_ecrec64()
              find_ecrec()
              process_zip_cmmnt()
@@ -24,6 +24,7 @@
              get_cdir_ent()
              process_local_file_hdr()
              getZip64Data()
+             getUnicodeData()
              ef_scan_for_izux()
              getRISCOSexfield()
 

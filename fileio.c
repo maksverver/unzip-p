@@ -15,24 +15,23 @@
   of the stuff has to do with opening, closing, reading and/or writing files.
 
   Contains:  open_input_file()
-             open_outfile()           (not: VMS, AOS/VS, CMSMVS, MACOS, TANDEM)
+             open_outfile()
              undefer_input()
              defer_leftover_input()
              readbuf()
              readbyte()
              fillinbuf()
              seek_zipf()
-             flush()                  (non-VMS)
-             is_vms_varlen_txt()      (non-VMS, VMS_TEXT_CONV only)
-             disk_error()             (non-VMS)
+             flush()
+             is_vms_varlen_txt()      (VMS_TEXT_CONV only)
+             disk_error()
              UzpMessagePrnt()
-             UzpMessageNull()         (DLL only)
              UzpInput()
              UzpMorePause()
-             UzpPassword()            (non-WINDLL)
+             UzpPassword()
              handler()
-             dos_to_unix_time()       (non-VMS, non-VM/CMS, non-MVS)
-             check_for_newer()        (non-VMS, non-OS/2, non-VM/CMS, non-MVS)
+             dos_to_unix_time()
+             check_for_newer()
              do_string()
              makeword()
              makelong()
@@ -40,14 +39,7 @@
              fzofft()
              str2iso()                (CRYPT && NEED_STR2ISO, only)
              str2oem()                (CRYPT && NEED_STR2OEM, only)
-             memset()                 (ZMEM only)
-             memcpy()                 (ZMEM only)
              zstrnicmp()              (NO_STRNICMP only)
-             zstat()                  (REGULUS only)
-             plastchar()              (_MBCS only)
-             uzmbclen()               (_MBCS && NEED_UZMBCLEN, only)
-             uzmbschr()               (_MBCS && NEED_UZMBSCHR, only)
-             uzmbsrchr()              (_MBCS && NEED_UZMBSRCHR, only)
 
   ---------------------------------------------------------------------------*/
 
@@ -991,8 +983,6 @@ int UZ_EXP UzpMessagePrnt(pG, buf, size, flag)
     but none of them will do anything without setting the appropriate bit
     in the flag argument of every Info() statement which is to be turned
     *off*.  That is, all messages are currently turned on for all ports.
-    To turn off *all* messages, use the UzpMessageNull() function instead
-    of this one.
   ---------------------------------------------------------------------------*/
 
     if (MSG_STDERR(flag) && !((Uz_Globs *)pG)->UzO.tflag)

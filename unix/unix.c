@@ -12,8 +12,7 @@
 
   Unix-specific routines for use with Info-ZIP's UnZip 5.41 and later.
 
-  Contains:  readdir()
-             do_wild()           <-- generic enough to put in fileio.c?
+  Contains:  do_wild()           <-- generic enough to put in fileio.c?
              mapattr()
              mapname()
              checkdir()

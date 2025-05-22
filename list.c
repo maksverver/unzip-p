@@ -13,7 +13,7 @@
   This file contains the non-ZipInfo-specific listing routines for UnZip.
 
   Contains:  list_files()
-             get_time_stamp()   [optional feature]
+             get_time_stamp()
              ratio()
              fnprint()
 
