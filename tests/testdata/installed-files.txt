@@ -1,0 +1,16 @@
+drwxr-xr-x 3 .
+drwxr-xr-x 3 ./usr
+drwxr-xr-x 4 ./usr/local
+drwxr-xr-x 2 ./usr/local/bin
+-rwxr-xr-x 1 ./usr/local/bin/funzip
+-rwxr-xr-x 2 ./usr/local/bin/unzip
+-rwxr-xr-x 1 ./usr/local/bin/unzipsfx
+-rwxr-xr-x 1 ./usr/local/bin/zipgrep
+-rwxr-xr-x 2 ./usr/local/bin/zipinfo
+drwxr-xr-x 3 ./usr/local/man
+drwxr-xr-x 2 ./usr/local/man/man1
+-rw-r--r-- 1 ./usr/local/man/man1/funzip.1
+-rw-r--r-- 1 ./usr/local/man/man1/unzip.1
+-rw-r--r-- 1 ./usr/local/man/man1/unzipsfx.1
+-rw-r--r-- 1 ./usr/local/man/man1/zipgrep.1
+-rw-r--r-- 1 ./usr/local/man/man1/zipinfo.1

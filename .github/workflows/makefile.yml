@@ -44,6 +44,9 @@ jobs:
     - name: Install (bzip2 enabled)
       run: make install DESTDIR=pkg
 
+    - name: Check install
+      run: make check-install DESTDIR=pkg
+
     - name: Archive results
       uses: actions/upload-artifact@v4
       with:

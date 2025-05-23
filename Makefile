@@ -146,6 +146,13 @@ clean:
 
 docs: $(DOCS)
 
+# Verifies that installed files match expectations. This is mainly intended to be used
+# by the test automation, but could be used by packagers too.
+check-install: tests/testdata/installed-files.txt
+	test -n "$(DESTDIR)"  # check-install only makes sense if DESTDIR is set
+	(cd "$(DESTDIR)/" && find . -printf '%M %n %p\n' | sort -k3) \
+		| diff - tests/testdata/installed-files.txt
+
 %.txt: man/%.1
 	groff -C -Tascii -P -cbou -man $< > $@
 
