@@ -1218,7 +1218,6 @@ int uz_opts(__G__ pargc, pargv)
                     }
 #endif /* SFX */
                     break;
-#if (defined(RESTORE_UIDGID) || defined(RESTORE_ACL))
                 case ('X'):   /* restore owner/protection info (need privs?) */
                     if (negative) {
                         uO.X_flag = MAX(uO.X_flag-negative,0);
@@ -1226,7 +1225,6 @@ int uz_opts(__G__ pargc, pargv)
                     } else
                         ++uO.X_flag;
                     break;
-#endif /* RESTORE_UIDGID || RESTORE_ACL */
                 case ('z'):    /* display only the archive comment */
                     if (negative) {
                         uO.zflag = MAX(uO.zflag-negative,0);

@@ -942,7 +942,6 @@ static int get_extattribs(__G__ pzt, z_uidgid)
     we're laughing:  both mtime and atime are ours.  On the other hand, we
     then have to check for restoration of UID/GID.
   ---------------------------------------------------------------------------*/
-    int have_uidgid_flg;
     unsigned eb_izux_flg;
 
     eb_izux_flg = (G.extra_field ? ef_scan_for_izux(G.extra_field,
@@ -969,13 +968,7 @@ static int get_extattribs(__G__ pzt, z_uidgid)
     }
 
     /* if -X option was specified and we have UID/GID info, restore it */
-    have_uidgid_flg =
-#ifdef RESTORE_UIDGID
-            (uO.X_flag && (eb_izux_flg & EB_UX2_VALID));
-#else
-            0;
-#endif
-    return have_uidgid_flg;
+    return (uO.X_flag && (eb_izux_flg & EB_UX2_VALID));
 }
 
 

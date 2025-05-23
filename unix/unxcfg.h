@@ -55,7 +55,6 @@ typedef struct stat z_stat;
 #  if (!defined(NOTIMESTAMP) && !defined(TIMESTAMP))   /* GRR 970513 */
 #    define TIMESTAMP
 #  endif
-#  define RESTORE_UIDGID
 
 /* Static variables that we have to add to Uz_Globs: */
 #  define SYSTEM_SPECIFIC_GLOBALS \
