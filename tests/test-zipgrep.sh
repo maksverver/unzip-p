@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Smoke test for basic functionality of zipgrep.
 #

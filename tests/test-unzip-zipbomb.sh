@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Verifies that zipbomb detection in `unzip` is effective.
 #

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Verifies `funzip` can extract a password-protected archive.
 

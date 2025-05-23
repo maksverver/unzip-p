@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Verifies a basic zip64 file can be extracted.
 # (Note this doesn't work with funzip currently!)

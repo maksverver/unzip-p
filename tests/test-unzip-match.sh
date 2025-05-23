@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Tests file pattern matching with wildcards (? and *) and bracket groups ([]),
 # and the options -W (stop at directory) and -C (case insensitive).

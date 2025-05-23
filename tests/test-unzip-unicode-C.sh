@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Verifies unicode characters get translated to ASCII in the C locale.
 # Note: keep this in sync with test-unzip-unicode-U.sh

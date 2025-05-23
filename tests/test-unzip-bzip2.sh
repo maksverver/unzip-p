@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Verifies unzipping files compressed with bzip2 works.
 

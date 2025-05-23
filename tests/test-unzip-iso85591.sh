@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Verifies unsupported Unicode characters are escaped/replaced,
 # while supported characters kept, when using the ISO-8859-1 encoding.

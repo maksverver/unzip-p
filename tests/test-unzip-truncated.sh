@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Verifies that unzip fails with status code 9
 # when the central directory is not found.

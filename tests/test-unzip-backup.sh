@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Verifies the backup option (-B) works as advertised.
 #

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Verifies that unzip fails with status code 2 when a CRC fails.
 
