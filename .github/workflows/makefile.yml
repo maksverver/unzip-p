@@ -1,0 +1,31 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Initialize locales
+      run: |
+          sudo locale-gen en_US.utf8
+          sudo locale-gen en_US
+          sudo update-locale LANG=en_US.UTF-8
+          locale -a  # show available locales
+
+    - uses: actions/checkout@v4
+
+    - name: Build
+      run: make all
+
+    - name: Test
+      run: make check
+
+    - name: Install
+      run: make install DESTDIR=pkg
