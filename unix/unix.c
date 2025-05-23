@@ -1488,13 +1488,13 @@ static void charset_to_intern(char *string, char *from_charset)
 }
 
 /* Convert a string from OEM_CP to the current locale charset. */
-inline void oem_intern(char *string)
+void oem_intern(char *string)
 {
     charset_to_intern(string, OEM_CP);
 }
 
 /* Convert a string from ISO_CP to the current locale charset. */
-inline void iso_intern(char *string)
+void iso_intern(char *string)
 {
     charset_to_intern(string, ISO_CP);
 }

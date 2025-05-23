@@ -2395,7 +2395,8 @@ char *fnfilter(raw, space, size)   /* convert name to safely printable form */
     if (in_len > 0) {
         /* did not convert entire input; append ellipsis ("...") if possible,
            but leave space for terminating NUL byte (in case size < 4). */
-        for (size_t n = 3; n > 0 && out_len > 1; --n) {
+        size_t n;
+        for (n = 3; n > 0 && out_len > 1; --n) {
             *out_ptr++ = '.';
             --out_len;
         }

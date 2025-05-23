@@ -59,7 +59,7 @@ LN = ln
 CFLAGS_OPTIMIZATIONS = -O2
 
 # Compiler diagnostics to enable.
-CFLAGS_DIAGNOSTICS = -Wall -Wno-old-style-definition
+CFLAGS_DIAGNOSTICS = -Wall -Wno-old-style-definition -Werror=implicit-function-declaration
 
 # These correspond roughly to GCC's -fhardened, but they're spelled out here
 # for compatibility with clang which currently doesn't support that option.

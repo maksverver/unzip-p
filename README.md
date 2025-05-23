@@ -16,6 +16,8 @@ Note that the packaging tools from [Info-Zip's zip](https://infozip.sourceforge.
 
 ## Building, testing, and installing.
 
+The source compiles with `-std=gnu90` or equivalent.
+
 ```
 % make all          # add -j for parallel builds
 % make check
