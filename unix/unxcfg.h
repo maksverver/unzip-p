@@ -25,6 +25,7 @@
 #  include <sys/stat.h>
 #  include <fcntl.h>            /* O_BINARY for open() w/o CR/LF translation */
 #  include <time.h>
+#  include <strings.h>            /* strcasecmp() */
 #  include <unistd.h>
 #  include <utime.h>
 

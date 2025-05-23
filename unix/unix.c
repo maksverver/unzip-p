@@ -1475,7 +1475,7 @@ static void charset_to_intern(char *string, char *from_charset)
     if(!d)
         goto cleanup;
 
-    bzero(buf,buflen);
+    memset(buf, 0, buflen);
     dlen = buflen - 1;
 
     if(iconv(cd, &s, &slen, &d, &dlen) == (size_t)-1)
