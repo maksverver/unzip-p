@@ -14,6 +14,6 @@ if ! locale -a | grep -q $LC_CTYPE; then
     exit 234  # magic value that means skip this test
 fi
 
-$UNZIP -l testdata/unicode.zip | diff testdata/unicode-listing-iso85591.txt -
+$UNZIP -l testdata/unicode.zip | diff testdata/unicode-listing-iso88591.txt -
 
-$UNZIP -l testdata/iso88591.zip | diff testdata/iso85591-listing-iso85591.txt -
+$UNZIP -l testdata/iso88591.zip | diff testdata/iso88591-listing-iso88591.txt -
