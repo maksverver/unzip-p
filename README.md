@@ -1,9 +1,11 @@
-# POSIX-only fork of Info-ZIP UnZip 6.0 with bug fixes and security patches
+# UnZip (patched)
 
 This repository contains a fork of
 [Info-ZIP's UnZip](https://infozip.sourceforge.net/UnZip.html).
 It is based on the latest official release (UnZip 6.0) but
 with improvements to make the code more robust, secure and maintainable.
+
+The goal is to provide a maintainable code base that allows users to run the familiar `unzip` command on POSIX systems. Explicit non-goals are new feature development, supporting non-POSIX/UNIX-like operating systems (they have their own tool ecosystems), supporting programmatic access (use a library like https://libzip.org/ instead).
 
 See [patches/](patches/) for a list of security patches I applied, and [CHANGES.md](CHANGES.md) for a high-level description of other changes. Detailed changes area available in the git repository.
 
@@ -26,7 +28,7 @@ Consult the comments in [Makefile](Makefile) for details.
 
 ## Motivation
 
-Info-ZIP's `unzip` is a popular tool on Linux and other POSIX systems (FreeBSD, OS X, etc) for handling ZIP files, which, despite being ancient technology at this point, are still quite widely used.
+Info-ZIP's `unzip` is a popular tool on Linux and other POSIX systems (FreeBSD, OS X, etc) for extracting ZIP files, which, despite being ancient technology at this point, are still quite widely used.
 
 Unfortunately, development of the official Info-ZIP `zip` and `unzip` tools has stalled around 2009, and new releases are unlikely to happen. In the meantime, a number of bugs and security vulnerabilities have been identified. This has required Linux distributions to apply an ever-growing list of patches, which creates an unreasonable burden on packagers.
 
@@ -47,6 +49,13 @@ Packagers should consider installing my fork over using the official `unzip60.zi
 
 
 ## Random notes
+
+### Original source code
+
+The [tests/testdata/unzip60/unzip60/](tests/testdata/unzip60/unzip60/) directory contains a full copy of the UnZip 6.0 source code on which this fork is based. It is mostly of historical interest.
+
+The reason I included it is that I needed some non-trivial ZIP files for testing purposes, and unzip60.zip has the advantage that it is of course covered by the same license as the rest of the source code, so it was the easiest way to add a “real” ZIP file without copyright concerns.
+
 
 ### UnZip beta 6.10b
 
