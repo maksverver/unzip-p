@@ -1,6 +1,6 @@
 Archive:  testdata/iso88591.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-       14  2025-05-20 15:32   hellø.txt
+       14  2025-05-20 13:32   hellø.txt
 ---------                     -------
        14                     1 file

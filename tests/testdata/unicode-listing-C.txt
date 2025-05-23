@@ -1,8 +1,8 @@
 Archive:  testdata/unicode.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-16 15:49   F#U00f8#U00f6.txt
-        0  2025-05-16 15:49   #U3053#U3093#U306b#U3061#U306f
-        0  2025-05-16 15:51   #L01f614#L01f4e5#L01f6ba#L01f47d#L01f53b#U26b1#L01f559#L01f414#L01f476#U26bd#Ufe0f#L01f536#L01f30b#L01f602#L01f22f#Ufe0f#L01f411.#L01f379#L01f339#U2649#Ufe0f
+        0  2025-05-16 13:49   F#U00f8#U00f6.txt
+        0  2025-05-16 13:49   #U3053#U3093#U306b#U3061#U306f
+        0  2025-05-16 13:51   #L01f614#L01f4e5#L01f6ba#L01f47d#L01f53b#U26b1#L01f559#L01f414#L01f476#U26bd#Ufe0f#L01f536#L01f30b#L01f602#L01f22f#Ufe0f#L01f411.#L01f379#L01f339#U2649#Ufe0f
 ---------                     -------
         0                     3 files

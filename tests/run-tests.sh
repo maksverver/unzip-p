@@ -10,6 +10,9 @@ set -eu -o pipefail
 basedir=$(dirname $(readlink -f $0))
 cd "$basedir"
 
+export LANG=en_US.UTF-8
+export TZ=UTC
+
 passed=0
 failed=0
 skipped=0

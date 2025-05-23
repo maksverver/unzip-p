@@ -16,24 +16,24 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/
-        0  2025-05-15 17:49   foo/baz
-        0  2025-05-15 17:49   foo/BAZ
-        0  2025-05-15 17:49   foo/BAR/
-        0  2025-05-15 17:49   foo/BAR/quux
-        0  2025-05-15 17:49   foo/BAR/QUUX
-        0  2025-05-15 17:49   foo/bar/
-        0  2025-05-15 17:49   foo/bar/quux
-        0  2025-05-15 17:49   foo/bar/QUUX
-        0  2025-05-15 17:49   FOO/
-        0  2025-05-15 17:49   FOO/baz
-        0  2025-05-15 17:49   FOO/BAZ
-        0  2025-05-15 17:49   FOO/BAR/
-        0  2025-05-15 17:49   FOO/BAR/quux
-        0  2025-05-15 17:49   FOO/BAR/QUUX
-        0  2025-05-15 17:49   FOO/bar/
-        0  2025-05-15 17:49   FOO/bar/quux
-        0  2025-05-15 17:49   FOO/bar/QUUX
+        0  2025-05-15 15:49   foo/
+        0  2025-05-15 15:49   foo/baz
+        0  2025-05-15 15:49   foo/BAZ
+        0  2025-05-15 15:49   foo/BAR/
+        0  2025-05-15 15:49   foo/BAR/quux
+        0  2025-05-15 15:49   foo/BAR/QUUX
+        0  2025-05-15 15:49   foo/bar/
+        0  2025-05-15 15:49   foo/bar/quux
+        0  2025-05-15 15:49   foo/bar/QUUX
+        0  2025-05-15 15:49   FOO/
+        0  2025-05-15 15:49   FOO/baz
+        0  2025-05-15 15:49   FOO/BAZ
+        0  2025-05-15 15:49   FOO/BAR/
+        0  2025-05-15 15:49   FOO/BAR/quux
+        0  2025-05-15 15:49   FOO/BAR/QUUX
+        0  2025-05-15 15:49   FOO/bar/
+        0  2025-05-15 15:49   FOO/bar/quux
+        0  2025-05-15 15:49   FOO/bar/QUUX
 ---------                     -------
         0                     18 files
 EOF
@@ -44,9 +44,9 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/BAR/quux
-        0  2025-05-15 17:49   foo/bar/QUUX
-        0  2025-05-15 17:49   FOO/bar/
+        0  2025-05-15 15:49   foo/BAR/quux
+        0  2025-05-15 15:49   foo/bar/QUUX
+        0  2025-05-15 15:49   FOO/bar/
 ---------                     -------
         0                     3 files
 EOF
@@ -57,10 +57,10 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/baz
-        0  2025-05-15 17:49   foo/bar/
-        0  2025-05-15 17:49   foo/bar/quux
-        0  2025-05-15 17:49   foo/bar/QUUX
+        0  2025-05-15 15:49   foo/baz
+        0  2025-05-15 15:49   foo/bar/
+        0  2025-05-15 15:49   foo/bar/quux
+        0  2025-05-15 15:49   foo/bar/QUUX
 ---------                     -------
         0                     4 files
 EOF
@@ -74,7 +74,7 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/baz
+        0  2025-05-15 15:49   foo/baz
 ---------                     -------
         0                     1 file
 EOF
@@ -85,10 +85,10 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/baz
-        0  2025-05-15 17:49   foo/BAZ
-        0  2025-05-15 17:49   FOO/baz
-        0  2025-05-15 17:49   FOO/BAZ
+        0  2025-05-15 15:49   foo/baz
+        0  2025-05-15 15:49   foo/BAZ
+        0  2025-05-15 15:49   FOO/baz
+        0  2025-05-15 15:49   FOO/BAZ
 ---------                     -------
         0                     4 files
 EOF
@@ -99,8 +99,8 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/BAR/
-        0  2025-05-15 17:49   foo/bar/
+        0  2025-05-15 15:49   foo/BAR/
+        0  2025-05-15 15:49   foo/bar/
 ---------                     -------
         0                     2 files
 EOF
@@ -123,7 +123,7 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/BAR/quux
+        0  2025-05-15 15:49   foo/BAR/quux
 ---------                     -------
         0                     1 file
 EOF
@@ -134,14 +134,14 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/BAR/quux
-        0  2025-05-15 17:49   foo/BAR/QUUX
-        0  2025-05-15 17:49   foo/bar/quux
-        0  2025-05-15 17:49   foo/bar/QUUX
-        0  2025-05-15 17:49   FOO/BAR/quux
-        0  2025-05-15 17:49   FOO/BAR/QUUX
-        0  2025-05-15 17:49   FOO/bar/quux
-        0  2025-05-15 17:49   FOO/bar/QUUX
+        0  2025-05-15 15:49   foo/BAR/quux
+        0  2025-05-15 15:49   foo/BAR/QUUX
+        0  2025-05-15 15:49   foo/bar/quux
+        0  2025-05-15 15:49   foo/bar/QUUX
+        0  2025-05-15 15:49   FOO/BAR/quux
+        0  2025-05-15 15:49   FOO/BAR/QUUX
+        0  2025-05-15 15:49   FOO/bar/quux
+        0  2025-05-15 15:49   FOO/bar/QUUX
 ---------                     -------
         0                     8 files
 EOF
@@ -158,8 +158,8 @@ cat >$TMPFIL <<EOF
 Archive:  testdata/cases.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2025-05-15 17:49   foo/BAR/quux
-        0  2025-05-15 17:49   foo/bar/quux
+        0  2025-05-15 15:49   foo/BAR/quux
+        0  2025-05-15 15:49   foo/bar/quux
 ---------                     -------
         0                     2 files
 EOF
