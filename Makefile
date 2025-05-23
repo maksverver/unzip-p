@@ -59,16 +59,23 @@ LN = ln
 CFLAGS_OPTIMIZATIONS = -O2
 
 # Compiler diagnostics to enable.
-CFLAGS_DIAGNOSTICS = -Wall -Wno-old-style-definition -Werror=implicit-function-declaration
+CFLAGS_DIAGNOSTICS = \
+	-Wall \
+	-Wno-old-style-definition \
+	-Wno-deprecated-non-prototype \
+	-Werror=implicit-function-declaration
 
 # These correspond roughly to GCC's -fhardened, but they're spelled out here
 # for compatibility with clang which currently doesn't support that option.
 CFLAGS_SECURITY = \
 	-D_FORTIFY_SOURCE=3 \
-	-Wl,-z,relro,-z,now,-z,nodlopen,-z,noexecstack \
-	-fPIE -pie \
+	-fPIE \
 	-fstack-protector-strong \
 	-fstack-clash-protection
+
+LDFLAGS_SECURITY = \
+	-Wl,-z,relro,-z,now,-z,nodlopen,-z,noexecstack \
+	-pie
 
 # Commonly enabled features:
 #
@@ -87,9 +94,9 @@ CFLAGS = $(CFLAGS_OPTIMIZATIONS) $(CFLAGS_DIAGNOSTICS) $(CFLAGS_SECURITY) $(CFLA
 # Convenience variable to append additional LDFLAGS on the command line.
 LDFLAGS_EXTRA =
 
-LDFLAGS = $(LDFLAGS_EXTRA)
+LDFLAGS = $(LDFLAGS_SECURITY) $(LDFLAGS_EXTRA)
 
-# Convenience variable to append additional LDFLAGS on the command line.
+# Convenience variable to append additional LDLIBS on the command line.
 LDLIBS_EXTRA =
 
 LDLIBS = $(LDLIBS_EXTRA)
