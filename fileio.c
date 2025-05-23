@@ -1200,6 +1200,8 @@ void UZ_EXP UzpMorePause(pG, prompt, flag)
 /* Function UzpPassword() */
 /**************************/
 
+#define PROMPT_MAX_LEN (2*FILNAMSIZ + 15)
+
 int UZ_EXP UzpPassword (pG, rcnt, pwbuf, size, zfn, efn)
     void *pG;          /* pointer to UnZip's internal global vars */
     int *rcnt;         /* retry counter */
@@ -1210,12 +1212,8 @@ int UZ_EXP UzpPassword (pG, rcnt, pwbuf, size, zfn, efn)
 {
 #if CRYPT
     int r = IZ_PW_ENTERED;
-    char *m;
+    const char *m;
     char *prompt;
-    char *zfnf;
-    char *efnf;
-    size_t zfnfl;
-    int isOverflow;
 
 #  ifndef REENTRANT
     /* tell picky compilers to shut up about "unused variable" warnings */
@@ -1224,34 +1222,25 @@ int UZ_EXP UzpPassword (pG, rcnt, pwbuf, size, zfn, efn)
 
     if (*rcnt == 0) {           /* First call for current entry */
         *rcnt = 2;
-        zfnf = FnFilter1(zfn);
-        efnf = FnFilter2(efn);
-        zfnfl = strlen(zfnf);
-        isOverflow = TRUE;
-        if (2*FILNAMSIZ >= zfnfl && (2*FILNAMSIZ - zfnfl) >= strlen(efnf))
-        {
-            isOverflow = FALSE;
-        }
-        if ((isOverflow == FALSE) && ((prompt = (char *)malloc(2*FILNAMSIZ + 15)) != (char *)NULL)) {
-            sprintf(prompt, PasswPrompt,
-                    FnFilter1(zfn), FnFilter2(efn));
+        if ( (prompt = (char *)malloc(PROMPT_MAX_LEN)) != NULL &&
+             (size_t) snprintf( prompt, PROMPT_MAX_LEN, PasswPrompt,
+                                FnFilter1(zfn), FnFilter2(efn) )
+                < PROMPT_MAX_LEN) {
             m = prompt;
-        } else
-            m = (char *)PasswPrompt2;
+        } else {
+            m = PasswPrompt2;
+        }
     } else {                    /* Retry call, previous password was wrong */
         (*rcnt)--;
         prompt = NULL;
-        m = (char *)PasswRetry;
+        m = PasswRetry;
     }
 
     m = getp(__G__ m, pwbuf, size);
-    if (prompt != (char *)NULL) {
-        free(prompt);
-    }
-    if (m == (char *)NULL) {
+    free(prompt);
+    if (m == NULL) {
         r = IZ_PW_ERROR;
-    }
-    else if (*pwbuf == '\0') {
+    } else if (*pwbuf == '\0') {
         r = IZ_PW_CANCELALL;
     }
     return r;
