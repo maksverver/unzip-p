@@ -21,63 +21,16 @@
 
 
 #  include <sys/types.h>          /* off_t, time_t, dev_t, ... */
+#  include <sys/param.h>
 #  include <sys/stat.h>
+#  include <fcntl.h>            /* O_BINARY for open() w/o CR/LF translation */
+#  include <time.h>
 #  include <unistd.h>
+#  include <utime.h>
 
 typedef off_t zoff_t;
 
 typedef struct stat z_stat;
-
-#  include <fcntl.h>            /* O_BINARY for open() w/o CR/LF translation */
-
-#  ifndef NO_PARAM_H
-#    ifdef NGROUPS_MAX
-#      undef NGROUPS_MAX      /* SCO bug:  defined again in <sys/param.h> */
-#    endif
-#    ifdef BSD
-#      define TEMP_BSD        /* may be defined again in <sys/param.h> */
-#      undef BSD
-#    endif
-#    include <sys/param.h>    /* conflict with <sys/types.h>, some systems? */
-#    ifdef TEMP_BSD
-#      undef TEMP_BSD
-#      ifndef BSD
-#        define BSD
-#      endif
-#    endif
-#  endif /* !NO_PARAM_H */
-
-#  ifdef __CYGWIN__
-#    include <unistd.h>
-#    define DIRENT
-#    define HAVE_TERMIOS_H
-#    ifndef timezone
-#      define timezone _timezone
-#    endif
-#  endif
-
-#  ifdef BSD
-#    include <sys/time.h>
-#    include <sys/timeb.h>
-#    if (defined(__GLIBC__) || defined(__GNU__))
-#      include <time.h>
-#    endif
-#  else
-#    include <time.h>
-/*   struct tm *gmtime(), *localtime(); */
-#  endif
-
-#  if (defined(BSD4_4) || defined(SYSV))
-#    include <unistd.h>           /* this includes utime.h on SGIs */
-#    if (defined(BSD4_4) || defined(linux) || defined(__GLIBC__))
-#      include <utime.h>
-#      define GOT_UTIMBUF
-#    endif
-#    if (!defined(GOT_UTIMBUF) && defined(__GNU__))
-#      include <utime.h>
-#      define GOT_UTIMBUF
-#    endif
-#  endif
 
 #  if (!defined(HAVE_STRNICMP) & !defined(NO_STRNICMP))
 #    define NO_STRNICMP

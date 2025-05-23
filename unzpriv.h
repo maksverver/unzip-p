@@ -788,14 +788,7 @@ typedef uint32_t    z_uint4;
 #    endif
 #  endif
 
-#  if (defined(GOT_UTIMBUF))
-   typedef struct utimbuf ztimbuf;
-#  else
-   typedef struct ztimbuf {
-       time_t actime;        /* new access time */
-       time_t modtime;       /* new modification time */
-   } ztimbuf;
-#  endif
+typedef struct utimbuf ztimbuf;
 
 typedef struct iztimes {
    time_t atime;             /* new access time */
