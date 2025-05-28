@@ -33,7 +33,7 @@ zipfile="$1"; shift
 
 list=0
 silent=0
-opt=`echo "$opt" | sed -e 's/ //g' -e 's/-//g'`
+opt=`printf '%s\n' "$opt" | sed -e 's/ //g' -e 's/-//g'`
 case "$opt" in
   *l*) list=1; opt=`echo $opt | sed s/l//`
 esac
@@ -55,7 +55,7 @@ for i in `unzip -Z1 "$zipfile" ${1+"$@"} | sed -e 's/\\\\/\\\\\\\\/g' `; do
   if test $list -eq 1; then
     # "-l": Show only the archive member name, not the matching line(s).
     unzip -p-L "$zipfile" "$i" | \
-     grep -E $opt "$pat" > /dev/null && echo "$i"
+     grep -E $opt "$pat" > /dev/null && printf '%s\n' "$i"
     status_grep=$?
   elif test $silent -eq 1; then
     # "-h": Show only the matching line(s), not the archive member name.
@@ -66,7 +66,7 @@ for i in `unzip -Z1 "$zipfile" ${1+"$@"} | sed -e 's/\\\\/\\\\\\\\/g' `; do
   else
     # Escape (or re-escape) shell-special characters in the archive
     # member name, "i".
-    i=` echo "$i" | \
+    i=` printf "%s\n" "$i" | \
      sed -e 's/\\\\/\\\\\\\\/g' -e 's/|/\\\|/g' -e 's/&/\\\&/g' `
 
     # Globally, send fd 4 to stdout.  In the pipeline, send normal
